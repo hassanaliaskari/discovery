@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.liangfeizc.avatarview.AvatarView;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 //View Holder for picture cards
 public class CardPictureViewHolder extends RecyclerView.ViewHolder {
@@ -39,7 +41,38 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
 
 
 
-    public void addLikeCallback(final DataPictureCard dataPictureCard, final HomeFragment.ImageAdapter imageAdapter, final int position) {
+    public void poplulatePictureCard (final DataPictureCard dataPictureCard, int position) {
+        DisplayImageOptions options= new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.mipmap.ic_loading)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .build();
+
+        this.description.setText(dataPictureCard.description);
+        //this.likes.setText(String.valueOf(dataPictureCard.likes));
+        this.activity.setText(dataPictureCard.activity);
+        this.location.setText(dataPictureCard.location);
+        ImageLoader.getInstance().displayImage(dataPictureCard.link, this.image, options, new Animations.AnimateFirstDisplayListener());
+        //this.uploader.name.setText(dataPictureCard.dataUploaderBar.uploader_name);
+        //ImageLoader.getInstance().displayImage(dataPictureCard.dataUploaderBar.uploader_pp, this.uploader.pp, options, null);
+        ImageLoader.getInstance().displayImage(dataPictureCard.dataUploaderBar.uploader_pp, this.uploaderPic, options, null);
+
+
+        if (dataPictureCard.isLiked == false) {
+            this.like_button.setVisibility(View.VISIBLE);
+            this.location.setVisibility(View.GONE);
+            this.addLikeCallback(dataPictureCard);
+        } else {
+            this.like_button.setImageResource(R.drawable.ic_liked);
+            this.add_to_bl_button.setVisibility(View.VISIBLE);
+            this.location.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+
+        public void addLikeCallback(final DataPictureCard dataPictureCard) {
         like_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.liangfeizc.avatarview.AvatarView;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 //View Holder for picture cards
 public class CardBlogViewHolder extends RecyclerView.ViewHolder {
@@ -44,7 +46,37 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    public void addLikeCallback(final DataBlogCard dataBlogCard, final HomeFragment.ImageAdapter imageAdapter, final int position) {
+
+    public void poplulateBlogCard (final DataBlogCard dataBlogCard, int position) {
+        DisplayImageOptions options= new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.mipmap.ic_loading)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .build();
+
+        ImageLoader.getInstance().displayImage(dataBlogCard.thumbnail_url, this.thumbnail, options, new Animations.AnimateFirstDisplayListener());
+        this.title.setText(dataBlogCard.title);
+        this.extract.setText(dataBlogCard.extract);
+        //this.like_button.setText("Like");
+        //this.likes.setText(dataBlogCard.likes + " People Likes this");
+        this.activity.setText("Diving");
+        this.location.setText(dataBlogCard.location);
+        //this.uploader.name.setText(dataBlogCard.dataUploaderBar.uploader_name);
+        //ImageLoader.getInstance().displayImage(dataBlogCard.dataUploaderBar.uploader_pp, this.uploader.pp, options, null);
+        ImageLoader.getInstance().displayImage(dataBlogCard.dataUploaderBar.uploader_pp, this.uploaderPic, options, null);
+
+        if (dataBlogCard.isLiked == false) {
+            this.addLikeCallback(dataBlogCard);
+        }
+
+
+    }
+
+
+
+
+    public void addLikeCallback(final DataBlogCard dataBlogCard) {
         like_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
