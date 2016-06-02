@@ -30,6 +30,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             fab:menu_fab_size="normal"
+            fab:menu_colorNormal="@color/colorAccent"
             fab:menu_showShadow="true"
             fab:menu_icon="@drawable/fab_add">
 
@@ -37,25 +38,25 @@
                 android:id="@+id/fab_add_blog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_add_to_bl"
+                android:src="@drawable/ic_add_blog"
                 fab:fab_size="mini"
-                fab:fab_label="Add to Bucket List" />
+                app:fab_colorNormal="@color/colorAccent" />
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fab_add_picture_gallery"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_add_to_bl"
+                android:src="@drawable/ic_browse_gallery"
                 fab:fab_size="mini"
-                fab:fab_label="Upload Picture from Gallery" />
+                app:fab_colorNormal="@color/colorAccent" />
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fab_add_picture_camera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_add_to_bl"
+                android:src="@drawable/ic_add_from_camera"
                 fab:fab_size="mini"
-                fab:fab_label="Upload Picture from Camera" />
+                app:fab_colorNormal="@color/colorAccent" />
 
         </com.github.clans.fab.FloatingActionMenu>
 

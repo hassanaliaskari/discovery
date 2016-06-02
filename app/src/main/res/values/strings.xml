@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Discovery</string>
+    <string name="app_name">Trouvaille</string>
 
     <!-- Strings related to login -->
     <string name="facebook_app_id">495600770631539</string>
@@ -23,5 +23,6 @@
     <string name="title_activity_add_picture_card">AddPictureCardActivity</string>
     <string name="title_activity_crop_picture">CropPictureActivity</string>
     <string name="title_activity_add_interest">AddInterestActivity</string>
+    <string name="title_activity_main">Home</string>
 
 </resources>
