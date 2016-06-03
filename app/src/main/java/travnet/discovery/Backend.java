@@ -640,6 +640,68 @@ public class Backend {
 
 
 
+    public abstract class PostBlogListener {
+        public PostBlogListener() {
+        }
+
+        public abstract void onBlogPostSuccess();
+        public abstract void onBlogPostFailed();
+    }
+    public void postBlog(final String blogURL, final String blogTitle, final String blogExtract, final String thumbnailURL, final PostBlogListener listener) {
+        class updateUserInterestsTask extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                RequestQueue queue = Volley.newRequestQueue(context);
+                String url = baseUrl + "registerCard";
+
+                JSONObject blog = new JSONObject();
+                try {
+                    blog.put("user_id", User.getInstance().getUserID());
+                    blog.put("card_type", "blog");
+                    blog.put("url", blogURL);
+                    blog.put("title", blogTitle);
+                    blog.put("extract", blogExtract);
+                    blog.put("thumbnail", thumbnailURL);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    listener.onBlogPostFailed();
+                }
+
+                JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                        (Request.Method.POST, url, blog, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                listener.onBlogPostSuccess();
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                listener.onBlogPostFailed();
+                            }
+                        });
+
+                queue.add(jsObjRequest);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void v) {
+            }
+
+        }
+
+        new updateUserInterestsTask().execute();
+
+    }
+
+
+
 
 
 

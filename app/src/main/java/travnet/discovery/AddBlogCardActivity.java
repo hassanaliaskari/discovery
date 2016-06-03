@@ -1,5 +1,6 @@
 package travnet.discovery;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -7,6 +8,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,14 +39,16 @@ public class AddBlogCardActivity extends AppCompatActivity {
     String blogURL;
     String blogTitle;
     String blogExtract;
-    Bitmap blogThumbnail;
+    String thumbnailURL;
 
-    EditText inputBlogLink;
-    Button buttonPreviewBlog;
+    Menu menu;
+    ProgressDialog progress;
+
+    ImageView previewThumbnail;
     TextView previewTitle;
     TextView previewExtract;
-    ImageView previewThumbnail;
-    Button buttonPostBlog;
+    EditText inputBlogURL;
+    Button buttonPreviewBlog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,26 +57,18 @@ public class AddBlogCardActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        inputBlogLink = (EditText) findViewById(R.id.blog_link);
-        buttonPreviewBlog = (Button) findViewById(R.id.button_preview_blog);
+        previewThumbnail = (ImageView) findViewById(R.id.thumbnail);
         previewTitle = (TextView) findViewById(R.id.title);
         previewExtract = (TextView) findViewById(R.id.extract);
-        previewThumbnail = (ImageView) findViewById(R.id.thumbnail);
-        buttonPostBlog = (Button) findViewById(R.id.button_post_blog);
+        inputBlogURL = (EditText) findViewById(R.id.blog_link);
+        buttonPreviewBlog = (Button) findViewById(R.id.button_preview_blog);
 
         buttonPreviewBlog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                blogURL = inputBlogLink.getText().toString();
+                blogURL = inputBlogURL.getText().toString();
                 TextCrawler textCrawler = new TextCrawler();
                 textCrawler.makePreview(linkPreviewCallback, blogURL);
-            }
-        });
-
-        buttonPostBlog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                postBlog();
             }
         });
 
@@ -81,77 +78,86 @@ public class AddBlogCardActivity extends AppCompatActivity {
 
         @Override
         public void onPre() {
+            showProgressDialog();
         }
 
         @Override
-        public void onPos(SourceContent sourceContent, boolean b) {
+        public void onPos(SourceContent sourceContent, boolean isNull) {
+            progress.dismiss();
+
+            if (isNull || sourceContent.getFinalUrl().equals("")) {
+                Toast.makeText(getApplicationContext(), R.string.error_blog_preview_failed, Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            MenuItem buttonPostBlog = menu.findItem(R.id.action_done);
+            buttonPostBlog.setVisible(true);
+
+            inputBlogURL.setVisibility(View.GONE);
+            buttonPreviewBlog.setVisibility(View.GONE);
+
             blogTitle = sourceContent.getTitle();
             blogExtract = sourceContent.getDescription();
-
             previewTitle.setText(blogTitle);
             previewExtract.setText(blogExtract);
-            String thumbnailUrl = sourceContent.getImages().get(0);
+
+            thumbnailURL = sourceContent.getImages().get(0);
             ImageLoader imageLoader = ImageLoader.getInstance();
-            imageLoader.loadImage(thumbnailUrl, new SimpleImageLoadingListener() {
-                @Override
-                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    blogThumbnail = loadedImage;
-                    previewThumbnail.setImageBitmap(loadedImage);
-                }
-            });
-            //ImageLoader.getInstance().displayImage(thumbnailUrl, previewThumbnail);
+            ImageLoader.getInstance().displayImage(thumbnailURL, previewThumbnail);
+
         }
     };
 
 
-
     public void postBlog() {
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://54.86.18.174/api/registerCard";
-        String image = getStringImage(blogThumbnail);
+        Backend backend = Backend.getInstance();
+        backend.postBlog(blogURL, blogTitle, blogExtract, thumbnailURL, backend.new PostBlogListener() {
+            @Override
+            public void onBlogPostSuccess() {
+                returnFromActivity();
+            }
 
-        JSONObject blog = new JSONObject();
-        try {
-            blog.put("user_id", User.getInstance().getUserID());
-            blog.put("card_type", "blog");
-            blog.put("url", blogURL);
-            blog.put("title", blogTitle);
-            //blog.put("extract", blogExtract);
-            //blog.put("thumbnail", image);
-        } catch (JSONException e) {
-            e.printStackTrace();
+            @Override
+            public void onBlogPostFailed() {
+                Toast.makeText(getApplicationContext(), R.string.error_blog_post_failed, Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+    private void showProgressDialog() {
+        progress = new ProgressDialog(this);
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        //progress.setTitle("Loading Preview");
+        progress.show();
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
+        getMenuInflater().inflate(R.menu.menu_activity_complete, menu);
+        MenuItem item = menu.findItem(R.id.action_done);
+        item.setVisible(false);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_done) {
+            postBlog();
+            return true;
         }
 
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.POST, url, blog, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        returnFromActivity();
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), R.string.error_connect_server_failed, Toast.LENGTH_LONG).show();
-                    }
-                });
-
-        queue.add(jsObjRequest);
-
+        return super.onOptionsItemSelected(item);
     }
 
 
     private void returnFromActivity() {
         finish();
-    }
-
-    public String getStringImage(Bitmap bitmap){
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] imageBytes = baos.toByteArray();
-        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-        return encodedImage;
     }
 
 }

@@ -43,7 +43,8 @@
         <activity
             android:name=".AddBlogCardActivity"
             android:label="@string/title_activity_add_blog_card"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".AddPictureCardActivity"
             android:label="@string/title_activity_add_picture_card"

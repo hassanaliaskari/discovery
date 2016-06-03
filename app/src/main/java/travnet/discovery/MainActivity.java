@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.facebook.FacebookSdk;
 import com.facebook.login.*;
 import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -107,10 +108,12 @@ public class MainActivity extends AppCompatActivity
         navDrawerHeader = navigationView.getHeaderView(0);
 
         //Floating action buttons
+        final FloatingActionMenu fabmenu = (FloatingActionMenu) findViewById(R.id.fab_add);
         FloatingActionButton fabAddBlog = (FloatingActionButton) findViewById(R.id.fab_add_blog);
         fabAddBlog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                fabmenu.close(true);
                 addBlogCard();
             }
         });
@@ -118,6 +121,7 @@ public class MainActivity extends AppCompatActivity
         fabAddPictureGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                fabmenu.close(true);
                 addPictureCardGallery();
             }
         });
@@ -125,6 +129,7 @@ public class MainActivity extends AppCompatActivity
         fabAddPictureCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                fabmenu.close(true);
                 addPictureCardCamera();
             }
         });

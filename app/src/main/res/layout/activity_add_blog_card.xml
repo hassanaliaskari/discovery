@@ -21,69 +21,88 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
-        <EditText
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:id="@+id/blog_link"
-            android:hint="Enter link"/>
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/blog_link"
-            android:id="@+id/button_preview_blog"
-            android:text="Preview"/>
-
-        <RelativeLayout android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/preview_blog"
-            android:layout_below="@+id/button_preview_blog">
+            android:orientation="vertical"
+            android:background="@color/colorPrimary">
 
+            <android.support.percent.PercentRelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id = "@+id/image_holder">
+                <ImageView
+                    app:layout_widthPercent="100%"
+                    app:layout_aspectRatio="178%"
+                    android:scaleType="centerCrop"
+                    android:id="@+id/thumbnail" />
+            </android.support.percent.PercentRelativeLayout>
 
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:id="@+id/thumbnail"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/title"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@id/thumbnail"
-                android:textStyle="bold"/>
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:textSize="24sp"/>
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/extract"
-                android:layout_below="@+id/title"
-                android:layout_toRightOf="@id/thumbnail" />
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:textSize="14sp" />
+        </LinearLayout>
 
-        </RelativeLayout>
 
-
-        <Button
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/preview_blog"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textSize="16sp"
+            android:singleLine="true"
+            android:id="@+id/blog_link"
+            android:hint="Enter link"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:paddingTop="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:id="@+id/button_preview_blog"
+            android:text="Preview"
+            style="@style/Widget.AppCompat.Button.Borderless"/>
+
+
+
+        <!--Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/button_post_blog"
-            android:text="Post"/>
+            android:text="Post"/-->
 
 
-    </RelativeLayout>
+    </LinearLayout>
 
 
 
