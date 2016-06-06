@@ -66,6 +66,10 @@ public class AddInterestActivity extends AppCompatActivity {
                 interests.addAll(listInterests);
                 addInterestItemAdapter.notifyDataSetChanged();
             }
+
+            @Override
+            public void onGetInterestsFailed() {
+            }
         });
 
 

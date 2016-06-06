@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.isseiaoki.simplecropview.CropImageView;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
@@ -45,7 +47,7 @@ public class AddPictureCardActivity extends AppCompatActivity {
     EditText add_location;
     AutoCompleteTextView activityAutoCompleteView;
     ImageView previewImage;
-    String[] activityList = { "Sightseeing", "Surfing", "Trekking", "Yoga"};
+    ArrayList<String> interestlist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +56,26 @@ public class AddPictureCardActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        String source = getIntent().getExtras().getString("source");
-        if (source.equals("gallery")) {
-            browsePhoneGallery();
-        } else if (source.equals("camera")) {
-            openCamera();
-        }
+        interestlist = new ArrayList<String>();
+        getInterests();
+
+
+        ImageButton buttonGallery = (ImageButton) findViewById(R.id.button_browse_gallery);
+        buttonGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                browsePhoneGallery();
+            }
+        });
+
+        ImageButton buttonCamera = (ImageButton) findViewById(R.id.button_camera);
+        buttonCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCamera();
+            }
+        });
+
 
         previewImage = (ImageView) findViewById(R.id.previewImage);
 
@@ -68,7 +84,7 @@ public class AddPictureCardActivity extends AppCompatActivity {
 
         activityAutoCompleteView = (AutoCompleteTextView) findViewById(R.id.add_activity);
         ArrayAdapter<String> activityAdapter = new ArrayAdapter<String>
-                (this,android.R.layout.select_dialog_item, activityList);
+                (this,android.R.layout.select_dialog_item, interestlist);
         activityAutoCompleteView.setAdapter(activityAdapter);
 
         Button buttonPostPicture = (Button) findViewById(R.id.button_post_picture);
@@ -81,6 +97,23 @@ public class AddPictureCardActivity extends AppCompatActivity {
 
 
     }
+
+
+    private void getInterests() {
+        Backend backend = Backend.getInstance();
+        backend.getIntersets(backend.new GetInterestsListener() {
+            @Override
+            public void onInterestsFetched(ArrayList<String> listInterests) {
+                interestlist.addAll(listInterests);
+            }
+
+            @Override
+            public void onGetInterestsFailed() {
+
+            }
+        });
+    }
+
 
     public void openCamera() {
         EasyImage.openCamera(this, 2);

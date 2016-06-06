@@ -21,23 +21,62 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="travnet.discovery.AddPictureCardFragment">
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <ImageView
+
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="220dp"
-            android:id="@+id/previewImage"/>
+            android:background="#000000">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:id="@+id/previewImage"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentBottom="true"
+                android:gravity="center">
+
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_browse_gallery"
+                    android:background="#000000"
+                    android:id="@+id/button_browse_gallery"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_add_from_camera"
+                    android:background="#000000"
+                    android:id="@+id/button_camera"/>
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+
 
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="32dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:gravity="center"
-            android:layout_below="@id/previewImage"
             android:id="@+id/description"
             android:imeOptions="actionDone"
             android:singleLine="true"
@@ -47,8 +86,10 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:gravity="center"
-            android:layout_below="@id/description"
             android:id="@+id/add_location"
             android:focusable="false"
             android:hint= "Location" />
@@ -59,7 +100,9 @@
             android:id="@+id/add_activity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/add_location"
+            android:paddingTop="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:gravity="center"
             android:hint="Activity"
             android:imeOptions="actionDone"
@@ -75,7 +118,7 @@
             android:text="Post"/>
 
 
-    </RelativeLayout>
+    </LinearLayout>
 
 
 

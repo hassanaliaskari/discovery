@@ -382,6 +382,7 @@ public class Backend {
         }
 
         public abstract void onInterestsFetched(ArrayList<String> listInterests);
+        public abstract void onGetInterestsFailed();
     }
 
     public void getIntersets(final GetInterestsListener listener) {
@@ -398,7 +399,6 @@ public class Backend {
 
                             @Override
                             public void onResponse(JSONObject response) {
-                                Log.v("fd", "df");
                                 ArrayList<String> listInterest = new ArrayList<String>();
                                 try {
                                     JSONArray arrayJson = response.getJSONArray("interests");
@@ -409,6 +409,7 @@ public class Backend {
                                     listener.onInterestsFetched(listInterest);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
+                                    listener.onGetInterestsFailed();
                                 }
 
                             }
@@ -416,7 +417,7 @@ public class Backend {
 
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Log.v("fd", "df");
+                                listener.onGetInterestsFailed();
                             }
                         });
 
