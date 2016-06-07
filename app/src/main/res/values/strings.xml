@@ -26,5 +26,8 @@
     <string name="title_activity_main">Home</string>
     <string name="error_blog_preview_failed">Preview Unavailable</string>
     <string name="error_blog_post_failed">Failed to Post Blog</string>
+    <string name="error_picture_not_selected">Please select a picture</string>
+    <string name="error_location_not_selected">Please select location</string>
+    <string name="error_interest_not_selected">Please select interest</string>
 
 </resources>

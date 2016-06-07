@@ -2,6 +2,7 @@ package travnet.discovery;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -14,13 +15,18 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -43,10 +49,15 @@ public class AddPictureCardActivity extends AppCompatActivity {
     private static final int REQUEST_CROP_IMAGE = 5;
     private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 3;
 
+    Uri imageUri;
+    Place location;
 
     EditText add_location;
-    AutoCompleteTextView activityAutoCompleteView;
+    AutoCompleteTextView interestAutoCompleteView;
     ImageView previewImage;
+    ImageButton buttonGallery;
+    ImageButton buttonCamera;
+    ProgressDialog progress;
     ArrayList<String> interestlist;
 
     @Override
@@ -56,11 +67,15 @@ public class AddPictureCardActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        imageUri = null;
+        location = null;
+        progress = new ProgressDialog(this);
+
         interestlist = new ArrayList<String>();
         getInterests();
 
 
-        ImageButton buttonGallery = (ImageButton) findViewById(R.id.button_browse_gallery);
+        buttonGallery = (ImageButton) findViewById(R.id.button_browse_gallery);
         buttonGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,7 +83,7 @@ public class AddPictureCardActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton buttonCamera = (ImageButton) findViewById(R.id.button_camera);
+        buttonCamera = (ImageButton) findViewById(R.id.button_camera);
         buttonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,18 +97,10 @@ public class AddPictureCardActivity extends AppCompatActivity {
         add_location = (EditText) findViewById(R.id.add_location);
         add_location.setOnClickListener(getLocation);
 
-        activityAutoCompleteView = (AutoCompleteTextView) findViewById(R.id.add_activity);
+        interestAutoCompleteView = (AutoCompleteTextView) findViewById(R.id.add_activity);
         ArrayAdapter<String> activityAdapter = new ArrayAdapter<String>
                 (this,android.R.layout.select_dialog_item, interestlist);
-        activityAutoCompleteView.setAdapter(activityAdapter);
-
-        Button buttonPostPicture = (Button) findViewById(R.id.button_post_picture);
-        buttonPostPicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                postPicture();
-            }
-        });
+        interestAutoCompleteView.setAdapter(activityAdapter);
 
 
     }
@@ -143,15 +150,19 @@ public class AddPictureCardActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CROP_IMAGE) {
+            previewImage.setImageURI(null);
             Parcelable parcelable = data.getParcelableExtra("uri");
-            Uri uri = (Uri) parcelable;
-            previewImage.setImageURI(uri);
+            imageUri = (Uri) parcelable;
+            previewImage.setImageURI(imageUri);
+            buttonCamera.setVisibility(View.GONE);
+            buttonGallery.setVisibility(View.GONE);
         }
 
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            progress.dismiss();
             if (resultCode == Activity.RESULT_OK) {
-                Place place = PlaceAutocomplete.getPlace(this, data);
-                add_location.setText(place.getName());
+                location = PlaceAutocomplete.getPlace(this, data);
+                add_location.setText(location.getName());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
                 // TODO: Handle the error.
@@ -184,6 +195,9 @@ public class AddPictureCardActivity extends AppCompatActivity {
     EditText.OnClickListener getLocation = new EditText.OnClickListener() {
         @Override
         public void onClick(View v) {
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            //progress.setTitle("Loading Preview");
+            progress.show();
             startGooglePlaces();
         }
     };
@@ -203,11 +217,49 @@ public class AddPictureCardActivity extends AppCompatActivity {
     }
 
 
-    void postPicture() {
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_activity_complete, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_done) {
+            postPictureCard();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 
 
 
+
+
+    void postPictureCard() {
+
+        //Check if enough data is present
+        if (imageUri == null) {
+            Toast.makeText(getApplicationContext(), R.string.error_picture_not_selected, Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (location == null) {
+            Toast.makeText(getApplicationContext(), R.string.error_location_not_selected, Toast.LENGTH_LONG).show();
+            return;
+        }
+        String interest = interestAutoCompleteView.getText().toString().trim();
+        if (interestlist.contains(interest) == false) {
+            Toast.makeText(getApplicationContext(), R.string.error_interest_not_selected, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        //Post picture card
         finish();
     }
 

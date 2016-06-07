@@ -43,20 +43,13 @@
                 app:fab_colorNormal="@color/colorAccent" />
 
             <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/fab_add_picture_gallery"
+                android:id="@+id/fab_add_picture_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_browse_gallery"
+                android:src="@drawable/ic_add_picture_card"
                 fab:fab_size="mini"
                 app:fab_colorNormal="@color/colorAccent" />
 
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/fab_add_picture_camera"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_add_from_camera"
-                fab:fab_size="mini"
-                app:fab_colorNormal="@color/colorAccent" />
 
         </com.github.clans.fab.FloatingActionMenu>
 

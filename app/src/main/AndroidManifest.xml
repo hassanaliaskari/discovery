@@ -48,7 +48,8 @@
         <activity
             android:name=".AddPictureCardActivity"
             android:label="@string/title_activity_add_picture_card"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".CropPictureActivity"
             android:label="@string/title_activity_crop_picture"

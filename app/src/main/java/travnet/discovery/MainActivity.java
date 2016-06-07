@@ -117,20 +117,12 @@ public class MainActivity extends AppCompatActivity
                 addBlogCard();
             }
         });
-        FloatingActionButton fabAddPictureGallery = (FloatingActionButton) findViewById(R.id.fab_add_picture_gallery);
-        fabAddPictureGallery.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fabAddPictureCard = (FloatingActionButton) findViewById(R.id.fab_add_picture_card);
+        fabAddPictureCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fabmenu.close(true);
-                addPictureCardGallery();
-            }
-        });
-        FloatingActionButton fabAddPictureCamera = (FloatingActionButton) findViewById(R.id.fab_add_picture_camera);
-        fabAddPictureCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fabmenu.close(true);
-                addPictureCardCamera();
+                addPictureCard();
             }
         });
 
@@ -154,15 +146,8 @@ public class MainActivity extends AppCompatActivity
         this.startActivity(intent);
     }
 
-    void addPictureCardGallery() {
+    void addPictureCard() {
         Intent intent = new Intent(this, AddPictureCardActivity.class);
-        intent.putExtra("source", "gallery");
-        this.startActivity(intent);
-    }
-
-    void addPictureCardCamera() {
-        Intent intent = new Intent(this, AddPictureCardActivity.class);
-        intent.putExtra("source", "camera");
         this.startActivity(intent);
     }
 
