@@ -2,6 +2,7 @@ package travnet.discovery;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -42,6 +44,8 @@ public class MainActivity extends AppCompatActivity
     Backend backend;
     View navDrawerHeader;
     SharedPreferences myPrefs;
+
+    FloatingActionMenu fabmenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +112,19 @@ public class MainActivity extends AppCompatActivity
         navDrawerHeader = navigationView.getHeaderView(0);
 
         //Floating action buttons
-        final FloatingActionMenu fabmenu = (FloatingActionMenu) findViewById(R.id.fab_add);
+        fabmenu = (FloatingActionMenu) findViewById(R.id.fab_add);
+        fabmenu.setClosedOnTouchOutside(true);
+        fabmenu.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
+            @Override
+            public void onMenuToggle(boolean opened) {
+                if (opened) {
+                    dimBackground();
+                } else {
+                    restoreBackground();
+                }
+            }
+        });
+
         FloatingActionButton fabAddBlog = (FloatingActionButton) findViewById(R.id.fab_add_blog);
         fabAddBlog.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,6 +238,24 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    private void dimBackground() {
+        findViewById(R.id.detailsDimView).setVisibility(View.VISIBLE);
+        findViewById(R.id.detailsDimView).setClickable(true);
+    }
+
+    private void restoreBackground() {
+        findViewById(R.id.detailsDimView).setVisibility(View.GONE);
+        findViewById(R.id.detailsDimView).setClickable(false);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+        fabmenu.close(true);
+
+        return super.dispatchTouchEvent(event);
     }
 
 
