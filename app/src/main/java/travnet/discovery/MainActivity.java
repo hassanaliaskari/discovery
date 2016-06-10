@@ -56,6 +56,9 @@ public class MainActivity extends AppCompatActivity
         backend = Backend.getInstance();
         homeFragment = new HomeFragment();
 
+        fabmenu = (FloatingActionMenu) findViewById(R.id.fab_add);
+        fabmenu.setVisibility(View.GONE);
+
         myPrefs = this.getSharedPreferences("login", MODE_PRIVATE);
 
         //Check for previous login
@@ -112,7 +115,7 @@ public class MainActivity extends AppCompatActivity
         navDrawerHeader = navigationView.getHeaderView(0);
 
         //Floating action buttons
-        fabmenu = (FloatingActionMenu) findViewById(R.id.fab_add);
+        fabmenu.setVisibility(View.VISIBLE);
         fabmenu.setClosedOnTouchOutside(true);
         fabmenu.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
             @Override
@@ -253,7 +256,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event){
-        fabmenu.close(true);
+        if (fabmenu.isOpened()) {
+            fabmenu.close(true);
+        }
 
         return super.dispatchTouchEvent(event);
     }
