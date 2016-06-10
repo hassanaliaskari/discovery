@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -117,6 +119,19 @@ public class MainActivity extends AppCompatActivity
         //Floating action buttons
         fabmenu.setVisibility(View.VISIBLE);
         fabmenu.setClosedOnTouchOutside(true);
+        fabmenu.setOnMenuButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!fabmenu.isOpened()) {
+                    dimBackground();
+                    fabmenu.open(true);
+                } else {
+                    restoreBackground();
+                    fabmenu.close(true);
+                }
+            }
+        });
+
         fabmenu.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
             @Override
             public void onMenuToggle(boolean opened) {
@@ -245,8 +260,17 @@ public class MainActivity extends AppCompatActivity
 
 
     private void dimBackground() {
-        findViewById(R.id.detailsDimView).setVisibility(View.VISIBLE);
-        findViewById(R.id.detailsDimView).setClickable(true);
+        View overlay = findViewById(R.id.detailsDimView);
+
+        if (overlay.getVisibility() == View.VISIBLE)
+            return;
+
+        Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        overlay.startAnimation(fadeInAnimation);
+
+        overlay.setVisibility(View.VISIBLE);
+        overlay.setClickable(true);
+
     }
 
     private void restoreBackground() {
