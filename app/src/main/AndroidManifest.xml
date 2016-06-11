@@ -21,8 +21,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name">
-        </activity>
+            android:label="@string/app_name" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -44,12 +43,12 @@
             android:name=".AddBlogCardActivity"
             android:label="@string/title_activity_add_blog_card"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".AddPictureCardActivity"
             android:label="@string/title_activity_add_picture_card"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".CropPictureActivity"
             android:label="@string/title_activity_crop_picture"
@@ -67,6 +66,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".FullscreenPictureCardActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_fullscreen_picture_card"
+            android:theme="@style/FullscreenTheme" />
     </application>
 
 </manifest>

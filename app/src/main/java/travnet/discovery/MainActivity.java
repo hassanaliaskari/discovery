@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity
         this.startActivityForResult(intent, REQUEST_ADD_INTEREST);
     }
 
-
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 

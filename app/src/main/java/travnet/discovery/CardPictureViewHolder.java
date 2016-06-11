@@ -1,5 +1,6 @@
 package travnet.discovery;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -14,6 +15,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 //View Holder for picture cards
 public class CardPictureViewHolder extends RecyclerView.ViewHolder {
+    View cardView;
+
     TextView description;
     ImageView image;
     ImageButton like_button;
@@ -26,6 +29,7 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
 
     public CardPictureViewHolder(View itemView) {
         super(itemView);
+        cardView = itemView;
         uploader = new BarUploaderViewHolder ();
         description = (TextView) itemView.findViewById(R.id.description);
         image = (ImageView) itemView.findViewById(R.id.image);

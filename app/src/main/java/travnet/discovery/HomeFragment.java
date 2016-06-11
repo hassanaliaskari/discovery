@@ -1,5 +1,6 @@
 package travnet.discovery;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -45,6 +46,7 @@ public class HomeFragment extends Fragment {
 
     private static final int TYPE_PICTURE = 0;
     private static final int TYPE_BLOG = 1;
+    private static final int FULLSCREEN_PICTURE = 55;
 
     public static class CardsRef {
         int type;
@@ -233,8 +235,14 @@ public class HomeFragment extends Fragment {
 
                 case TYPE_PICTURE:
                     CardPictureViewHolder cardPictureViewHolder = (CardPictureViewHolder) holder;
-                    DataPictureCard dataPictureCard = dataPictureCards.get(cardsRef.get(position).index);
+                    final DataPictureCard dataPictureCard = dataPictureCards.get(cardsRef.get(position).index);
                     cardPictureViewHolder.poplulatePictureCard(dataPictureCard, position);
+                    cardPictureViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            openFullScreenPicture(dataPictureCard, position);
+                        }
+                    });
                     break;
 
                 case TYPE_BLOG:
@@ -259,6 +267,30 @@ public class HomeFragment extends Fragment {
         }
 
     }
+
+    private void openFullScreenPicture(DataPictureCard dataPictureCard, int position) {
+        Intent intent = new Intent(getContext(), FullscreenPictureCardActivity.class);
+        intent.putExtra("card_data", dataPictureCard);
+        intent.putExtra("position", position);
+        startActivityForResult(intent, FULLSCREEN_PICTURE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FULLSCREEN_PICTURE) {
+            if (resultCode == Activity.RESULT_OK) {
+                DataPictureCard returnedCard = data.getParcelableExtra("card_data");
+                int returnedPosition = data.getIntExtra("position", -1);
+                if (returnedPosition != -1) {
+                    int index = cardsRef.get(returnedPosition).index;
+                    dataPictureCards.set(index, returnedCard);
+                    cardAdapter.notifyDataSetChanged();
+                }
+            }
+        }
+    }
+
 
 
 }

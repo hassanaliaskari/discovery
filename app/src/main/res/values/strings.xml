@@ -30,4 +30,8 @@
     <string name="error_location_not_selected">Please select location</string>
     <string name="error_interest_not_selected">Please select interest</string>
 
+    <string name="title_activity_fullscreen_picture_card">FullscreenPictureCardActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
 </resources>
