@@ -4,21 +4,34 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="16dp">
 
-
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:id="@+id/image"
-        android:background="#000000"
-        android:scaleType="centerCrop"/>
-
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:paddingLeft="100dp"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
         android:id="@+id/location"
-        android:textSize="25dp"
-        android:textStyle="italic"
-        android:gravity="center_vertical"/>
+        android:paddingLeft="16dp"
+        android:textSize="16sp"/>
 
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollview"
+        android:layout_below="@id/location">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/location_pictures">
+
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <!--View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="#000000"/-->
 </RelativeLayout>
