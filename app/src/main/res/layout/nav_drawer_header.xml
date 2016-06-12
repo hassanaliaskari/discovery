@@ -2,28 +2,52 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="220dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#111"
     android:gravity="bottom"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
-        android:id="@+id/profile_pic"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@android:drawable/sym_def_app_icon" />
-
-    <TextView
+    <android.support.percent.PercentRelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/profile_name"
-        android:layout_above="@+id/profile_home"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:id = "@+id/image_holder">
+        <ImageView
+            app:layout_widthPercent="100%"
+            app:layout_aspectRatio="100%"
+            android:scaleType="centerCrop"
+            android:background="@color/colorPrimary"
+            android:id="@+id/profile_pic" />
+    </android.support.percent.PercentRelativeLayout>
 
-    <TextView
-        android:id="@+id/profile_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/profile_pic"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#33000000"
+        android:layout_alignParentBottom="true">
+
+        <!--ImageView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:background="#000000"
+            android:alpha="0.5" /-->
+
+        <TextView
+            android:id="@+id/profile_home"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/profile_name"
+            android:layout_above="@id/profile_home"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    </RelativeLayout>
+
 
 </RelativeLayout>
