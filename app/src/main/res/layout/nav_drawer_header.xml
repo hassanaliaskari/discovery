@@ -15,15 +15,21 @@
             app:layout_widthPercent="100%"
             app:layout_aspectRatio="100%"
             android:scaleType="centerCrop"
-            android:background="@color/colorPrimary"
+            android:background="#000000"
             android:id="@+id/profile_pic" />
     </android.support.percent.PercentRelativeLayout>
 
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/scrim"/>
+
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#33000000"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
         android:layout_alignParentBottom="true">
 
         <!--ImageView
@@ -37,12 +43,14 @@
             android:id="@+id/profile_home"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
             android:layout_alignParentBottom="true"/>
 
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
             android:id="@+id/profile_name"
             android:layout_above="@id/profile_home"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />

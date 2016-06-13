@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_profile_photos"
+            android:title="Photos" />
+        <item
+            android:id="@+id/nav_profile_interests"
+            android:title="Interests" />
 
-    <item android:title="Profile">
-        <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/nav_profile_photos"
-                    android:title="Photos" />
-                <item
-                    android:id="@+id/nav_profile_interests"
-                    android:title="Interests" />
+        <item
+            android:id="@+id/nav_profile_bucket_list"
+            android:title="Bucket List" />
+    </group>
 
-                <item
-                    android:id="@+id/nav_profile_bucket_list"
-                    android:title="Bucket List" />
-            </group>
-
-            <item
-                android:id="@+id/logout"
-                android:title="Logout" />
-        </menu>
-    </item>
+    <item
+        android:id="@+id/logout"
+        android:title="Logout" />
 
 </menu>
