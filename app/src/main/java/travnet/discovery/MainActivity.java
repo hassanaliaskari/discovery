@@ -34,7 +34,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseNavDrawerActivity
         implements SignInFragment.OnFragmentInteractionListener, SignInFragment.OnLoginListener,
         HomeFragment.OnFragmentInteractionListener,
         GoogleApiClient.OnConnectionFailedListener,
@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity
     HomeFragment homeFragment;
     SignInFragment signInFragment;
     Backend backend;
-    View navDrawerHeader;
     SharedPreferences myPrefs;
 
     FloatingActionMenu fabmenu;
@@ -54,7 +53,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        getLayoutInflater().inflate(R.layout.activity_main, frameLayout);
+        //setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -116,9 +116,8 @@ public class MainActivity extends AppCompatActivity
 
 
         //Initialize navigation drawer
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        navDrawerHeader = navigationView.getHeaderView(0);
+        setupNavigationDrawer();
+
 
         //Floating action buttons
         fabmenu.setVisibility(View.VISIBLE);
@@ -190,7 +189,17 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    private void setupNavigationDrawer() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
+    }
+
     void updateNavDrawerHeader() {
+        View navDrawerHeader;
+        navDrawerHeader = ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0);
+
         ImageView profilePic = (ImageView) navDrawerHeader.findViewById(R.id.profile_pic);
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.displayImage(User.getInstance().getProfilePicURL(), profilePic);

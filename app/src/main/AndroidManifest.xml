@@ -72,6 +72,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_fullscreen_picture_card"
             android:theme="@style/FullscreenTheme" />
+        <activity android:name=".BaseNavDrawerActivity"></activity>
     </application>
 
 </manifest>
