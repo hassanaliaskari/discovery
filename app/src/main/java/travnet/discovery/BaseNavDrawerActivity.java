@@ -20,20 +20,22 @@ public class BaseNavDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     protected FrameLayout frameLayout;
+    protected NavigationView navigationView;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_nav_drawer);
         frameLayout = (FrameLayout) findViewById(R.id.content_frame);
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        //navigationView.setNavigationItemSelectedListener(this);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
     }
 
 
-    void updateNavDrawerHeader() {
+
+    protected void updateNavDrawerHeader() {
         View navDrawerHeader;
         navDrawerHeader = ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0);
 
@@ -44,6 +46,7 @@ public class BaseNavDrawerActivity extends AppCompatActivity
         TextView profileName = (TextView) navDrawerHeader.findViewById(R.id.profile_name);
         profileName.setText(User.getInstance().getName());
         TextView profileHome = (TextView) navDrawerHeader.findViewById(R.id.profile_home);
+        String name = User.getInstance().getName();
         profileHome.setText(User.getInstance().getHometown());
     }
 
@@ -76,7 +79,6 @@ public class BaseNavDrawerActivity extends AppCompatActivity
             finish();
             startActivity(intent);
         }
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

@@ -26,7 +26,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BucketListActivity extends AppCompatActivity {
+public class BucketListActivity extends BaseNavDrawerActivity {
 
     List<DataBucketListCard> userBucketList;
     BucketListItemAdapter bucketListItemAdapter;
@@ -34,7 +34,8 @@ public class BucketListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bucket_list);
+        getLayoutInflater().inflate(R.layout.activity_bucket_list, frameLayout);
+        updateNavDrawerHeader();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -70,9 +71,14 @@ public class BucketListActivity extends AppCompatActivity {
         userBucketList.setLayoutManager(linearLayoutManager);
         userBucketList.setAdapter(bucketListItemAdapter);
 
-
-
     }
+
+    @Override
+    protected void onResume() {
+        navigationView.getMenu().findItem(R.id.nav_profile_bucket_list).setChecked(true);
+        super.onResume();
+    }
+
 
     private class BucketListItemAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder> {
 

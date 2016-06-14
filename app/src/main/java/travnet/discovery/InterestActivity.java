@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class InterestActivity extends AppCompatActivity {
+public class InterestActivity extends BaseNavDrawerActivity {
 
     private static final int REQUEST_ADD_INTEREST = 1;
 
@@ -40,7 +40,8 @@ public class InterestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_interest);
+        getLayoutInflater().inflate(R.layout.activity_interest, frameLayout);
+        updateNavDrawerHeader();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -61,6 +62,13 @@ public class InterestActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    protected void onResume() {
+        navigationView.getMenu().findItem(R.id.nav_profile_interests).setChecked(true);
+        super.onResume();
+    }
+
 
 
     private void initializeListView() {

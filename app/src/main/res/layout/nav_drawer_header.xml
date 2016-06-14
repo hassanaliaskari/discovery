@@ -15,7 +15,7 @@
             app:layout_widthPercent="100%"
             app:layout_aspectRatio="100%"
             android:scaleType="centerCrop"
-            android:background="#000000"
+            android:background="#157304"
             android:id="@+id/profile_pic" />
     </android.support.percent.PercentRelativeLayout>
 

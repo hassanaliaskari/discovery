@@ -28,7 +28,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PicturesActivity extends AppCompatActivity {
+public class PicturesActivity extends BaseNavDrawerActivity {
 
     ArrayList<DataPictureCard> userPictures;
     ImageAdapter imageadapter;
@@ -36,7 +36,8 @@ public class PicturesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pictures);
+        getLayoutInflater().inflate(R.layout.activity_pictures, frameLayout);
+        updateNavDrawerHeader();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -59,6 +60,12 @@ public class PicturesActivity extends AppCompatActivity {
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         gridUserPictures.setLayoutManager(gridLayoutManager);
         gridUserPictures.setAdapter(imageadapter);
+    }
+
+    @Override
+    protected void onResume() {
+        navigationView.getMenu().findItem(R.id.nav_profile_photos).setChecked(true);
+        super.onResume();
     }
 
 
