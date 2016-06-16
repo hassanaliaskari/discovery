@@ -23,6 +23,7 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
     ImageButton add_to_bl_button;
     TextView likes;
     TextView activity;
+    View scrim;
     TextView location;
     AvatarView uploaderPic;
     BarUploaderViewHolder uploader;
@@ -37,6 +38,7 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
         add_to_bl_button = (ImageButton) itemView.findViewById(R.id.add_to_bl_button);
         likes = (TextView) itemView.findViewById(R.id.likes);
         activity = (TextView) itemView.findViewById(R.id.activity);
+        scrim = (View) itemView.findViewById(R.id.scrim);
         location = (TextView) itemView.findViewById(R.id.location);
         //uploader.name = (TextView) itemView.findViewById(R.id.name);
         //uploader.pp = (ImageView) itemView.findViewById(R.id.pp);
@@ -65,11 +67,13 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
 
         if (dataPictureCard.isLiked == false) {
             this.like_button.setVisibility(View.VISIBLE);
+            this.scrim.setVisibility(View.GONE);
             this.location.setVisibility(View.GONE);
             this.addLikeCallback(dataPictureCard);
         } else {
             this.like_button.setImageResource(R.drawable.ic_liked);
             this.add_to_bl_button.setVisibility(View.VISIBLE);
+            this.scrim.setVisibility(View.VISIBLE);
             this.location.setVisibility(View.VISIBLE);
         }
 
@@ -86,11 +90,16 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
                 //like_button.setVisibility(View.GONE);
                 like_button.setImageResource(R.drawable.ic_liked);
                 add_to_bl_button.setVisibility(View.VISIBLE);
+                scrim.setVisibility(View.VISIBLE);
                 location.setVisibility(View.VISIBLE);
                 AlphaAnimation fadeIn = new AlphaAnimation(0.0f , 1.0f );
-                location.startAnimation(fadeIn);
                 fadeIn.setDuration(1200);
                 fadeIn.setFillAfter(true);
+                AlphaAnimation scrimFadeIn = new AlphaAnimation(0.0f , 0.7f );
+                scrimFadeIn.setDuration(1200);
+                scrimFadeIn.setFillAfter(true);
+                location.startAnimation(fadeIn);
+                scrim.startAnimation(scrimFadeIn);
                 //likes.setText(dataPictureCard.likes + " People Likes this");
             }
         });

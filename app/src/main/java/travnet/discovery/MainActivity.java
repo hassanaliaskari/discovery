@@ -2,18 +2,14 @@ package travnet.discovery;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
@@ -22,9 +18,6 @@ import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
-import java.util.ArrayList;
 
 public class MainActivity extends BaseNavDrawerActivity
         implements SignInFragment.OnFragmentInteractionListener, SignInFragment.OnLoginListener,
@@ -215,7 +208,7 @@ public class MainActivity extends BaseNavDrawerActivity
         if (overlay.getVisibility() == View.VISIBLE)
             return;
 
-        Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fab_overlay_fade_in);
         overlay.startAnimation(fadeInAnimation);
 
         overlay.setVisibility(View.VISIBLE);

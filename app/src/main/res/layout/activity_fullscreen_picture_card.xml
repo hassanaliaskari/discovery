@@ -22,6 +22,12 @@
             android:background="#FFFFFF"
             android:scaleType="centerCrop"
             android:id = "@+id/image" />
+
+        <View
+            app:layout_widthPercent="100%"
+            app:layout_aspectRatio="100%"
+            android:id="@+id/scrim"
+            android:background="@drawable/scrim"/>
     </android.support.percent.PercentRelativeLayout>
 
 
