@@ -260,7 +260,26 @@ public class AddPictureCardActivity extends AppCompatActivity {
         }
 
         //Post picture card
-        finish();
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.setTitle("Uploading picture");
+        progress.show();
+
+        Backend backend = Backend.getInstance();
+        backend.uploadPicture(imageUri, backend.new UploadPicureListener() {
+            @Override
+            public void onUploadPictureSuccess() {
+                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();
+                progress.dismiss();
+                finish();
+            }
+
+            @Override
+            public void onUploadPictureFailed() {
+                progress.dismiss();
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
 }
