@@ -84,7 +84,7 @@ public class AddInterestActivity extends AppCompatActivity {
         listInterests.setLayoutManager(linearLayoutManager);
         listInterests.setAdapter(addInterestItemAdapter);
 
-        Button buttonAdd = (Button) findViewById(R.id.add);
+        FloatingActionButton buttonAdd = (FloatingActionButton) findViewById(R.id.add);
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,6 +127,12 @@ public class AddInterestActivity extends AppCompatActivity {
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.card_add_interest, parent, false);
             CardAddInterestItemViewHolder cardAddInterestItemViewHolder = new CardAddInterestItemViewHolder(view);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((CheckBox)v.findViewById(R.id.interest_select)).toggle();
+                }
+            });
             return cardAddInterestItemViewHolder;
         }
 
@@ -139,16 +145,19 @@ public class AddInterestActivity extends AppCompatActivity {
                 cardBucketListItemViewHolder.isSelected.setChecked(true);
             }
 
+
         }
     }
 
 
     private class CardAddInterestItemViewHolder extends RecyclerView.ViewHolder {
+        View cardView;
         TextView interestName;
         CheckBox isSelected;
 
         public CardAddInterestItemViewHolder(View itemView) {
             super(itemView);
+            cardView = itemView;
 
             interestName = (TextView) itemView.findViewById(R.id.interest_name);
             isSelected = (CheckBox) itemView.findViewById(R.id.interest_select);
