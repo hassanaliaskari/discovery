@@ -156,6 +156,7 @@ public class BucketListActivity extends BaseNavDrawerActivity {
         HorizontalScrollView scrollView;
         LinearLayout locationPictures;
         TextView location;
+        View divider;
 
         public CardBucketListItemViewHolder(View itemView) {
             super(itemView);
@@ -163,6 +164,7 @@ public class BucketListActivity extends BaseNavDrawerActivity {
             scrollView = (HorizontalScrollView) itemView.findViewById(R.id.scrollview);
             locationPictures = (LinearLayout) scrollView.findViewById(R.id.location_pictures);
             location = (TextView) itemView.findViewById(R.id.location);
+            divider = itemView.findViewById(R.id.divider);
 
         }
 
@@ -172,8 +174,10 @@ public class BucketListActivity extends BaseNavDrawerActivity {
                 public void onClick(View v) {
                     if (scrollView.getVisibility() == View.GONE) {
                         scrollView.setVisibility(View.VISIBLE);
+                        divider.setVisibility(View.GONE);
                     } else {
                         scrollView.setVisibility(View.GONE);
+                        divider.setVisibility(View.VISIBLE);
                     }
                 }
             });
