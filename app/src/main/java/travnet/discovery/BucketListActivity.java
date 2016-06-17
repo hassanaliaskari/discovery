@@ -38,6 +38,8 @@ public class BucketListActivity extends BaseNavDrawerActivity {
         updateNavDrawerHeader();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setToolbarToggle(toolbar);
+
 
         userBucketList = new ArrayList<>();
         bucketListItemAdapter = new BucketListItemAdapter(this);

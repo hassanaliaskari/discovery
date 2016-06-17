@@ -44,6 +44,8 @@ public class InterestActivity extends BaseNavDrawerActivity {
         updateNavDrawerHeader();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setToolbarToggle(toolbar);
+
 
         userInterests = new ArrayList<String>();
         listViewInterests = (SwipeMenuListView) findViewById(R.id.list_interests);

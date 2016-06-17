@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -40,6 +42,7 @@ public class MainActivity extends BaseNavDrawerActivity
         getLayoutInflater().inflate(R.layout.activity_main, frameLayout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setToolbarToggle(toolbar);
 
         FacebookSdk.sdkInitialize(this);
         backend = Backend.getInstance();

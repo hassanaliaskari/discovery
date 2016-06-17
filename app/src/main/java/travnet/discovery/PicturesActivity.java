@@ -40,6 +40,8 @@ public class PicturesActivity extends BaseNavDrawerActivity {
         updateNavDrawerHeader();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setToolbarToggle(toolbar);
+
 
         userPictures = new ArrayList<DataPictureCard>();
         imageadapter = new ImageAdapter();
