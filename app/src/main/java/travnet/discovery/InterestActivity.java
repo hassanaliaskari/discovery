@@ -117,7 +117,7 @@ public class InterestActivity extends BaseNavDrawerActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_ADD_INTEREST) {
+        if (requestCode == REQUEST_ADD_INTEREST && resultCode == RESULT_OK) {
             ArrayList<String> interestsToAdd = (ArrayList<String>) data.getSerializableExtra("interests");
             updateInterests(interestsToAdd);
         }
