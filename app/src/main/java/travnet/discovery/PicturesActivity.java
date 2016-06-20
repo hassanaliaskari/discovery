@@ -19,6 +19,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -32,6 +33,7 @@ public class PicturesActivity extends BaseNavDrawerActivity {
 
     ArrayList<DataPictureCard> userPictures;
     ImageAdapter imageadapter;
+    LinearLayout emptyStateLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,8 @@ public class PicturesActivity extends BaseNavDrawerActivity {
         setSupportActionBar(toolbar);
         setToolbarToggle(toolbar);
 
+        emptyStateLayout = (LinearLayout) findViewById(R.id.empty_state_layout);
+        emptyStateLayout.setVisibility(View.GONE);
 
         userPictures = new ArrayList<DataPictureCard>();
         imageadapter = new ImageAdapter();
@@ -50,6 +54,9 @@ public class PicturesActivity extends BaseNavDrawerActivity {
         Backend.getInstance().getUserPictures(Backend.getInstance().new GetUserPicturesListener() {
             @Override
             public void onUserPicturesFetched(ArrayList<DataPictureCard> userPictures) {
+                if (userPictures.size() == 0) {
+                    emptyStateLayout.setVisibility(View.VISIBLE);
+                }
                 addUserPictures(userPictures);
             }
 

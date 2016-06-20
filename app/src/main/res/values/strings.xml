@@ -35,5 +35,7 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="navigation_drawer_open">Open Navigation Drawer</string>
     <string name="navigation_drawer_close">Close Navigation Drawer</string>
+    <string name="empty_msg_user_pictures_header">No Pictures</string>
+    <string name="empty_msg_user_pictures_sub">Please upload your travel photos</string>
 
 </resources>
