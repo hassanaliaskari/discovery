@@ -1,6 +1,7 @@
 package travnet.discovery;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,10 +11,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,13 +38,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
 
 public class AddBlogCardActivity extends AppCompatActivity {
 
+    private static final int REQUEST_ADD_INTEREST = 1;
     String blogURL;
     String blogTitle;
     String blogExtract;
     String thumbnailURL;
+    ArrayList<String> selectedInterests;
 
     Menu menu;
     ProgressDialog progress;
@@ -49,6 +58,7 @@ public class AddBlogCardActivity extends AppCompatActivity {
     TextView previewExtract;
     EditText inputBlogURL;
     Button buttonPreviewBlog;
+    EditText inputInterest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +67,14 @@ public class AddBlogCardActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        selectedInterests = new ArrayList<>();
+
         previewThumbnail = (ImageView) findViewById(R.id.thumbnail);
         previewTitle = (TextView) findViewById(R.id.title);
         previewExtract = (TextView) findViewById(R.id.extract);
         inputBlogURL = (EditText) findViewById(R.id.blog_link);
         buttonPreviewBlog = (Button) findViewById(R.id.button_preview_blog);
+        inputInterest = (EditText) findViewById(R.id.add_activity);
 
         buttonPreviewBlog.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +84,17 @@ public class AddBlogCardActivity extends AppCompatActivity {
                 textCrawler.makePreview(linkPreviewCallback, blogURL);
             }
         });
+
+        inputInterest.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    startAddInterestActivity();
+                }
+                return true;
+            }
+        });
+        inputInterest.setVisibility(View.GONE);
 
     }
 
@@ -95,6 +119,7 @@ public class AddBlogCardActivity extends AppCompatActivity {
 
             inputBlogURL.setVisibility(View.GONE);
             buttonPreviewBlog.setVisibility(View.GONE);
+            inputInterest.setVisibility(View.VISIBLE);
 
             blogTitle = sourceContent.getTitle();
             blogExtract = sourceContent.getDescription();
@@ -109,7 +134,36 @@ public class AddBlogCardActivity extends AppCompatActivity {
     };
 
 
+    private void startAddInterestActivity() {
+        Intent intent = new Intent(this, AddInterestActivity.class);
+        intent.putExtra("interests", (Serializable) selectedInterests);
+        intent.putExtra("minimum_required", 1);
+        intent.putExtra("maximum_allowed", 3);
+        this.startActivityForResult(intent, REQUEST_ADD_INTEREST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_ADD_INTEREST && resultCode == RESULT_OK) {
+            ArrayList<String> interestsToAdd = (ArrayList<String>) data.getSerializableExtra("interests");
+            selectedInterests.clear();
+            selectedInterests.addAll(interestsToAdd);
+            inputInterest.setText(android.text.TextUtils.join(", ", selectedInterests));
+        }
+
+    }
+
+
+
     public void postBlog() {
+        if (selectedInterests.size() == 0) {
+            Toast.makeText(getApplicationContext(), "Please select interest", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+
         Backend backend = Backend.getInstance();
         backend.postBlog(blogURL, blogTitle, blogExtract, thumbnailURL, backend.new PostBlogListener() {
             @Override

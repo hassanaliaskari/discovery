@@ -35,6 +35,7 @@ public class AddInterestActivity extends AppCompatActivity {
     RecyclerView listInterests;
 
     int minInterestRequired;
+    int maxInterestAllowed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,7 @@ public class AddInterestActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             minInterestRequired = extras.getInt("minimum_required", 0);
+            maxInterestAllowed = extras.getInt("maximum_allowed", 100);
             if (extras.containsKey("interests")) {
                 ArrayList<String> userInterests = (ArrayList <String>) extras.getSerializable("interests");
                 selectedIntersets.addAll(userInterests);
@@ -57,6 +59,7 @@ public class AddInterestActivity extends AppCompatActivity {
 
         } else {
             minInterestRequired = 0;
+            maxInterestAllowed = 100;
         }
 
 
@@ -104,7 +107,6 @@ public class AddInterestActivity extends AppCompatActivity {
             inflater = LayoutInflater.from(context);
 
             options = new DisplayImageOptions.Builder()
-                    .showImageOnLoading(R.mipmap.ic_loading)
                     .cacheInMemory(true)
                     .cacheOnDisk(true)
                     .considerExifParams(true)
@@ -180,17 +182,23 @@ public class AddInterestActivity extends AppCompatActivity {
             }
         }
 
-        if (selectedIntersets.size() >= minInterestRequired) {
-            User.getInstance().setInterests(selectedIntersets);
 
-            Intent returnIntent = new Intent();
-            returnIntent.putExtra("interests", selectedIntersets);
-            setResult(Activity.RESULT_OK, returnIntent);
-            finish();
-        } else {
-            String msg = "Please select " + minInterestRequired + "interests";
+        if (selectedIntersets.size() < minInterestRequired) {
+            String msg = "Please select atleast " + minInterestRequired + " interests";
             Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+            return;
+        } else if (selectedIntersets.size() > maxInterestAllowed){
+            String msg = "Please select max " + maxInterestAllowed + " interests";
+            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+            return;
         }
+
+        User.getInstance().setInterests(selectedIntersets);
+
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("interests", selectedIntersets);
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
 
     }
 

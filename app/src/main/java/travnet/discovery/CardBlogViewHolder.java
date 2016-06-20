@@ -49,7 +49,6 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
 
     public void poplulateBlogCard (final DataBlogCard dataBlogCard, int position) {
         DisplayImageOptions options= new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.mipmap.ic_loading)
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .considerExifParams(true)

@@ -92,7 +92,6 @@ public class BucketListActivity extends BaseNavDrawerActivity {
             inflater = LayoutInflater.from(context);
 
             options = new DisplayImageOptions.Builder()
-                    .showImageOnLoading(R.mipmap.ic_loading)
                     .cacheInMemory(true)
                     .cacheOnDisk(true)
                     .considerExifParams(true)
@@ -133,6 +132,7 @@ public class BucketListActivity extends BaseNavDrawerActivity {
     private void populateScrollView(LinearLayout layout, List<String> pictures) {
         for (int i=0; i<pictures.size(); i++) {
             ImageView imageView = new ImageView(BucketListActivity.this);
+            imageView.setBackgroundResource(R.drawable.placeholder_loading);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dpToPx(100), dpToPx(100));
             if (i==0) {
                 params.setMargins(dpToPx(16),0,0,0);

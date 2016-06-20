@@ -84,7 +84,6 @@ public class PicturesActivity extends BaseNavDrawerActivity {
 
         ImageAdapter() {
             options = new DisplayImageOptions.Builder()
-                    .showImageOnLoading(R.mipmap.ic_loading)
                     .cacheInMemory(true)
                     .cacheOnDisk(true)
                     .considerExifParams(true)

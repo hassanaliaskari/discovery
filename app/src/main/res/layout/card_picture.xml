@@ -27,6 +27,7 @@
                 <ImageView
                     app:layout_widthPercent="100%"
                     app:layout_aspectRatio="100%"
+                    android:background="@drawable/placeholder_loading"
                     android:scaleType="centerCrop"
                     android:id = "@+id/image" />
 

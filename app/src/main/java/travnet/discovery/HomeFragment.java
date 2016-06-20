@@ -190,7 +190,6 @@ public class HomeFragment extends Fragment {
             inflater = LayoutInflater.from(context);
 
             options = new DisplayImageOptions.Builder()
-                    .showImageOnLoading(R.mipmap.ic_loading)
                     .cacheInMemory(true)
                     .cacheOnDisk(true)
                     .considerExifParams(true)

@@ -19,7 +19,7 @@
         <ImageView
             app:layout_widthPercent="100%"
             app:layout_aspectRatio="100%"
-            android:background="#FFFFFF"
+            android:background="@drawable/placeholder_loading"
             android:scaleType="centerCrop"
             android:id = "@+id/image" />
 
@@ -95,7 +95,6 @@
             avatarview:border_width="6dp"
             avatarview:border_color="@android:color/white"
             avatarview:shadow_width="6dp"
-            avatarview:shadow_color="@android:color/holo_red_dark"
             android:layout_width="50dp"
             android:layout_height="50dp" />
 

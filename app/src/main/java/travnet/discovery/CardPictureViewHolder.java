@@ -49,7 +49,6 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
 
     public void poplulatePictureCard (final DataPictureCard dataPictureCard, int position) {
         DisplayImageOptions options= new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.mipmap.ic_loading)
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .considerExifParams(true)
