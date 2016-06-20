@@ -66,15 +66,25 @@ public class BaseNavDrawerActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.nav_profile_photos) {
-            Intent intent = new Intent(this, PicturesActivity.class);
+        if (id == R.id.nav_profile_home) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             this.startActivity(intent);
+        } else if (id == R.id.nav_profile_photos) {
+            if (!(this instanceof PicturesActivity)) {
+                Intent intent = new Intent(this, PicturesActivity.class);
+                this.startActivity(intent);
+            }
         } else if (id == R.id.nav_profile_interests) {
-            Intent intent = new Intent(this, InterestActivity.class);
-            this.startActivity(intent);
+            if (!(this instanceof InterestActivity)) {
+                Intent intent = new Intent(this, InterestActivity.class);
+                this.startActivity(intent);
+            }
         } else if (id == R.id.nav_profile_bucket_list) {
-            Intent intent = new Intent(this, BucketListActivity.class);
-            this.startActivity(intent);
+            if (!(this instanceof BucketListActivity)) {
+                Intent intent = new Intent(this, BucketListActivity.class);
+                this.startActivity(intent);
+            }
         } else if (id == R.id.logout) {
             LoginManager.getInstance().logOut();
 

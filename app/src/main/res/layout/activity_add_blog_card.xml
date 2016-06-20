@@ -35,7 +35,7 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:layout_marginBottom="32dp"
-            andrid:gravity="center"
+            android:gravity="center"
             android:hint="Activity"
             android:singleLine="true"
             android:completionThreshold="1"/>

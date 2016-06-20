@@ -54,9 +54,13 @@ public class MainActivity extends BaseNavDrawerActivity
         myPrefs = this.getSharedPreferences("login", MODE_PRIVATE);
 
         //Check for previous login
-        boolean isLogged = getIntent().getExtras().getBoolean("isLogged");
+        SharedPreferences myPrefs = this.getSharedPreferences("login", MODE_PRIVATE);
+        boolean prev_login = myPrefs.getBoolean("prev_login", false);
+        String userID = myPrefs.getString("user_id", "");
+        boolean isLogged = (prev_login && !userID.equals(""));
 
         if (isLogged) {
+            User.getInstance().setUserID(userID);
             setupHomeScreen();
         } else {
             //Set Login fragment
@@ -70,16 +74,14 @@ public class MainActivity extends BaseNavDrawerActivity
 
     @Override
     protected void onResume() {
-        navigationView.getMenu().findItem(R.id.nav_profile_photos).setChecked(false);
-        navigationView.getMenu().findItem(R.id.nav_profile_bucket_list).setChecked(false);
-        navigationView.getMenu().findItem(R.id.nav_profile_interests).setChecked(false);
+        navigationView.getMenu().findItem(R.id.nav_profile_home).setChecked(true);
         super.onResume();
     }
 
 
     public void onLoginSuccessful(){
         //Save login
-        myPrefs.edit().putBoolean("isLogged", true).apply();
+        myPrefs.edit().putBoolean("prev_login", true).apply();
         Log.i("login", User.getInstance().getUserID());
 
         //Remove Login Fragment

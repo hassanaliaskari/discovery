@@ -31,14 +31,17 @@
         <activity
             android:name=".BucketListActivity"
             android:label="@string/title_activity_bucket_list"
+            android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PicturesActivity"
             android:label="@string/title_activity_pictures"
+            android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".InterestActivity"
             android:label="@string/title_activity_interest"
+            android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AddBlogCardActivity"

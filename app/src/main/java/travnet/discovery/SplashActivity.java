@@ -31,9 +31,7 @@ public class SplashActivity extends AppCompatActivity {
         if (isLogged && !userID.equals("")) {
             Log.i("login", userID);
             User.getInstance().setUserID(userID);
-            intent.putExtra("isLogged", true);
         } else {
-            intent.putExtra("isLogged", false);
         }
 
         Backend.getInstance().getCards(0, Backend.getInstance().new GetCardsListener() {
