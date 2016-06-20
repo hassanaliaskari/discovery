@@ -46,6 +46,6 @@
         android:layout_height="1dp"
         android:id="@+id/divider"
         android:layout_alignParentBottom="true"
-        android:background="#1FFFFFFF"/>
+        android:background="@color/color_divider"/>
 
 </RelativeLayout>
