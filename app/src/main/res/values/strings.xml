@@ -37,5 +37,7 @@
     <string name="navigation_drawer_close">Close Navigation Drawer</string>
     <string name="empty_msg_user_pictures_header">No Pictures</string>
     <string name="empty_msg_user_pictures_sub">Please upload your travel photos</string>
+    <string name="empty_msg_bucket_list_header">Bucket List Empty</string>
+    <string name="empty_msg_bucket_list_sub">Add pictures and blogs of where you want to go</string>
 
 </resources>

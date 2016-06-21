@@ -30,6 +30,7 @@ public class BucketListActivity extends BaseNavDrawerActivity {
 
     List<DataBucketListCard> userBucketList;
     BucketListItemAdapter bucketListItemAdapter;
+    LinearLayout emptyStateLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +66,13 @@ public class BucketListActivity extends BaseNavDrawerActivity {
         userBucketList.add(data1);
         userBucketList.add(data2);
         userBucketList.add(data3);
+
+
+        emptyStateLayout = (LinearLayout) findViewById(R.id.empty_state_layout);
+        emptyStateLayout.setVisibility(View.GONE);
+        if (userBucketList.size() == 0) {
+            emptyStateLayout.setVisibility(View.VISIBLE);
+        }
 
 
         RecyclerView userBucketList = (RecyclerView) findViewById(R.id.user_bucket_list);
