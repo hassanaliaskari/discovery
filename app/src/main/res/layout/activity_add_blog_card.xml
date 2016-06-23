@@ -46,8 +46,7 @@
             android:layout_height="wrap_content"
 
             android:id="@+id/preview_blog"
-            android:orientation="vertical"
-            android:background="#000000">
+            android:orientation="vertical">
 
             <android.support.percent.PercentRelativeLayout
                 android:layout_width="match_parent"
@@ -56,8 +55,17 @@
                 <ImageView
                     app:layout_widthPercent="100%"
                     app:layout_aspectRatio="178%"
-                    android:scaleType="centerCrop"
+                    android:background="#000000"
                     android:id="@+id/thumbnail" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/thumbnail"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/ic_crop"
+                    android:background="#000000"
+                    android:id="@+id/button_crop_image"/>
             </android.support.percent.PercentRelativeLayout>
 
 

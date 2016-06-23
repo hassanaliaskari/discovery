@@ -180,14 +180,15 @@ public class AddPictureCardActivity extends AppCompatActivity {
 
             @Override
             public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
-                cropPicture(imageFile.getAbsolutePath());
+                Uri uri = Uri.fromFile(imageFile);
+                cropPicture(uri);
             }
         });
     }
 
-    void cropPicture(String path) {
+    void cropPicture(Uri uri) {
         Intent intent = new Intent(this, CropPictureActivity.class);
-        intent.putExtra("path", path);
+        intent.putExtra("path", uri);
         this.startActivityForResult(intent, REQUEST_CROP_IMAGE);
     }
 

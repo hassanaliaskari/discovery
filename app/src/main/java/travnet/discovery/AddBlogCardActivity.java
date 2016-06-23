@@ -3,6 +3,7 @@ package travnet.discovery;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
@@ -44,6 +46,7 @@ import java.util.ArrayList;
 public class AddBlogCardActivity extends AppCompatActivity {
 
     private static final int REQUEST_ADD_INTEREST = 1;
+    private static final int REQUEST_CROP_IMAGE = 2;
     String blogURL;
     String blogTitle;
     String blogExtract;
@@ -54,6 +57,7 @@ public class AddBlogCardActivity extends AppCompatActivity {
     ProgressDialog progress;
 
     ImageView previewThumbnail;
+    ImageButton buttonCrop;
     TextView previewTitle;
     TextView previewExtract;
     EditText inputBlogURL;
@@ -70,11 +74,14 @@ public class AddBlogCardActivity extends AppCompatActivity {
         selectedInterests = new ArrayList<>();
 
         previewThumbnail = (ImageView) findViewById(R.id.thumbnail);
+        buttonCrop = (ImageButton) findViewById(R.id.button_crop_image);
         previewTitle = (TextView) findViewById(R.id.title);
         previewExtract = (TextView) findViewById(R.id.extract);
         inputBlogURL = (EditText) findViewById(R.id.blog_link);
         buttonPreviewBlog = (Button) findViewById(R.id.button_preview_blog);
         inputInterest = (EditText) findViewById(R.id.add_activity);
+
+        buttonCrop.setVisibility(View.GONE);
 
         buttonPreviewBlog.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +92,14 @@ public class AddBlogCardActivity extends AppCompatActivity {
             }
         });
 
+        
+        buttonCrop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cropPicture(thumbnailURL);
+            }
+        });
+        
         inputInterest.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -116,6 +131,7 @@ public class AddBlogCardActivity extends AppCompatActivity {
 
             MenuItem buttonPostBlog = menu.findItem(R.id.action_done);
             buttonPostBlog.setVisible(true);
+            buttonCrop.setVisibility(View.VISIBLE);
 
             inputBlogURL.setVisibility(View.GONE);
             buttonPreviewBlog.setVisibility(View.GONE);
@@ -133,6 +149,14 @@ public class AddBlogCardActivity extends AppCompatActivity {
         }
     };
 
+
+    void cropPicture(String url) {
+        Intent intent = new Intent(this, CropPictureActivity.class);
+        Uri imageUri = Uri.parse(url);
+        intent.putExtra("path", imageUri);
+        this.startActivityForResult(intent, REQUEST_CROP_IMAGE);
+    }
+    
 
     private void startAddInterestActivity() {
         Intent intent = new Intent(this, AddInterestActivity.class);

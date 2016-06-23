@@ -4,11 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -42,8 +39,8 @@ public class CropPictureActivity extends AppCompatActivity {
         progress = new ProgressDialog(this);
         cropImageView = (CropImageView) findViewById(R.id.crop_image_view);
 
-        String imagePath = getIntent().getExtras().getString("path");
-        setImageForCropping(imagePath);
+        Uri imageUri = (Uri) getIntent().getExtras().getParcelable("path");
+        setImageForCropping(imageUri);
 
         ImageButton buttonRotateLeft = (ImageButton) findViewById(R.id.button_rotate_left);
         buttonRotateLeft.setOnClickListener(new View.OnClickListener() {
@@ -67,10 +64,8 @@ public class CropPictureActivity extends AppCompatActivity {
         return Uri.fromFile(new File(this.getCacheDir(), "croppedImage"));
     }
 
-    public void setImageForCropping(String imagePath) {
-        //Bitmap myBitmap = BitmapFactory.decodeFile(imagePath);
-        File imageFile = new File(imagePath);
-        cropImageView.startLoad(Uri.fromFile(imageFile), new LoadCallback() {
+    public void setImageForCropping(Uri uri) {
+        cropImageView.startLoad(uri, new LoadCallback() {
             @Override
             public void onError() {
                 Toast.makeText(getApplicationContext(), R.string.error_get_picture_failed, Toast.LENGTH_LONG).show();
@@ -78,8 +73,8 @@ public class CropPictureActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess() {
-                MenuItem buttonPostBlog = menu.findItem(R.id.action_done);
-                buttonPostBlog.setVisible(true);
+                //MenuItem buttonDone = menu.findItem(R.id.action_done);
+                //buttonDone.setVisible(true);
                 //setDoneButton();
             }
 
@@ -123,8 +118,8 @@ public class CropPictureActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
         getMenuInflater().inflate(R.menu.menu_activity_complete, menu);
-        MenuItem item = menu.findItem(R.id.action_done);
-        item.setVisible(false);
+        //MenuItem item = menu.findItem(R.id.action_done);
+        //item.setVisible(false);
         return true;
     }
 
