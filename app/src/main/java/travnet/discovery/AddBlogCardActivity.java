@@ -1,15 +1,19 @@
 package travnet.discovery;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -33,13 +37,18 @@ import com.android.volley.toolbox.Volley;
 import com.leocardz.link.preview.library.LinkPreviewCallback;
 import com.leocardz.link.preview.library.SourceContent;
 import com.leocardz.link.preview.library.TextCrawler;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.nostra13.universalimageloader.utils.MemoryCacheUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -51,6 +60,7 @@ public class AddBlogCardActivity extends AppCompatActivity {
     String blogTitle;
     String blogExtract;
     String thumbnailURL;
+    Uri localImageUri;
     ArrayList<String> selectedInterests;
 
     Menu menu;
@@ -81,7 +91,6 @@ public class AddBlogCardActivity extends AppCompatActivity {
         buttonPreviewBlog = (Button) findViewById(R.id.button_preview_blog);
         inputInterest = (EditText) findViewById(R.id.add_activity);
 
-        buttonCrop.setVisibility(View.GONE);
 
         buttonPreviewBlog.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,14 +101,15 @@ public class AddBlogCardActivity extends AppCompatActivity {
             }
         });
 
-        
+
         buttonCrop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cropPicture(thumbnailURL);
             }
         });
-        
+        buttonCrop.setVisibility(View.GONE);
+
         inputInterest.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -141,22 +151,58 @@ public class AddBlogCardActivity extends AppCompatActivity {
             blogExtract = sourceContent.getDescription();
             previewTitle.setText(blogTitle);
             previewExtract.setText(blogExtract);
-
             thumbnailURL = sourceContent.getImages().get(0);
-            ImageLoader imageLoader = ImageLoader.getInstance();
-            ImageLoader.getInstance().displayImage(thumbnailURL, previewThumbnail);
 
+            loadImage();
         }
     };
+
+
+
+    private void loadImage() {
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .build();
+        ImageLoader.getInstance().displayImage(thumbnailURL, previewThumbnail, options, null);
+        imageLoader.loadImage(thumbnailURL, new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String imageUri, View view) {
+
+            }
+
+            @Override
+            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+
+            }
+
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                localImageUri = getImageUri(getApplicationContext(), loadedImage);
+            }
+
+            @Override
+            public void onLoadingCancelled(String imageUri, View view) {
+
+            }
+        });
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
 
 
     void cropPicture(String url) {
         Intent intent = new Intent(this, CropPictureActivity.class);
         Uri imageUri = Uri.parse(url);
-        intent.putExtra("path", imageUri);
+        intent.putExtra("path", localImageUri);
         this.startActivityForResult(intent, REQUEST_CROP_IMAGE);
     }
-    
+
 
     private void startAddInterestActivity() {
         Intent intent = new Intent(this, AddInterestActivity.class);
@@ -169,6 +215,17 @@ public class AddBlogCardActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CROP_IMAGE && resultCode == RESULT_OK) {
+            previewThumbnail.setImageURI(null);
+            Parcelable parcelable = data.getParcelableExtra("uri");
+            Uri newImageUri = (Uri) parcelable;
+            previewThumbnail.setImageURI(newImageUri);
+
+            new File(localImageUri.getPath()).delete();
+            localImageUri = newImageUri;
+            buttonCrop.setVisibility(View.GONE);
+        }
 
         if (requestCode == REQUEST_ADD_INTEREST && resultCode == RESULT_OK) {
             ArrayList<String> interestsToAdd = (ArrayList<String>) data.getSerializableExtra("interests");
