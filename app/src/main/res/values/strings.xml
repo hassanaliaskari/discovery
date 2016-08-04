@@ -22,7 +22,7 @@
     <string name="title_activity_add_blog_card">AddBlogCardActivity</string>
     <string name="title_activity_add_picture_card">AddPictureCardActivity</string>
     <string name="title_activity_crop_picture">CropPictureActivity</string>
-    <string name="title_activity_add_interest">AddInterestActivity</string>
+    <string name="title_activity_add_interest">Add Interest</string>
     <string name="title_activity_main">Home</string>
     <string name="error_blog_preview_failed">Preview Unavailable</string>
     <string name="error_blog_post_failed">Failed to Post Blog</string>

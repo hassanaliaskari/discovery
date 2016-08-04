@@ -81,9 +81,9 @@ public class InterestActivity extends BaseNavDrawerActivity {
                 // Create delete button
                 SwipeMenuItem deleteMenuItem = new SwipeMenuItem(
                         getApplicationContext());
-                deleteMenuItem.setBackground(new ColorDrawable(Color.rgb(0x00,0x00, 0x00)));
+                //deleteMenuItem.setBackground(new ColorDrawable(Color.rgb(0x00,0x00, 0x00)));
                 deleteMenuItem.setWidth(200);
-                deleteMenuItem.setIcon(R.drawable.ic_delete);
+                deleteMenuItem.setIcon(R.drawable.ic_delete_black);
                 menu.addMenuItem(deleteMenuItem);
             }
         };
