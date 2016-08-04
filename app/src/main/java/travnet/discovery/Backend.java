@@ -48,7 +48,8 @@ public class Backend {
     private Context context;
 
     //private String baseUrl = "http://192.168.1.25:8080/api/";
-    private String baseUrl = "http://54.86.18.174/api/";
+    //private String baseUrl = "http://54.86.18.174/api/";
+    private String baseUrl = "http://54.169.51.25/api/";
 
     public static final int NO_OF_CARDS = 5;
     private static final int TYPE_PICTURE = 0;
@@ -609,7 +610,7 @@ public class Backend {
             protected Void doInBackground(Void... params) {
 
                 RequestQueue queue = Volley.newRequestQueue(context);
-                String url = baseUrl + "updateInterests";
+                String url = baseUrl + "registerInterests";
 
                 JSONObject userInterest = new JSONObject();
                 try {
