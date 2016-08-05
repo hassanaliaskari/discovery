@@ -19,9 +19,9 @@
     <string name="title_activity_pictures">My Pictures</string>
     <string name="title_activity_bucket_list">My Bucket List</string>
     <string name="title_activity_interest">My Interests</string>
-    <string name="title_activity_add_blog_card">AddBlogCardActivity</string>
-    <string name="title_activity_add_picture_card">AddPictureCardActivity</string>
-    <string name="title_activity_crop_picture">CropPictureActivity</string>
+    <string name="title_activity_add_blog_card">Blog Upload</string>
+    <string name="title_activity_add_picture_card">Photo Upload</string>
+    <string name="title_activity_crop_picture">Cropping</string>
     <string name="title_activity_add_interest">Add Interest</string>
     <string name="title_activity_main">Home</string>
     <string name="error_blog_preview_failed">Preview Unavailable</string>
