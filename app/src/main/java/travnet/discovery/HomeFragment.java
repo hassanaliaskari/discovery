@@ -236,7 +236,7 @@ public class HomeFragment extends Fragment {
                     CardPictureViewHolder cardPictureViewHolder = (CardPictureViewHolder) holder;
                     final DataPictureCard dataPictureCard = dataPictureCards.get(cardsRef.get(position).index);
                     cardPictureViewHolder.poplulatePictureCard(dataPictureCard, position);
-                    cardPictureViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+                    cardPictureViewHolder.image.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             openFullScreenPicture(dataPictureCard, position);
@@ -269,6 +269,7 @@ public class HomeFragment extends Fragment {
 
     private void openFullScreenPicture(DataPictureCard dataPictureCard, int position) {
         Intent intent = new Intent(getContext(), FullscreenPictureCardActivity.class);
+        intent.putExtra("card_src", "feed");
         intent.putExtra("card_data", dataPictureCard);
         intent.putExtra("position", position);
         startActivityForResult(intent, FULLSCREEN_PICTURE);

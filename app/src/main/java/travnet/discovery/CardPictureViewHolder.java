@@ -63,7 +63,6 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
         //ImageLoader.getInstance().displayImage(dataPictureCard.dataUploaderBar.uploader_pp, this.uploader.pp, options, null);
         ImageLoader.getInstance().displayImage(dataPictureCard.dataUploaderBar.uploader_pp, this.uploaderPic, options, null);
 
-
         if (dataPictureCard.isLiked == false) {
             this.like_button.setVisibility(View.VISIBLE);
             this.scrim.setVisibility(View.GONE);
@@ -71,10 +70,20 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
             this.addLikeCallback(dataPictureCard);
         } else {
             this.like_button.setImageResource(R.drawable.ic_liked);
+            this.like_button.setClickable(false);
             this.add_to_bl_button.setVisibility(View.VISIBLE);
             this.scrim.setVisibility(View.VISIBLE);
             this.location.setVisibility(View.VISIBLE);
         }
+
+        if (dataPictureCard.isAddedToBl == false) {
+            this.addBucketCallback(dataPictureCard);
+        } else {
+            this.add_to_bl_button.setImageResource(R.drawable.ic_added_to_bl);
+            this.add_to_bl_button.setClickable(false);
+        }
+
+
 
     }
 
@@ -88,18 +97,33 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
 
                 //like_button.setVisibility(View.GONE);
                 like_button.setImageResource(R.drawable.ic_liked);
+                like_button.setClickable(false);
+
                 add_to_bl_button.setVisibility(View.VISIBLE);
                 scrim.setVisibility(View.VISIBLE);
                 location.setVisibility(View.VISIBLE);
-                AlphaAnimation fadeIn = new AlphaAnimation(0.0f , 1.0f );
+                AlphaAnimation fadeIn = new AlphaAnimation(0.0f, 1.0f);
                 fadeIn.setDuration(1200);
                 fadeIn.setFillAfter(true);
-                AlphaAnimation scrimFadeIn = new AlphaAnimation(0.0f , 0.7f );
+                AlphaAnimation scrimFadeIn = new AlphaAnimation(0.0f, 0.7f);
                 scrimFadeIn.setDuration(1200);
                 scrimFadeIn.setFillAfter(true);
                 location.startAnimation(fadeIn);
                 scrim.startAnimation(scrimFadeIn);
                 //likes.setText(dataPictureCard.likes + " People Likes this");
+            }
+        });
+        }
+
+    public void addBucketCallback(final DataPictureCard dataPictureCard) {
+        add_to_bl_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataPictureCard.noBlucketListed++;
+                dataPictureCard.isAddedToBl = true;
+
+                add_to_bl_button.setImageResource(R.drawable.ic_added_to_bl);
+                add_to_bl_button.setClickable(false);
             }
         });
     }

@@ -31,6 +31,8 @@ import java.util.List;
 
 public class PicturesActivity extends BaseNavDrawerActivity {
 
+    private static final int FULLSCREEN_PICTURE = 55;
+
     ArrayList<DataPictureCard> userPictures;
     ImageAdapter imageadapter;
     LinearLayout emptyStateLayout;
@@ -119,7 +121,15 @@ public class PicturesActivity extends BaseNavDrawerActivity {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
             CardUserPictureViewHolder cardPictureViewHolder = (CardUserPictureViewHolder) holder;
-            ImageLoader.getInstance().displayImage(userPictures.get(position).link, cardPictureViewHolder.image, options, null);
+            final DataPictureCard dataPictureCard = userPictures.get(position);
+            ImageLoader.getInstance().displayImage(dataPictureCard.link, cardPictureViewHolder.image, options, null);
+            cardPictureViewHolder.image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openFullScreenPicture(dataPictureCard, position);
+                }
+            });
+
         }
     }
 
@@ -131,6 +141,14 @@ public class PicturesActivity extends BaseNavDrawerActivity {
             super(itemView);
             image = (ImageView) itemView.findViewById(R.id.image);
         }
+    }
+
+    private void openFullScreenPicture(DataPictureCard dataPictureCard, int position) {
+        Intent intent = new Intent(this, FullscreenPictureCardActivity.class);
+        intent.putExtra("card_src", "user");
+        intent.putExtra("card_data", dataPictureCard);
+        intent.putExtra("position", position);
+        startActivityForResult(intent, FULLSCREEN_PICTURE);
     }
 
 

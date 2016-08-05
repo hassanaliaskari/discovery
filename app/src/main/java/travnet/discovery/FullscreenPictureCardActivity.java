@@ -28,6 +28,13 @@ public class FullscreenPictureCardActivity extends AppCompatActivity {
         position = getIntent().getIntExtra("position", -1);
         CardPictureViewHolder cardPictureViewHolder = new CardPictureViewHolder(view);
         cardPictureViewHolder.poplulatePictureCard(dataPictureCard, 0);
+
+        //Check if the picture is the user's own
+        if (getIntent().getStringExtra("card_src").equals("user")) {
+            cardPictureViewHolder.like_button.setVisibility(View.GONE);
+            cardPictureViewHolder.add_to_bl_button.setVisibility(View.GONE);
+        }
+
     }
 
     @Override

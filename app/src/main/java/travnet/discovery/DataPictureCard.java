@@ -17,11 +17,13 @@ public class DataPictureCard implements Parcelable{
     String description;
     String link;
     int likes;
+    int noBlucketListed;
     String location;
     String activity;
     DataUploaderBar dataUploaderBar;
 
     boolean isLiked;
+    boolean isAddedToBl;
 
     public DataPictureCard() {
     }
