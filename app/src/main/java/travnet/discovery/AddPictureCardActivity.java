@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
@@ -37,6 +38,7 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.isseiaoki.simplecropview.CropImageView;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import pl.aprilapps.easyphotopicker.DefaultCallback;
@@ -48,17 +50,19 @@ public class AddPictureCardActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
     private static final int REQUEST_CROP_IMAGE = 5;
     private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 3;
+    private static final int REQUEST_ADD_INTEREST = 6;
+
 
     Uri imageUri;
     Place location;
 
     EditText add_location;
-    AutoCompleteTextView interestAutoCompleteView;
+    EditText inputInterest;
     ImageView previewImage;
     ImageButton buttonGallery;
     ImageButton buttonCamera;
     ProgressDialog progress;
-    ArrayList<String> interestlist;
+    ArrayList<String> selectedInterests;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,10 +74,7 @@ public class AddPictureCardActivity extends AppCompatActivity {
         imageUri = null;
         location = null;
         progress = new ProgressDialog(this);
-
-        interestlist = new ArrayList<String>();
-        getInterests();
-
+        selectedInterests = new ArrayList<>();
 
         buttonGallery = (ImageButton) findViewById(R.id.button_browse_gallery);
         buttonGallery.setOnClickListener(new View.OnClickListener() {
@@ -97,29 +98,20 @@ public class AddPictureCardActivity extends AppCompatActivity {
         add_location = (EditText) findViewById(R.id.add_location);
         add_location.setOnClickListener(getLocation);
 
-        interestAutoCompleteView = (AutoCompleteTextView) findViewById(R.id.add_activity);
-        ArrayAdapter<String> activityAdapter = new ArrayAdapter<String>
-                (this,android.R.layout.select_dialog_item, interestlist);
-        interestAutoCompleteView.setAdapter(activityAdapter);
 
-
-    }
-
-
-    private void getInterests() {
-        Backend backend = Backend.getInstance();
-        backend.getIntersets(backend.new GetInterestsListener() {
+        inputInterest = (EditText) findViewById(R.id.add_activity);
+        inputInterest.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onInterestsFetched(ArrayList<String> listInterests) {
-                interestlist.addAll(listInterests);
-            }
-
-            @Override
-            public void onGetInterestsFailed() {
-
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    startAddInterestActivity();
+                }
+                return true;
             }
         });
+
     }
+
 
 
     public void openCamera() {
@@ -171,6 +163,13 @@ public class AddPictureCardActivity extends AppCompatActivity {
             }
         }
 
+        if (requestCode == REQUEST_ADD_INTEREST && resultCode == RESULT_OK) {
+            ArrayList<String> interestsToAdd = (ArrayList<String>) data.getSerializableExtra("interests");
+            selectedInterests.clear();
+            selectedInterests.addAll(interestsToAdd);
+            inputInterest.setText(android.text.TextUtils.join(", ", selectedInterests));
+        }
+
 
         EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
             @Override
@@ -218,6 +217,13 @@ public class AddPictureCardActivity extends AppCompatActivity {
     }
 
 
+    private void startAddInterestActivity() {
+        Intent intent = new Intent(this, AddInterestActivity.class);
+        intent.putExtra("interests", (Serializable) selectedInterests);
+        intent.putExtra("minimum_required", 1);
+        intent.putExtra("maximum_allowed", 3);
+        this.startActivityForResult(intent, REQUEST_ADD_INTEREST);
+    }
 
 
     @Override
@@ -254,11 +260,7 @@ public class AddPictureCardActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), R.string.error_location_not_selected, Toast.LENGTH_LONG).show();
             return;
         }
-        String interest = interestAutoCompleteView.getText().toString().trim();
-        if (interestlist.contains(interest) == false) {
-            Toast.makeText(getApplicationContext(), R.string.error_interest_not_selected, Toast.LENGTH_LONG).show();
-            return;
-        }
+        String interest = inputInterest.getText().toString().trim();
 
         //Post picture card
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
