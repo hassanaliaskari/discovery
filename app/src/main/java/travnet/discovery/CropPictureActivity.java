@@ -24,6 +24,10 @@ import java.io.File;
 
 public class CropPictureActivity extends AppCompatActivity {
 
+    private static final int LANDSCAPE_RATIO = 1;
+    private static final int SQUARE_RATIO = 2;
+    private static final int POTRAIT_RATIO = 3;
+
     CropImageView cropImageView;
     Button buttonDone;
     Menu menu;
@@ -57,6 +61,31 @@ public class CropPictureActivity extends AppCompatActivity {
                 cropImageView.rotateImage(CropImageView.RotateDegrees.ROTATE_90D);
             }
         });
+
+        Button buttonLandscape = (Button) findViewById(R.id.button_landscape);
+        buttonLandscape.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setAspectRatio(LANDSCAPE_RATIO);
+            }
+        });
+
+        Button buttonSquare = (Button) findViewById(R.id.button_square);
+        buttonSquare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setAspectRatio(SQUARE_RATIO);
+            }
+        });
+
+        Button buttonPotrait = (Button) findViewById(R.id.button_potrait);
+        buttonPotrait.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setAspectRatio(POTRAIT_RATIO);
+            }
+        });
+
     }
 
 
@@ -80,6 +109,20 @@ public class CropPictureActivity extends AppCompatActivity {
 
         });
     }
+
+
+    private void setAspectRatio(int aspectRatio) {
+        if (aspectRatio == LANDSCAPE_RATIO) {
+            cropImageView.setCropMode(CropImageView.CropMode.RATIO_4_3);
+        } else if (aspectRatio == SQUARE_RATIO) {
+            cropImageView.setCropMode(CropImageView.CropMode.SQUARE);
+        }
+        if (aspectRatio == POTRAIT_RATIO) {
+            cropImageView.setCropMode(CropImageView.CropMode.RATIO_3_4);
+        }
+
+    }
+
 
 
     private void returnCroppedImage() {
