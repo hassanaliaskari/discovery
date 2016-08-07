@@ -51,18 +51,16 @@ public class AddPictureCardActivity extends AppCompatActivity {
     private static final int REQUEST_CROP_IMAGE = 5;
     private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 3;
     private static final int REQUEST_ADD_INTEREST = 6;
+    private static final int REQUEST_POST_PICTURE = 10;
 
 
     Uri imageUri;
     Place location;
 
-    EditText add_location;
-    EditText inputInterest;
     ImageView previewImage;
     ImageButton buttonGallery;
     ImageButton buttonCamera;
     ProgressDialog progress;
-    ArrayList<String> selectedInterests;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +72,6 @@ public class AddPictureCardActivity extends AppCompatActivity {
         imageUri = null;
         location = null;
         progress = new ProgressDialog(this);
-        selectedInterests = new ArrayList<>();
 
         buttonGallery = (ImageButton) findViewById(R.id.button_browse_gallery);
         buttonGallery.setOnClickListener(new View.OnClickListener() {
@@ -92,24 +89,7 @@ public class AddPictureCardActivity extends AppCompatActivity {
             }
         });
 
-
         previewImage = (ImageView) findViewById(R.id.previewImage);
-
-        add_location = (EditText) findViewById(R.id.add_location);
-        add_location.setOnClickListener(getLocation);
-
-
-        inputInterest = (EditText) findViewById(R.id.add_activity);
-        inputInterest.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    startAddInterestActivity();
-                }
-                return true;
-            }
-        });
-
     }
 
 
@@ -150,27 +130,6 @@ public class AddPictureCardActivity extends AppCompatActivity {
             buttonGallery.setVisibility(View.GONE);
         }
 
-        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
-            progress.dismiss();
-            if (resultCode == Activity.RESULT_OK) {
-                location = PlaceAutocomplete.getPlace(this, data);
-                add_location.setText(location.getName());
-            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(this, data);
-                // TODO: Handle the error.
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                // The user canceled the operation.
-            }
-        }
-
-        if (requestCode == REQUEST_ADD_INTEREST && resultCode == RESULT_OK) {
-            ArrayList<String> interestsToAdd = (ArrayList<String>) data.getSerializableExtra("interests");
-            selectedInterests.clear();
-            selectedInterests.addAll(interestsToAdd);
-            inputInterest.setText(android.text.TextUtils.join(", ", selectedInterests));
-        }
-
-
         EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
             @Override
             public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
@@ -183,6 +142,11 @@ public class AddPictureCardActivity extends AppCompatActivity {
                 cropPicture(uri);
             }
         });
+
+        if (requestCode == REQUEST_POST_PICTURE && resultCode == RESULT_OK) {
+            finish();
+        }
+
     }
 
     void cropPicture(Uri uri) {
@@ -217,15 +181,6 @@ public class AddPictureCardActivity extends AppCompatActivity {
     }
 
 
-    private void startAddInterestActivity() {
-        Intent intent = new Intent(this, AddInterestActivity.class);
-        intent.putExtra("interests", (Serializable) selectedInterests);
-        intent.putExtra("minimum_required", 1);
-        intent.putExtra("maximum_allowed", 3);
-        this.startActivityForResult(intent, REQUEST_ADD_INTEREST);
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_activity_complete, menu);
@@ -237,7 +192,7 @@ public class AddPictureCardActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_done) {
-            postPictureCard();
+            startCardInfoActivity();
             return true;
         }
 
@@ -246,43 +201,18 @@ public class AddPictureCardActivity extends AppCompatActivity {
 
 
 
-
-
-
-    void postPictureCard() {
-
-        //Check if enough data is present
+    private void startCardInfoActivity () {
         if (imageUri == null) {
             Toast.makeText(getApplicationContext(), R.string.error_picture_not_selected, Toast.LENGTH_LONG).show();
             return;
         }
-        if (location == null) {
-            Toast.makeText(getApplicationContext(), R.string.error_location_not_selected, Toast.LENGTH_LONG).show();
-            return;
-        }
-        String interest = inputInterest.getText().toString().trim();
 
-        //Post picture card
-        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progress.setTitle("Uploading picture");
-        progress.show();
-
-        Backend backend = Backend.getInstance();
-        backend.uploadPicture(imageUri, backend.new UploadPicureListener() {
-            @Override
-            public void onUploadPictureSuccess() {
-                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();
-                progress.dismiss();
-                finish();
-            }
-
-            @Override
-            public void onUploadPictureFailed() {
-                progress.dismiss();
-                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_LONG).show();
-            }
-        });
-
+        Intent intent = new Intent(this, AddCardInfoActivity.class);
+        intent.putExtra("type", "picture");
+        intent.putExtra("image_uri", imageUri);
+        this.startActivityForResult(intent, REQUEST_POST_PICTURE);
     }
+
+
 
 }

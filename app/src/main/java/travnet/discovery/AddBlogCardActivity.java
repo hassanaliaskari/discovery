@@ -54,14 +54,13 @@ import java.util.ArrayList;
 
 public class AddBlogCardActivity extends AppCompatActivity {
 
-    private static final int REQUEST_ADD_INTEREST = 1;
     private static final int REQUEST_CROP_IMAGE = 2;
+    private static final int REQUEST_POST_BLOG = 5;
     String blogURL;
     String blogTitle;
     String blogExtract;
     String thumbnailURL;
     Uri localImageUri;
-    ArrayList<String> selectedInterests;
 
     Menu menu;
     ProgressDialog progress;
@@ -72,7 +71,6 @@ public class AddBlogCardActivity extends AppCompatActivity {
     TextView previewExtract;
     EditText inputBlogURL;
     Button buttonPreviewBlog;
-    EditText inputInterest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +79,6 @@ public class AddBlogCardActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        selectedInterests = new ArrayList<>();
 
         previewThumbnail = (ImageView) findViewById(R.id.thumbnail);
         buttonCrop = (ImageButton) findViewById(R.id.button_crop_image);
@@ -89,7 +86,6 @@ public class AddBlogCardActivity extends AppCompatActivity {
         previewExtract = (TextView) findViewById(R.id.extract);
         inputBlogURL = (EditText) findViewById(R.id.blog_link);
         buttonPreviewBlog = (Button) findViewById(R.id.button_preview_blog);
-        inputInterest = (EditText) findViewById(R.id.add_activity);
 
 
         buttonPreviewBlog.setOnClickListener(new View.OnClickListener() {
@@ -109,17 +105,6 @@ public class AddBlogCardActivity extends AppCompatActivity {
             }
         });
         buttonCrop.setVisibility(View.GONE);
-
-        inputInterest.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    startAddInterestActivity();
-                }
-                return true;
-            }
-        });
-        inputInterest.setVisibility(View.GONE);
 
     }
 
@@ -145,7 +130,6 @@ public class AddBlogCardActivity extends AppCompatActivity {
 
             inputBlogURL.setVisibility(View.GONE);
             buttonPreviewBlog.setVisibility(View.GONE);
-            inputInterest.setVisibility(View.VISIBLE);
 
             blogTitle = sourceContent.getTitle();
             blogExtract = sourceContent.getDescription();
@@ -204,13 +188,6 @@ public class AddBlogCardActivity extends AppCompatActivity {
     }
 
 
-    private void startAddInterestActivity() {
-        Intent intent = new Intent(this, AddInterestActivity.class);
-        intent.putExtra("interests", (Serializable) selectedInterests);
-        intent.putExtra("minimum_required", 1);
-        intent.putExtra("maximum_allowed", 3);
-        this.startActivityForResult(intent, REQUEST_ADD_INTEREST);
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -227,38 +204,24 @@ public class AddBlogCardActivity extends AppCompatActivity {
             buttonCrop.setVisibility(View.GONE);
         }
 
-        if (requestCode == REQUEST_ADD_INTEREST && resultCode == RESULT_OK) {
-            ArrayList<String> interestsToAdd = (ArrayList<String>) data.getSerializableExtra("interests");
-            selectedInterests.clear();
-            selectedInterests.addAll(interestsToAdd);
-            inputInterest.setText(android.text.TextUtils.join(", ", selectedInterests));
+        if (requestCode == REQUEST_POST_BLOG && resultCode == RESULT_OK) {
+            finish();
         }
+
 
     }
 
 
-
-    public void postBlog() {
-        if (selectedInterests.size() == 0) {
-            Toast.makeText(getApplicationContext(), "Please select interest", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-
-        Backend backend = Backend.getInstance();
-        backend.postBlog(blogURL, blogTitle, blogExtract, thumbnailURL, backend.new PostBlogListener() {
-            @Override
-            public void onBlogPostSuccess() {
-                returnFromActivity();
-            }
-
-            @Override
-            public void onBlogPostFailed() {
-                Toast.makeText(getApplicationContext(), R.string.error_blog_post_failed, Toast.LENGTH_LONG).show();
-            }
-        });
-
+    private void startCardInfoActivity () {
+        Intent intent = new Intent(this, AddCardInfoActivity.class);
+        intent.putExtra("type", "blog");
+        intent.putExtra("url", blogURL);
+        intent.putExtra("title", blogTitle);
+        intent.putExtra("extract", blogExtract);
+        intent.putExtra("thumbnail", thumbnailURL);
+        this.startActivityForResult(intent, REQUEST_POST_BLOG);
     }
+
 
     private void showProgressDialog() {
         progress = new ProgressDialog(this);
@@ -283,7 +246,7 @@ public class AddBlogCardActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_done) {
-            postBlog();
+            startCardInfoActivity();
             return true;
         }
 

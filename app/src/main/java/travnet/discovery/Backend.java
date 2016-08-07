@@ -661,7 +661,7 @@ public class Backend {
         public abstract void onBlogPostSuccess();
         public abstract void onBlogPostFailed();
     }
-    public void postBlog(final String blogURL, final String blogTitle, final String blogExtract, final String thumbnailURL, final PostBlogListener listener) {
+    public void postBlog(final String blogURL, final String blogTitle, final String blogExtract, final String thumbnailURL, final String interests, final String location, final PostBlogListener listener) {
         class updateUserInterestsTask extends AsyncTask<Void, Void, Void> {
 
             @Override

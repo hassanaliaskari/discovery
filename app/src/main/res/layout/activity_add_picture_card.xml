@@ -67,48 +67,7 @@
 
         </RelativeLayout>
 
-
-
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="32dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:gravity="center"
-            android:id="@+id/description"
-            android:imeOptions="actionDone"
-            android:singleLine="true"
-            android:hint= "@string/hint_picture_card_description" />
-
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:gravity="center"
-            android:id="@+id/add_location"
-            android:focusable="false"
-            android:hint= "Location" />
-
-
-        <EditText
-            android:id="@+id/add_activity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:gravity="center"
-            android:hint="Activity"
-            android:singleLine="true"
-            android:completionThreshold="1"/>
-
-
-    </LinearLayout>
+       </LinearLayout>
 
 
 
