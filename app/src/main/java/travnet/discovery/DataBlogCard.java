@@ -13,10 +13,12 @@ public class DataBlogCard {
     String title;
     String extract;
     int likes;
+    int noBlucketListed;
     String location;
     DataUploaderBar dataUploaderBar;
 
     boolean isLiked;
+    boolean isAddedToBl;
 
     public DataBlogCard() {
     }

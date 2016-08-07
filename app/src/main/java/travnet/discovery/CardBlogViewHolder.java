@@ -23,6 +23,7 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
     TextView title;
     TextView extract;
     ImageButton like_button;
+    ImageButton add_to_bl_button;
     TextView likes;
     TextView activity;
     TextView location;
@@ -37,6 +38,7 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
         title = (TextView) itemView.findViewById(R.id.title);
         extract = (TextView) itemView.findViewById(R.id.extract);
         like_button = (ImageButton) itemView.findViewById(R.id.like_button);
+        add_to_bl_button = (ImageButton) itemView.findViewById(R.id.add_to_bl_button);
         likes = (TextView) itemView.findViewById(R.id.likes);
         activity = (TextView) itemView.findViewById(R.id.activity);
         location = (TextView) itemView.findViewById(R.id.location);
@@ -67,12 +69,19 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
 
         if (dataBlogCard.isLiked == false) {
             this.addLikeCallback(dataBlogCard);
+        } else {
+            this.like_button.setImageResource(R.drawable.ic_liked);
+            this.like_button.setClickable(false);
         }
 
+        if (dataBlogCard.isAddedToBl == false) {
+            this.addBucketCallback(dataBlogCard);
+        } else {
+            this.add_to_bl_button.setImageResource(R.drawable.ic_added_to_bl);
+            this.add_to_bl_button.setClickable(false);
+        }
 
     }
-
-
 
 
     public void addLikeCallback(final DataBlogCard dataBlogCard) {
@@ -82,11 +91,26 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
                 dataBlogCard.likes++;
                 dataBlogCard.isLiked = true;
 
-                like_button.setOnClickListener(null);
+                like_button.setImageResource(R.drawable.ic_liked);
+                like_button.setClickable(false);
                 //likes.setText(dataBlogCard.likes + " People Likes this");
             }
         });
     }
 
+
+    public void addBucketCallback(final DataBlogCard dataBlogCard) {
+        add_to_bl_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataBlogCard.noBlucketListed++;
+                dataBlogCard.isAddedToBl = true;
+
+                add_to_bl_button.setImageResource(R.drawable.ic_added_to_bl);
+                add_to_bl_button.setClickable(false);
+                //likes.setText(dataBlogCard.likes + " People Likes this");
+            }
+        });
+    }
 
 }

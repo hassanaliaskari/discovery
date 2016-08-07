@@ -248,7 +248,7 @@ public class HomeFragment extends Fragment {
                     CardBlogViewHolder cardBlogViewHolder = (CardBlogViewHolder) holder;
                     final DataBlogCard dataBlogCard = dataBlogCards.get(cardsRef.get(position).index);
                     cardBlogViewHolder.poplulateBlogCard(dataBlogCard, position);
-                    cardBlogViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+                    cardBlogViewHolder.thumbnail.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(dataBlogCard.url));
