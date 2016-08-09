@@ -23,6 +23,8 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,18 +53,21 @@ public class BucketListActivity extends BaseNavDrawerActivity {
         ArrayList<String> links1 = new ArrayList<>();
         links1.add("http://science-all.com/images/wallpapers/nature/nature-25.jpg");
         links1.add("http://www.amaraholisticwellbeing.com/wp-content/uploads/2015/01/Fall-beautiful-nature-22666764-900-562.jpg");
-        DataBucketListCard data1 = new DataBucketListCard("Bali, Indonesia", links1);
+        ArrayList<String> headers1 = new ArrayList<>();
+        headers1.add("test1");
+        headers1.add("test2");
+        DataBucketListCard data1 = new DataBucketListCard("Bali, Indonesia", links1, headers1);
 
         ArrayList<String> links2 = new ArrayList<>();
         links2.add("https://capfor.files.wordpress.com/2012/07/beautiful-forest-beautiful-day-forests-grass-green-light-nature-sunshine-trees.jpg");
-        DataBucketListCard data2 = new DataBucketListCard("Lombok, Indonesia", links2);
+        DataBucketListCard data2 = new DataBucketListCard("Lombok, Indonesia", links2, headers1);
 
         ArrayList<String> links3 = new ArrayList<>();
         links3.add("http://hdwpro.com/wp-content/uploads/2015/12/nature-thailand.jpg");
         links3.add("http://webneel.com/wallpaper/sites/default/files/images/04-2013/mediterranean-beach-wallpaper.jpg");
         links3.add("https://i.ytimg.com/vi/9Nwn-TZfFUI/maxresdefault.jpg");
         links3.add("http://tedytravel.com/wp-content/uploads/2016/04/Krabi-8.jpg");
-        DataBucketListCard data3 = new DataBucketListCard("Krabi, Thailand", links3);
+        DataBucketListCard data3 = new DataBucketListCard("Krabi, Thailand", links3, headers1);
         userBucketList.add(data1);
         userBucketList.add(data2);
         userBucketList.add(data3);
@@ -130,69 +135,124 @@ public class BucketListActivity extends BaseNavDrawerActivity {
 
             final CardBucketListItemViewHolder cardBucketListItemViewHolder = (CardBucketListItemViewHolder) holder;
             cardBucketListItemViewHolder.location.setText(userBucketList.get(position).location);
-            cardBucketListItemViewHolder.pictureScrollView.setVisibility(View.GONE);
-            cardBucketListItemViewHolder.blogScrollView.setVisibility(View.GONE);
-            populatePictureScrollView(cardBucketListItemViewHolder.locationPictures, userBucketList.get(position).pictures);
             cardBucketListItemViewHolder.setListener();
+
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+            linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            cardBucketListItemViewHolder.pictures.setVisibility(View.GONE);
+            cardBucketListItemViewHolder.pictures.setLayoutManager(linearLayoutManager);
+            BucketListPictureAdapter bucketListPictureAdapter = new BucketListPictureAdapter(userBucketList.get(position).pictures);
+            cardBucketListItemViewHolder.pictures.setAdapter(bucketListPictureAdapter);
+
+            LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getApplicationContext());
+            linearLayoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
+            cardBucketListItemViewHolder.blogs.setVisibility(View.GONE);
+            cardBucketListItemViewHolder.blogs.setLayoutManager(linearLayoutManager2);
+            BucketListBlogAdapter bucketListBlogAdapter = new BucketListBlogAdapter(userBucketList.get(position).headers, userBucketList.get(position).pictures);
+            cardBucketListItemViewHolder.blogs.setAdapter(bucketListBlogAdapter);
+
         }
     }
 
 
-    private void populatePictureScrollView(LinearLayout layout, List<String> pictures) {
-        for (int i=0; i<pictures.size(); i++) {
-            ImageView imageView = new ImageView(BucketListActivity.this);
-            imageView.setBackgroundResource(R.drawable.placeholder_loading);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dpToPx(100), dpToPx(100));
-            if (i==0) {
-                params.setMargins(dpToPx(16),0,0,0);
-            } else {
-                params.setMargins(dpToPx(4), 0, 0, 0);
-            }
-            imageView.setLayoutParams(params);
-            layout.addView(imageView);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            ImageLoader.getInstance().displayImage(pictures.get(i), imageView);
+    private class BucketListPictureAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder> {
+        List<String> pictures;
+
+        public BucketListPictureAdapter(List<String> pictures){
+            super();
+            this.pictures = pictures;
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.card_bucket_list_picture, parent, false);
+            CardBucketListPictureViewHolder cardBucketListPictureViewHolder = new CardBucketListPictureViewHolder(view);
+            return cardBucketListPictureViewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            CardBucketListPictureViewHolder cardBucketListPictureViewHolder = (CardBucketListPictureViewHolder) holder;
+            ImageLoader.getInstance().displayImage(pictures.get(position), cardBucketListPictureViewHolder.image);
+        }
+
+        @Override
+        public int getItemCount() {
+            return pictures.size();
         }
     }
 
-    private void populateBlogScrollView(LinearLayout layout, List<String> pictures, List<String> headers) {
-        for (int i=0; i<headers.size(); i++) {
-            ImageView imageView = new ImageView(BucketListActivity.this);
-            imageView.setBackgroundResource(R.drawable.placeholder_loading);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dpToPx(100), dpToPx(100));
-            if (i==0) {
-                params.setMargins(dpToPx(16),0,0,0);
-            } else {
-                params.setMargins(dpToPx(4), 0, 0, 0);
-            }
-            imageView.setLayoutParams(params);
-            layout.addView(imageView);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            ImageLoader.getInstance().displayImage(pictures.get(i), imageView);
+    public class CardBucketListPictureViewHolder extends RecyclerView.ViewHolder {
+        ImageView image;
+
+        public CardBucketListPictureViewHolder(View itemView) {
+            super(itemView);
+            image = (ImageView) itemView.findViewById(R.id.image);
         }
     }
 
-    private int dpToPx(int dp){
-        final float scale = getResources().getDisplayMetrics().density;
-        return (int) (dp * scale + 0.5f);
+
+
+
+
+    private class BucketListBlogAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder> {
+        List<String> pictures;
+        List<String> headers;
+
+        public BucketListBlogAdapter(List<String> headers, List<String> pictures){
+            super();
+            this.headers = headers;
+            this.pictures = pictures;
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.card_bucket_list_blog, parent, false);
+            CardBucketListBlogViewHolder cardBucketListBlogViewHolder = new CardBucketListBlogViewHolder(view);
+            return cardBucketListBlogViewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            CardBucketListBlogViewHolder cardBucketListBlogViewHolder = (CardBucketListBlogViewHolder) holder;
+            ImageLoader.getInstance().displayImage(pictures.get(position), cardBucketListBlogViewHolder.thumbnail);
+        }
+
+        @Override
+        public int getItemCount() {
+            return pictures.size();
+        }
     }
+
+    public class CardBucketListBlogViewHolder extends RecyclerView.ViewHolder {
+        ImageView thumbnail;
+        TextView title;
+
+        public CardBucketListBlogViewHolder(View itemView) {
+            super(itemView);
+            thumbnail = (ImageView) itemView.findViewById(R.id.thumbnail);
+            title = (TextView) itemView.findViewById(R.id.title);
+        }
+    }
+
+
+
+
 
     private class CardBucketListItemViewHolder extends RecyclerView.ViewHolder {
         View cardView;
-        HorizontalScrollView pictureScrollView;
-        LinearLayout locationPictures;
-        HorizontalScrollView blogScrollView;
-        LinearLayout locationBlogs;
+        RecyclerView pictures;
+        RecyclerView blogs;
         TextView location;
         View divider;
 
         public CardBucketListItemViewHolder(View itemView) {
             super(itemView);
             cardView = itemView;
-            pictureScrollView = (HorizontalScrollView) itemView.findViewById(R.id.picture_scrollview);
-            locationPictures = (LinearLayout) pictureScrollView.findViewById(R.id.location_pictures);
-            blogScrollView = (HorizontalScrollView) itemView.findViewById(R.id.blog_scrollview);
-            locationBlogs = (LinearLayout) pictureScrollView.findViewById(R.id.location_blogs);
+            pictures  = (RecyclerView) itemView.findViewById(R.id.user_bucket_list_pictures);
+            blogs= (RecyclerView) itemView.findViewById(R.id.user_bucket_list_blogs);
             location = (TextView) itemView.findViewById(R.id.location);
             divider = itemView.findViewById(R.id.divider);
 
@@ -202,13 +262,13 @@ public class BucketListActivity extends BaseNavDrawerActivity {
             this.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (pictureScrollView.getVisibility() == View.GONE) {
-                        pictureScrollView.setVisibility(View.VISIBLE);
-                        blogScrollView.setVisibility(View.VISIBLE);
+                    if (pictures.getVisibility() == View.GONE) {
+                        pictures.setVisibility(View.VISIBLE);
+                        blogs.setVisibility(View.VISIBLE);
                         divider.setVisibility(View.GONE);
                     } else {
-                        pictureScrollView.setVisibility(View.GONE);
-                        blogScrollView.setVisibility(View.GONE);
+                        pictures.setVisibility(View.GONE);
+                        blogs.setVisibility(View.GONE);
                         divider.setVisibility(View.VISIBLE);
                     }
                 }

@@ -39,6 +39,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.methods.HttpPost;
+import cz.msebera.android.httpclient.entity.mime.HttpMultipartMode;
+import cz.msebera.android.httpclient.entity.mime.content.FileBody;
+import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 
 /**
  * Created by root on 5/20/16.
@@ -735,7 +740,7 @@ public class Backend {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
+        //client.addHeader("Content-Type", "multipart/form-data");
         client.post("http://54.169.51.25:3000/api/photo", params, new AsyncHttpResponseHandler() {
 
             @Override
