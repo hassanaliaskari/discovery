@@ -25,19 +25,31 @@
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/scrollview"
+            android:id="@+id/picture_scrollview"
             android:layout_below="@id/location">
-
-            <LinearLayout
+               <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:id="@+id/location_pictures">
-
-
             </LinearLayout>
-
         </HorizontalScrollView>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/blog_scrollview"
+            android:layout_below="@id/location">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/location_blogs">
+            </LinearLayout>
+        </HorizontalScrollView>
+
+
+
     </LinearLayout>
 
 

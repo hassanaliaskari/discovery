@@ -130,15 +130,33 @@ public class BucketListActivity extends BaseNavDrawerActivity {
 
             final CardBucketListItemViewHolder cardBucketListItemViewHolder = (CardBucketListItemViewHolder) holder;
             cardBucketListItemViewHolder.location.setText(userBucketList.get(position).location);
-            cardBucketListItemViewHolder.scrollView.setVisibility(View.GONE);
-            populateScrollView(cardBucketListItemViewHolder.locationPictures, userBucketList.get(position).pictures);
+            cardBucketListItemViewHolder.pictureScrollView.setVisibility(View.GONE);
+            cardBucketListItemViewHolder.blogScrollView.setVisibility(View.GONE);
+            populatePictureScrollView(cardBucketListItemViewHolder.locationPictures, userBucketList.get(position).pictures);
             cardBucketListItemViewHolder.setListener();
         }
     }
 
 
-    private void populateScrollView(LinearLayout layout, List<String> pictures) {
+    private void populatePictureScrollView(LinearLayout layout, List<String> pictures) {
         for (int i=0; i<pictures.size(); i++) {
+            ImageView imageView = new ImageView(BucketListActivity.this);
+            imageView.setBackgroundResource(R.drawable.placeholder_loading);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dpToPx(100), dpToPx(100));
+            if (i==0) {
+                params.setMargins(dpToPx(16),0,0,0);
+            } else {
+                params.setMargins(dpToPx(4), 0, 0, 0);
+            }
+            imageView.setLayoutParams(params);
+            layout.addView(imageView);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            ImageLoader.getInstance().displayImage(pictures.get(i), imageView);
+        }
+    }
+
+    private void populateBlogScrollView(LinearLayout layout, List<String> pictures, List<String> headers) {
+        for (int i=0; i<headers.size(); i++) {
             ImageView imageView = new ImageView(BucketListActivity.this);
             imageView.setBackgroundResource(R.drawable.placeholder_loading);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(dpToPx(100), dpToPx(100));
@@ -161,16 +179,20 @@ public class BucketListActivity extends BaseNavDrawerActivity {
 
     private class CardBucketListItemViewHolder extends RecyclerView.ViewHolder {
         View cardView;
-        HorizontalScrollView scrollView;
+        HorizontalScrollView pictureScrollView;
         LinearLayout locationPictures;
+        HorizontalScrollView blogScrollView;
+        LinearLayout locationBlogs;
         TextView location;
         View divider;
 
         public CardBucketListItemViewHolder(View itemView) {
             super(itemView);
             cardView = itemView;
-            scrollView = (HorizontalScrollView) itemView.findViewById(R.id.scrollview);
-            locationPictures = (LinearLayout) scrollView.findViewById(R.id.location_pictures);
+            pictureScrollView = (HorizontalScrollView) itemView.findViewById(R.id.picture_scrollview);
+            locationPictures = (LinearLayout) pictureScrollView.findViewById(R.id.location_pictures);
+            blogScrollView = (HorizontalScrollView) itemView.findViewById(R.id.blog_scrollview);
+            locationBlogs = (LinearLayout) pictureScrollView.findViewById(R.id.location_blogs);
             location = (TextView) itemView.findViewById(R.id.location);
             divider = itemView.findViewById(R.id.divider);
 
@@ -180,11 +202,13 @@ public class BucketListActivity extends BaseNavDrawerActivity {
             this.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (scrollView.getVisibility() == View.GONE) {
-                        scrollView.setVisibility(View.VISIBLE);
+                    if (pictureScrollView.getVisibility() == View.GONE) {
+                        pictureScrollView.setVisibility(View.VISIBLE);
+                        blogScrollView.setVisibility(View.VISIBLE);
                         divider.setVisibility(View.GONE);
                     } else {
-                        scrollView.setVisibility(View.GONE);
+                        pictureScrollView.setVisibility(View.GONE);
+                        blogScrollView.setVisibility(View.GONE);
                         divider.setVisibility(View.VISIBLE);
                     }
                 }
