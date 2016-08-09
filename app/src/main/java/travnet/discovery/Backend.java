@@ -736,10 +736,11 @@ public class Backend {
             e.printStackTrace();
         }
 
-        client.post("http://54.86.18.174:8081", params, new AsyncHttpResponseHandler() {
+        client.post("http://54.169.51.25:3000/api/photo", params, new AsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {
+                Log.v("as", "dsd");
                 // called before request is started
             }
 
@@ -755,6 +756,7 @@ public class Backend {
 
             @Override
             public void onRetry(int retryNo) {
+                listener.onUploadPictureFailed();
                 // called when request is retried
             }
         });

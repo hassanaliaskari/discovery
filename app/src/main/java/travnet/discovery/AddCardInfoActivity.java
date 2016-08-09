@@ -214,13 +214,13 @@ public class AddCardInfoActivity extends AppCompatActivity {
 
     void postPictureCard() {
         Uri imageUri = null;
-        Parcelable parcelable = getIntent().getParcelableExtra("uri");
+        Parcelable parcelable = getIntent().getParcelableExtra("image_uri");
         imageUri = (Uri) parcelable;
 
 
         //Check if enough data is present
         String interest = inputInterest.getText().toString().trim();
-        if (interest.isEmpty() == true) {
+        /*if (interest.isEmpty() == true) {
             Toast.makeText(getApplicationContext(), R.string.error_interest_not_selected, Toast.LENGTH_LONG).show();
             return;
         }
@@ -228,10 +228,10 @@ public class AddCardInfoActivity extends AppCompatActivity {
         if (location == null) {
             Toast.makeText(getApplicationContext(), R.string.error_location_not_selected, Toast.LENGTH_LONG).show();
             return;
-        }
+        }*/
 
         //Post picture card
-        /*progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progress.setTitle("Uploading picture");
         progress.show();
 
@@ -249,9 +249,9 @@ public class AddCardInfoActivity extends AppCompatActivity {
                 progress.dismiss();
                 Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_LONG).show();
             }
-        });*/
+        });
 
-        returnFromActivity();
+        //returnFromActivity();
 
     }
 
