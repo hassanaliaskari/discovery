@@ -10,6 +10,11 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -733,7 +738,26 @@ public class Backend {
     public void uploadPicture(Uri uri, final UploadPicureListener listener) {
         File file = new File(uri.getPath());
 
-        AsyncHttpClient client = new AsyncHttpClient();
+        AmazonS3 s3 = new AmazonS3Client(new AWSCredentials() {
+            @Override
+            public String getAWSAccessKeyId() {
+                return "";
+            }
+
+            @Override
+            public String getAWSSecretKey() {
+                return "";
+            }
+        });
+        TransferUtility transferUtility = new TransferUtility(s3, context);
+        TransferObserver observer = transferUtility.upload(
+                "travnet",     /* The bucket to upload to */
+                "test",    /* The key for the uploaded object */
+                file        /* The file where the data to upload exists */
+        );
+
+
+        /*AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         try {
             params.put("key", file);
@@ -764,7 +788,7 @@ public class Backend {
                 listener.onUploadPictureFailed();
                 // called when request is retried
             }
-        });
+        });*/
     }
 
 
