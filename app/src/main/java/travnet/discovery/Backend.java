@@ -11,7 +11,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -463,54 +465,6 @@ public class Backend {
 
 
 
-    public void postPictureCard(final String title, final String interest) {
-        class postPictureCard extends AsyncTask<Void, Void, Void> {
-
-            @Override
-            protected Void doInBackground(Void... params) {
-
-                RequestQueue queue = Volley.newRequestQueue(context);
-                String url = baseUrl + "registerCard";
-
-                JSONObject pictureCard = new JSONObject();
-                try {
-                    pictureCard.put("user_id", User.getInstance().getUserID());
-                    pictureCard.put("card_type", "photo");
-                    pictureCard.put("interest", interest);
-                    pictureCard.put("title", title);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                        (Request.Method.POST, url, pictureCard, new Response.Listener<JSONObject>() {
-
-                            @Override
-                            public void onResponse(JSONObject response) {
-
-                            }
-                        }, new Response.ErrorListener() {
-
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                            }
-                        });
-
-                queue.add(jsObjRequest);
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void v) {
-
-            }
-        }
-
-        new postPictureCard().execute();
-
-    }
-
 
 
     public abstract class GetCardsListener {
@@ -726,6 +680,70 @@ public class Backend {
 
 
 
+
+    public abstract class GetUserPictureCountListener {
+        public GetUserPictureCountListener() {
+        }
+
+        public abstract void onSuccess(int count);
+        public abstract void onFailed();
+    }
+
+    public void getUserPictureCount(final GetUserPictureCountListener listener) {
+        class getUserPictureCountTask extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                RequestQueue queue = Volley.newRequestQueue(context);
+                String url = baseUrl + "getUserPhotoCount";
+
+                JSONObject userID = new JSONObject();
+                try {
+                    userID.put("user_id", User.getInstance().getUserID());
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                        (Request.Method.POST, url, userID, new Response.Listener<JSONObject>() {
+
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    int count = response.getInt("count");
+                                    listener.onSuccess(count);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    listener.onFailed();
+                                }
+
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                listener.onFailed();
+                            }
+                        });
+
+                queue.add(jsObjRequest);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void v) {
+            }
+        }
+        new getUserPictureCountTask().execute();
+    }
+
+
+
+
     public abstract class UploadPicureListener {
         public UploadPicureListener() {
         }
@@ -734,8 +752,7 @@ public class Backend {
         public abstract void onUploadPictureFailed();
     }
 
-
-    public void uploadPicture(Uri uri, final UploadPicureListener listener) {
+    public void uploadPicture(Uri uri, final String key, final UploadPicureListener listener) {
         File file = new File(uri.getPath());
 
         AmazonS3 s3 = new AmazonS3Client(new AWSCredentials() {
@@ -752,10 +769,31 @@ public class Backend {
         TransferUtility transferUtility = new TransferUtility(s3, context);
         TransferObserver observer = transferUtility.upload(
                 "travnet",     /* The bucket to upload to */
-                "test",    /* The key for the uploaded object */
+                key,    /* The key for the uploaded object */
                 file        /* The file where the data to upload exists */
         );
+        observer.setTransferListener(new TransferListener(){
 
+            @Override
+            public void onStateChanged(int id, TransferState state) {
+                if (state == TransferState.COMPLETED) {
+                    listener.onUploadPictureSuccess();
+                }
+            }
+
+            @Override
+            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                int percentage = (int) (bytesCurrent/bytesTotal * 100);
+                //Display percentage transfered to user
+            }
+
+
+            @Override
+            public void onError(int id, Exception ex) {
+                listener.onUploadPictureFailed();
+            }
+
+        });
 
         /*AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
@@ -792,6 +830,66 @@ public class Backend {
     }
 
 
+
+    public abstract class PostPictureCardListener {
+        public PostPictureCardListener() {
+        }
+
+        public abstract void onPostPictureCardSuccess();
+        public abstract void onPostPictureCardFailed();
+    }
+
+    public void postPictureCard(final String pictureUrl, final String heading, final String location, final String interest, final String description, final PostPictureCardListener listener) {
+        class postPictureCard extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                RequestQueue queue = Volley.newRequestQueue(context);
+                String url = baseUrl + "registerCard";
+
+                JSONObject pictureCard = new JSONObject();
+                try {
+                    pictureCard.put("user_id", User.getInstance().getUserID());
+                    pictureCard.put("card_type", "photo");
+                    pictureCard.put("url", pictureUrl);
+                    pictureCard.put("title", heading);
+                    pictureCard.put("location", location);
+                    pictureCard.put("interest", interest);
+                    pictureCard.put("description", description);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                        (Request.Method.POST, url, pictureCard, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                listener.onPostPictureCardSuccess();
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                listener.onPostPictureCardFailed();
+                            }
+                        });
+
+                queue.add(jsObjRequest);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void v) {
+
+            }
+        }
+
+        new postPictureCard().execute();
+
+    }
 
 
 }

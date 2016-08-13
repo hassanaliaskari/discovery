@@ -42,9 +42,11 @@ public class CropPictureActivity extends AppCompatActivity {
 
         progress = new ProgressDialog(this);
         cropImageView = (CropImageView) findViewById(R.id.crop_image_view);
+        setAspectRatio(SQUARE_RATIO);
 
         Uri imageUri = (Uri) getIntent().getExtras().getParcelable("path");
         setImageForCropping(imageUri);
+        cropImageView.setCompressFormat(Bitmap.CompressFormat.JPEG);
 
         ImageButton buttonRotateLeft = (ImageButton) findViewById(R.id.button_rotate_left);
         buttonRotateLeft.setOnClickListener(new View.OnClickListener() {
@@ -114,11 +116,14 @@ public class CropPictureActivity extends AppCompatActivity {
     private void setAspectRatio(int aspectRatio) {
         if (aspectRatio == LANDSCAPE_RATIO) {
             cropImageView.setCropMode(CropImageView.CropMode.RATIO_4_3);
+            cropImageView.setOutputWidth(1024);
         } else if (aspectRatio == SQUARE_RATIO) {
             cropImageView.setCropMode(CropImageView.CropMode.SQUARE);
+            cropImageView.setOutputWidth(1024);
         }
         if (aspectRatio == POTRAIT_RATIO) {
             cropImageView.setCropMode(CropImageView.CropMode.RATIO_3_4);
+            cropImageView.setOutputWidth(768);
         }
 
     }

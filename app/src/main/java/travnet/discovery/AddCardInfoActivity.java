@@ -35,10 +35,14 @@ public class AddCardInfoActivity extends AppCompatActivity {
     Place location;
     ArrayList<String> selectedInterests;
     int cardType;
+    Backend backend;
+    int pictureCount;
+    Uri imageUri;
 
+    EditText inputHeading;
     EditText add_location;
     EditText inputInterest;
-    EditText description;
+    EditText inputDescription;
     ProgressDialog progress;
     Menu menu;
 
@@ -52,6 +56,12 @@ public class AddCardInfoActivity extends AppCompatActivity {
         selectedInterests = new ArrayList<>();
         location = null;
         progress = new ProgressDialog(this);
+        backend = Backend.getInstance();
+
+        imageUri = null;
+        Parcelable parcelable = getIntent().getParcelableExtra("image_uri");
+        imageUri = (Uri) parcelable;
+
 
         inputInterest = (EditText) findViewById(R.id.add_activity);
         inputInterest.setOnTouchListener(new View.OnTouchListener() {
@@ -67,14 +77,15 @@ public class AddCardInfoActivity extends AppCompatActivity {
         add_location = (EditText) findViewById(R.id.add_location);
         add_location.setOnClickListener(getLocation);
 
-        description = (EditText) findViewById(R.id.description);
+        inputDescription = (EditText) findViewById(R.id.description);
+        inputHeading = (EditText) findViewById(R.id.heading);
 
         if (getIntent().getStringExtra("type").equals("blog")) {
             cardType = TYPE_BLOG;
-            description.setVisibility(View.GONE);
+            inputDescription.setVisibility(View.GONE);
         } else {
             cardType = TYPE_PICTURE;
-            description.setVisibility(View.VISIBLE);
+            inputDescription.setVisibility(View.VISIBLE);
         }
 
 
@@ -162,7 +173,7 @@ public class AddCardInfoActivity extends AppCompatActivity {
             if (cardType == TYPE_BLOG) {
                 postBlog();
             } else {
-                postPictureCard();
+                checkInfo();
             }
 
             return true;
@@ -212,15 +223,10 @@ public class AddCardInfoActivity extends AppCompatActivity {
     }
 
 
-    void postPictureCard() {
-        Uri imageUri = null;
-        Parcelable parcelable = getIntent().getParcelableExtra("image_uri");
-        imageUri = (Uri) parcelable;
-
-
+    void checkInfo() {
         //Check if enough data is present
         String interest = inputInterest.getText().toString().trim();
-        /*if (interest.isEmpty() == true) {
+        if (interest.isEmpty() == true) {
             Toast.makeText(getApplicationContext(), R.string.error_interest_not_selected, Toast.LENGTH_LONG).show();
             return;
         }
@@ -228,20 +234,41 @@ public class AddCardInfoActivity extends AppCompatActivity {
         if (location == null) {
             Toast.makeText(getApplicationContext(), R.string.error_location_not_selected, Toast.LENGTH_LONG).show();
             return;
-        }*/
+        }
 
-        //Post picture card
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progress.setTitle("Uploading picture");
         progress.show();
+        getUserPictureCount();
+    }
 
-        Backend backend = Backend.getInstance();
-        backend.uploadPicture(imageUri, backend.new UploadPicureListener() {
+
+
+    void getUserPictureCount() {
+        backend.getUserPictureCount(backend.new GetUserPictureCountListener() {
+            @Override
+            public void onSuccess(int count) {
+                pictureCount = count;
+                uploadToS3();
+            }
+
+            @Override
+            public void onFailed() {
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
+
+    void uploadToS3() {
+        String userID = User.getInstance().getUserID();
+        String key = userID + "-" + pictureCount + ".jpg";
+
+        backend.uploadPicture(imageUri, key, backend.new UploadPicureListener() {
             @Override
             public void onUploadPictureSuccess() {
-                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();
-                progress.dismiss();
-                finish();
+                postPictureCard();
             }
 
             @Override
@@ -251,9 +278,35 @@ public class AddCardInfoActivity extends AppCompatActivity {
             }
         });
 
-        //returnFromActivity();
+    }
+
+    void postPictureCard() {
+        String interest = inputInterest.getText().toString().trim();
+        String description = inputDescription.getText().toString().trim();
+        String heading = inputHeading.getText().toString().trim();
+        String userID = User.getInstance().getUserID();
+        String pictureUrl = "https://travnet.s3.amazonaws.com/" + userID + "-" + pictureCount + ".jpg";
+
+
+        backend.postPictureCard(pictureUrl, heading, location.getName().toString(), interest, description, backend.new PostPictureCardListener() {
+            @Override
+            public void onPostPictureCardSuccess() {
+                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();
+                progress.dismiss();
+                returnFromActivity();
+            }
+
+            @Override
+            public void onPostPictureCardFailed() {
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_LONG).show();
+            }
+        });
+
+
 
     }
+
+
 
 
     private void returnFromActivity() {
