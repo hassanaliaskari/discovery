@@ -85,8 +85,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/image_holder"
         android:orientation="horizontal"
-        android:paddingTop="8dp"
-        android:background="#000000"
         android:gravity="center"
         android:id="@+id/button_holder">
 

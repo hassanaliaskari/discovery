@@ -13,36 +13,37 @@ import com.liangfeizc.avatarview.AvatarView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+
+
 //View Holder for picture cards
 public class CardPictureViewHolder extends RecyclerView.ViewHolder {
     View cardView;
 
-    TextView description;
     ImageView image;
-    ImageButton like_button;
-    ImageButton add_to_bl_button;
-    TextView likes;
-    TextView activity;
     View scrim;
+    TextView title;
     TextView location;
+    ImageButton likeButton;
+    ImageButton addToBlButton;
+    TextView activity;
+    TextView description;
     AvatarView uploaderPic;
-    BarUploaderViewHolder uploader;
+    TextView uploaderName;
 
     public CardPictureViewHolder(View itemView) {
         super(itemView);
         cardView = itemView;
-        uploader = new BarUploaderViewHolder ();
-        description = (TextView) itemView.findViewById(R.id.description);
+
         image = (ImageView) itemView.findViewById(R.id.image);
-        like_button = (ImageButton) itemView.findViewById(R.id.like_button);
-        add_to_bl_button = (ImageButton) itemView.findViewById(R.id.add_to_bl_button);
-        likes = (TextView) itemView.findViewById(R.id.likes);
-        activity = (TextView) itemView.findViewById(R.id.activity);
         scrim = (View) itemView.findViewById(R.id.scrim);
+        title= (TextView) itemView.findViewById(R.id.title);
         location = (TextView) itemView.findViewById(R.id.location);
-        //uploader.name = (TextView) itemView.findViewById(R.id.name);
-        //uploader.pp = (ImageView) itemView.findViewById(R.id.pp);
-        uploaderPic = (AvatarView) itemView.findViewById(R.id.pp);
+        likeButton = (ImageButton) itemView.findViewById(R.id.like_button);
+        addToBlButton = (ImageButton) itemView.findViewById(R.id.add_to_bl_button);
+        activity = (TextView) itemView.findViewById(R.id.activity);
+        description = (TextView) itemView.findViewById(R.id.description);
+        uploaderName = (TextView) itemView.findViewById(R.id.uploader_name);
+        uploaderPic = (AvatarView) itemView.findViewById(R.id.uploader_pp);
     }
 
 
@@ -54,33 +55,35 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
                 .considerExifParams(true)
                 .build();
 
-        this.description.setText(dataPictureCard.description);
-        //this.likes.setText(String.valueOf(dataPictureCard.likes));
-        this.activity.setText(dataPictureCard.activity);
-        this.location.setText(dataPictureCard.location);
+
         ImageLoader.getInstance().displayImage(dataPictureCard.link, this.image, options, new Animations.AnimateFirstDisplayListener());
-        //this.uploader.name.setText(dataPictureCard.dataUploaderBar.uploader_name);
-        //ImageLoader.getInstance().displayImage(dataPictureCard.dataUploaderBar.uploader_pp, this.uploader.pp, options, null);
+        this.title.setText(dataPictureCard.title);
+        this.location.setText(dataPictureCard.location);
+        this.activity.setText(dataPictureCard.activity);
+        this.description.setText(dataPictureCard.description);
+        this.uploaderName.setText(dataPictureCard.dataUploaderBar.uploader_name);
         ImageLoader.getInstance().displayImage(dataPictureCard.dataUploaderBar.uploader_pp, this.uploaderPic, options, null);
 
         if (dataPictureCard.isLiked == false) {
-            this.like_button.setVisibility(View.VISIBLE);
             this.scrim.setVisibility(View.GONE);
+            this.title.setVisibility(View.GONE);
             this.location.setVisibility(View.GONE);
+            this.description.setVisibility(View.GONE);
             this.addLikeCallback(dataPictureCard);
         } else {
-            this.like_button.setImageResource(R.drawable.ic_liked);
-            this.like_button.setClickable(false);
-            this.add_to_bl_button.setVisibility(View.VISIBLE);
             this.scrim.setVisibility(View.VISIBLE);
+            this.title.setVisibility(View.VISIBLE);
             this.location.setVisibility(View.VISIBLE);
+            this.description.setVisibility(View.VISIBLE);
+            this.likeButton.setImageResource(R.drawable.ic_liked);
+            this.likeButton.setClickable(false);
         }
 
         if (dataPictureCard.isAddedToBl == false) {
             this.addBucketCallback(dataPictureCard);
         } else {
-            this.add_to_bl_button.setImageResource(R.drawable.ic_added_to_bl);
-            this.add_to_bl_button.setClickable(false);
+            this.addToBlButton.setImageResource(R.drawable.ic_added_to_bl);
+            this.addToBlButton.setClickable(false);
         }
 
 
@@ -89,54 +92,42 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
 
 
         public void addLikeCallback(final DataPictureCard dataPictureCard) {
-        like_button.setOnClickListener(new View.OnClickListener() {
+            likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Backend backend = Backend.getInstance();
-                backend.registerLikeCard(dataPictureCard.id, backend.new RegisterLikeCardListener() {
-                    @Override
-                    public void onSuceess() {
-
-                    }
-
-                    @Override
-                    public void onFailed() {
-
-                    }
-                });
-
                 dataPictureCard.likes++;
                 dataPictureCard.isLiked = true;
 
                 //like_button.setVisibility(View.GONE);
-                like_button.setImageResource(R.drawable.ic_liked);
-                like_button.setClickable(false);
+                likeButton.setImageResource(R.drawable.ic_liked);
+                likeButton.setClickable(false);
 
-                add_to_bl_button.setVisibility(View.VISIBLE);
                 scrim.setVisibility(View.VISIBLE);
+                title.setVisibility(View.VISIBLE);
                 location.setVisibility(View.VISIBLE);
+                description.setVisibility(View.VISIBLE);
                 AlphaAnimation fadeIn = new AlphaAnimation(0.0f, 1.0f);
                 fadeIn.setDuration(1200);
                 fadeIn.setFillAfter(true);
                 AlphaAnimation scrimFadeIn = new AlphaAnimation(0.0f, 0.7f);
                 scrimFadeIn.setDuration(1200);
                 scrimFadeIn.setFillAfter(true);
+                title.startAnimation(fadeIn);
                 location.startAnimation(fadeIn);
                 scrim.startAnimation(scrimFadeIn);
-                //likes.setText(dataPictureCard.likes + " People Likes this");
             }
         });
         }
 
     public void addBucketCallback(final DataPictureCard dataPictureCard) {
-        add_to_bl_button.setOnClickListener(new View.OnClickListener() {
+        addToBlButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dataPictureCard.noBlucketListed++;
                 dataPictureCard.isAddedToBl = true;
 
-                add_to_bl_button.setImageResource(R.drawable.ic_added_to_bl);
-                add_to_bl_button.setClickable(false);
+                addToBlButton.setImageResource(R.drawable.ic_added_to_bl);
+                addToBlButton.setClickable(false);
             }
         });
     }

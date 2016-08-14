@@ -71,6 +71,7 @@ public class FullscreenPictureCardActivity extends AppCompatActivity {
         if(dataPictureCard.isLiked == false) {
             title.setVisibility(View.GONE);
             location.setVisibility(View.GONE);
+            description.setVisibility(View.GONE);
         }
         if (dataPictureCard.isLiked == true) {
             likeButton.setImageResource(R.drawable.ic_liked);
@@ -102,6 +103,7 @@ public class FullscreenPictureCardActivity extends AppCompatActivity {
 
                 title.setVisibility(View.VISIBLE);
                 location.setVisibility(View.VISIBLE);
+                description.setVisibility(View.VISIBLE);
             }
         });
     }
