@@ -92,6 +92,19 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
         like_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Backend backend = Backend.getInstance();
+                backend.registerLikeCard(dataPictureCard.id, backend.new RegisterLikeCardListener() {
+                    @Override
+                    public void onSuceess() {
+
+                    }
+
+                    @Override
+                    public void onFailed() {
+
+                    }
+                });
+
                 dataPictureCard.likes++;
                 dataPictureCard.isLiked = true;
 

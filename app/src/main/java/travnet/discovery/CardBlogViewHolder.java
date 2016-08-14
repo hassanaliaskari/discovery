@@ -84,7 +84,7 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    public void addLikeCallback(final DataBlogCard dataBlogCard) {
+     public void addLikeCallback(final DataBlogCard dataBlogCard) {
         like_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

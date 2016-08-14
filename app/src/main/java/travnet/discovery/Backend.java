@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Base64;
+import android.util.EventLogTags;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -63,7 +64,7 @@ public class Backend {
     //private String baseUrl = "http://54.86.18.174/api/";
     private String baseUrl = "http://54.169.51.25/api/";
 
-    public static final int NO_OF_CARDS = 5;
+    //public static final int NO_OF_CARDS = 5;
     private static final int TYPE_PICTURE = 0;
     private static final int TYPE_BLOG = 1;
 
@@ -342,18 +343,18 @@ public class Backend {
                                 try {
                                     ArrayList<DataPictureCard> dataPictureCards = new ArrayList<DataPictureCard>();
                                     JSONArray arrayJson = response.getJSONArray("cards");
-                                    for (int i=0; i< NO_OF_CARDS; i++) {
+                                    /*for (int i=0; i< NO_OF_CARDS; i++) {
                                         JSONObject card = arrayJson.getJSONObject(i);
 
                                         String check = card.getString(("card-type"));
                                         if (card.getString("card-type").equals("image")) {
                                             JSONObject content = card.getJSONObject("content");
-                                            DataPictureCard temp = new DataPictureCard(content.getString("description"), content.getString("url"),
+                                            DataPictureCard temp = new DataPictureCard("test_id", content.getString("description"), content.getString("url"),
                                                     card.getInt("likes"), card.getString("location"), "Place holder", card.getString("user-name"),
                                                     card.getString("user-img"));
                                             dataPictureCards.add(temp);
                                         }
-                                    }
+                                    }*/
                                     listener.onUserPicturesFetched(dataPictureCards);
 
                                 } catch (JSONException e) {
@@ -500,19 +501,20 @@ public class Backend {
                                 try {
                                     JSONObject jsonObj = new JSONObject(response);
                                     JSONArray arrayJson = jsonObj.getJSONArray("cards");
-                                    for (int i=0; i< NO_OF_CARDS; i++) {
+                                    int noOfCards = arrayJson.length();
+                                    for (int i=0; i< noOfCards; i++) {
                                         JSONObject card = arrayJson.getJSONObject(i);
                                         HomeFragment.CardsRef cardRef = new HomeFragment.CardsRef();
 
-                                        String check = card.getString(("card-type"));
-                                        if (card.getString("card-type").equals("image")) {
+                                        String cardID = card.getString("_id");
+                                        if (card.getString("card_type").equals("photo")) {
                                             cardRef.type = TYPE_PICTURE;
                                             cardRef.index = dataPictureCards.size();
                                             cardsRef.add(cardRef);
-                                            JSONObject content = card.getJSONObject("content");
-                                            DataPictureCard temp = new DataPictureCard(content.getString("description"), content.getString("url"),
-                                                    card.getInt("likes"), card.getString("location"), "Sight-Seeing", card.getString("user-name"),
-                                                    card.getString("user-img"));
+                                            JSONArray interests = card.getJSONArray("interests");
+                                            DataPictureCard temp = new DataPictureCard(cardID, card.getString("description"), card.getString("url"),
+                                                    card.getInt("likes"), card.getString("title"), card.getString("location"), interests.getString(0), card.getString("user_name"),
+                                                    card.getString("user_profile_pic"));
                                             dataPictureCards.add(temp);
                                         }
                                         else if (card.getString("card-type").equals("blog")) {
@@ -772,7 +774,7 @@ public class Backend {
                 key,    /* The key for the uploaded object */
                 file        /* The file where the data to upload exists */
         );
-        observer.setTransferListener(new TransferListener(){
+        observer.setTransferListener(new TransferListener() {
 
             @Override
             public void onStateChanged(int id, TransferState state) {
@@ -783,7 +785,7 @@ public class Backend {
 
             @Override
             public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-                int percentage = (int) (bytesCurrent/bytesTotal * 100);
+                int percentage = (int) (bytesCurrent / bytesTotal * 100);
                 //Display percentage transfered to user
             }
 
@@ -855,7 +857,9 @@ public class Backend {
                     pictureCard.put("url", pictureUrl);
                     pictureCard.put("title", heading);
                     pictureCard.put("location", location);
-                    pictureCard.put("interest", interest);
+                    JSONArray interests = new JSONArray();
+                    interests.put(interest);
+                    pictureCard.put("interests", interests);
                     pictureCard.put("description", description);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -890,6 +894,67 @@ public class Backend {
         new postPictureCard().execute();
 
     }
+
+
+    public abstract class RegisterLikeCardListener {
+        public RegisterLikeCardListener() {
+        }
+
+        public abstract void onSuceess();
+        public abstract void onFailed();
+    }
+
+    public void registerLikeCard(final String cardID, final RegisterLikeCardListener listener) {
+        class postPictureCard extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                RequestQueue queue = Volley.newRequestQueue(context);
+                String url = baseUrl + "likeCard";
+
+                JSONObject likeInfo = new JSONObject();
+                try {
+                    likeInfo.put("user_id", User.getInstance().getUserID());
+                    likeInfo.put("card_id", cardID);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                        (Request.Method.POST, url, likeInfo, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                listener.onSuceess();
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                listener.onFailed();
+                            }
+                        });
+
+                queue.add(jsObjRequest);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void v) {
+
+            }
+        }
+
+        new postPictureCard().execute();
+
+    }
+
+
+
+
+
 
 
 }
