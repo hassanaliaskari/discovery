@@ -24,7 +24,9 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
     TextView title;
     TextView location;
     ImageButton likeButton;
+    TextView noOfLikes;
     ImageButton addToBlButton;
+    TextView noOfBucketList;
     TextView activity;
     TextView description;
     AvatarView uploaderPic;
@@ -39,7 +41,9 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
         title= (TextView) itemView.findViewById(R.id.title);
         location = (TextView) itemView.findViewById(R.id.location);
         likeButton = (ImageButton) itemView.findViewById(R.id.like_button);
+        noOfLikes = (TextView) itemView.findViewById(R.id.no_of_likes);
         addToBlButton = (ImageButton) itemView.findViewById(R.id.add_to_bl_button);
+        noOfBucketList = (TextView) itemView.findViewById(R.id.no_of_bl);
         activity = (TextView) itemView.findViewById(R.id.activity);
         description = (TextView) itemView.findViewById(R.id.description);
         uploaderName = (TextView) itemView.findViewById(R.id.uploader_name);
@@ -59,6 +63,8 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
         ImageLoader.getInstance().displayImage(dataPictureCard.link, this.image, options, new Animations.AnimateFirstDisplayListener());
         this.title.setText(dataPictureCard.title);
         this.location.setText(dataPictureCard.location);
+        this.noOfLikes.setText(String.valueOf(dataPictureCard.likes));
+        this.noOfBucketList.setText(String.valueOf(dataPictureCard.noBlucketListed));
         this.activity.setText(dataPictureCard.activity);
         this.description.setText(dataPictureCard.description);
         this.uploaderName.setText(dataPictureCard.dataUploaderBar.uploader_name);
@@ -96,6 +102,7 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 dataPictureCard.likes++;
+                noOfLikes.setText(String.valueOf(dataPictureCard.likes));
                 dataPictureCard.isLiked = true;
 
                 //like_button.setVisibility(View.GONE);
@@ -124,6 +131,7 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 dataPictureCard.noBlucketListed++;
+                noOfBucketList.setText(String.valueOf(dataPictureCard.noBlucketListed));
                 dataPictureCard.isAddedToBl = true;
 
                 addToBlButton.setImageResource(R.drawable.ic_added_to_bl);

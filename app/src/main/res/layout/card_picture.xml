@@ -69,31 +69,53 @@
             android:id="@+id/button_holder">
 
 
-            <ImageButton
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:id="@+id/like_button"
-                android:src="@drawable/ic_like"
-                android:minHeight="0dp"
-                android:minWidth="0dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="4dp"
-                style="@style/Widget.AppCompat.Button.Borderless"/>
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/like_button"
+                    android:src="@drawable/ic_like"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
+                    style="@style/Widget.AppCompat.Button.Borderless"/>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="12sp"
+                    android:text="103"
+                    android:id="@+id/no_of_likes" />
+            </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/add_to_bl_button"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:minHeight="0dp"
-                android:minWidth="0dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="8dp"
-                android:src="@drawable/ic_add_to_bl"
-                style="@style/Widget.AppCompat.Button.Borderless"/>
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+                <ImageButton
+                    android:id="@+id/add_to_bl_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
+                    android:src="@drawable/ic_add_to_bl"
+                    style="@style/Widget.AppCompat.Button.Borderless"/>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="12sp"
+                    android:text="13"
+                    android:id="@+id/no_of_bl" />
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -130,24 +152,24 @@
                 android:gravity="right"
                 android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:paddingRight="8dp"
-                android:textSize="16sp"
-                android:id="@+id/uploader_name" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingRight="8dp"
+                    android:textSize="16sp"
+                    android:id="@+id/uploader_name" />
 
-            <com.liangfeizc.avatarview.AvatarView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_vertical"
-                android:id="@+id/uploader_pp"
-                android:layout_marginRight="16dp"
-                avatarview:border_width="6dp"
-                avatarview:border_color="@android:color/white"
-                avatarview:shadow_width="6dp"
-                avatarview:shadow_color="@android:color/holo_red_dark"/>
+                <com.liangfeizc.avatarview.AvatarView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:id="@+id/uploader_pp"
+                    android:layout_marginRight="16dp"
+                    avatarview:border_width="6dp"
+                    avatarview:border_color="@android:color/white"
+                    avatarview:shadow_width="6dp"
+                    avatarview:shadow_color="@android:color/holo_red_dark"/>
             </LinearLayout>
 
         </LinearLayout>
