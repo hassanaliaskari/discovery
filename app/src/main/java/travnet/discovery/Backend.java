@@ -506,12 +506,21 @@ public class Backend {
                                         JSONObject card = arrayJson.getJSONObject(i);
                                         HomeFragment.CardsRef cardRef = new HomeFragment.CardsRef();
 
+                                        boolean isLiked = false;
+                                        JSONArray likeList = card.getJSONArray("like_list");
+                                        for (int j=0;j<likeList.length();j++) {
+                                            String userID = User.getInstance().getUserID();
+                                            if (likeList.getString(j).equals(userID))
+                                                isLiked = true;
+                                        }
+
+
                                         if (card.getString("card_type").equals("photo")) {
                                             cardRef.type = TYPE_PICTURE;
                                             cardRef.index = dataPictureCards.size();
                                             cardsRef.add(cardRef);
                                             JSONArray interests = card.getJSONArray("interests");
-                                            DataPictureCard temp = new DataPictureCard(card.getString("_id"), card.getString("description"), card.getString("url"),
+                                            DataPictureCard temp = new DataPictureCard(card.getString("_id"), isLiked, card.getString("description"), card.getString("url"),
                                                     card.getInt("likes"), card.getString("title"), card.getString("location"), interests.getString(0), card.getString("user_name"),
                                                     card.getString("user_profile_pic"));
                                             dataPictureCards.add(temp);
@@ -524,7 +533,7 @@ public class Backend {
                                             ArrayList<String> interestList = new ArrayList<>();
                                             for (int j=0;j<interests.length();j++)
                                                 interestList.add(interests.getString(j));
-                                            DataBlogCard temp = new DataBlogCard(card.getString("_id"), card.getString("url"), card.getString("thumbnail"), card.getString("title"),
+                                            DataBlogCard temp = new DataBlogCard(card.getString("_id"), isLiked, card.getString("url"), card.getString("thumbnail"), card.getString("title"),
                                                     card.getString("description"), card.getInt("likes"), card.getString("location"), interestList, card.getString("user_name"),
                                                     card.getString("user_profile_pic"));
                                             dataBlogCards.add(temp);

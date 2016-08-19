@@ -23,12 +23,12 @@ public class SplashActivity extends AppCompatActivity {
         final ImageLoader imageLoader = ImageLoader.getInstance();
 
         SharedPreferences myPrefs = this.getSharedPreferences("login", MODE_PRIVATE);
-        boolean isLogged = myPrefs.getBoolean("isLogged", false);
+        boolean prev_login = myPrefs.getBoolean("prev_login", false);
         String userID = myPrefs.getString("user_id", "");
 
         final Intent intent = new Intent(this, MainActivity.class);
 
-        if (isLogged && !userID.equals("")) {
+        if (prev_login && !userID.equals("")) {
             Log.i("login", userID);
             User.getInstance().setUserID(userID);
         } else {

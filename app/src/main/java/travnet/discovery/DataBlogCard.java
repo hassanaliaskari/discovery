@@ -27,7 +27,7 @@ public class DataBlogCard {
     public DataBlogCard() {
     }
 
-    public DataBlogCard(String id, String url, String thumbnail_url, String title, String extract, int likes, String location, ArrayList<String> interests, String uploader_name, String uploader_pp) {
+    public DataBlogCard(String id, boolean isLiked, String url, String thumbnail_url, String title, String extract, int likes, String location, ArrayList<String> interests, String uploader_name, String uploader_pp) {
         dataUploaderBar = new DataUploaderBar();
         this.interests = new ArrayList<String>();
         this.id = id;
@@ -41,7 +41,7 @@ public class DataBlogCard {
         this.dataUploaderBar.uploader_name = uploader_name;
         this.dataUploaderBar.uploader_pp = uploader_pp;
 
-        this.isLiked = false;
+        this.isLiked = isLiked;
     }
 
 }
