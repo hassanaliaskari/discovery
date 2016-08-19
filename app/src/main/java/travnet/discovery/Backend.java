@@ -920,7 +920,7 @@ public class Backend {
         public abstract void onFailed();
     }
 
-    public void registerLikeCard(final String cardID, final RegisterLikeCardListener listener) {
+    public void registerLikeCard(final String cardID) {
         class postPictureCard extends AsyncTask<Void, Void, Void> {
 
             @Override
@@ -942,13 +942,13 @@ public class Backend {
 
                             @Override
                             public void onResponse(JSONObject response) {
-                                listener.onSuceess();
+
                             }
                         }, new Response.ErrorListener() {
 
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                listener.onFailed();
+
                             }
                         });
 

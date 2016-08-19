@@ -22,9 +22,9 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
     TextView title;
     ImageView thumbnail;
     TextView extract;
-    ImageButton like_button;
+    ImageButton likeButton;
     TextView noOfLikes;
-    ImageButton add_to_bl_button;
+    ImageButton addToBlButton;
     TextView noOfBucketList;
     TextView activity;
     TextView location;
@@ -38,9 +38,9 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
         title = (TextView) itemView.findViewById(R.id.title);
         thumbnail = (ImageView) itemView.findViewById(R.id.thumbnail);
         extract = (TextView) itemView.findViewById(R.id.extract);
-        like_button = (ImageButton) itemView.findViewById(R.id.like_button);
+        likeButton = (ImageButton) itemView.findViewById(R.id.like_button);
         noOfLikes = (TextView) itemView.findViewById(R.id.no_of_likes);
-        add_to_bl_button = (ImageButton) itemView.findViewById(R.id.add_to_bl_button);
+        addToBlButton = (ImageButton) itemView.findViewById(R.id.add_to_bl_button);
         noOfBucketList = (TextView) itemView.findViewById(R.id.no_of_bl);
         activity = (TextView) itemView.findViewById(R.id.activity);
         location = (TextView) itemView.findViewById(R.id.location);
@@ -68,39 +68,42 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
         this.uploaderName.setText(dataBlogCard.dataUploaderBar.uploader_name);
 
         if (dataBlogCard.isLiked == false) {
+            likeButton.setImageResource(R.drawable.ic_like);
             this.addLikeCallback(dataBlogCard);
         } else {
-            this.like_button.setImageResource(R.drawable.ic_liked);
-            this.like_button.setClickable(false);
+            this.likeButton.setImageResource(R.drawable.ic_liked);
+            this.likeButton.setClickable(false);
         }
 
         if (dataBlogCard.isAddedToBl == false) {
+            this.addToBlButton.setImageResource(R.drawable.ic_add_to_bl);
             this.addBucketCallback(dataBlogCard);
         } else {
-            this.add_to_bl_button.setImageResource(R.drawable.ic_added_to_bl);
-            this.add_to_bl_button.setClickable(false);
+            this.addToBlButton.setImageResource(R.drawable.ic_added_to_bl);
+            this.addToBlButton.setClickable(false);
         }
 
     }
 
 
      public void addLikeCallback(final DataBlogCard dataBlogCard) {
-        like_button.setOnClickListener(new View.OnClickListener() {
+        likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Backend.getInstance().registerLikeCard(dataBlogCard.id);
                 dataBlogCard.likes++;
                 noOfLikes.setText(String.valueOf(dataBlogCard.likes));
                 dataBlogCard.isLiked = true;
 
-                like_button.setImageResource(R.drawable.ic_liked);
-                like_button.setClickable(false);
+                likeButton.setImageResource(R.drawable.ic_liked);
+                likeButton.setClickable(false);
             }
         });
     }
 
 
     public void addBucketCallback(final DataBlogCard dataBlogCard) {
-        add_to_bl_button.setOnClickListener(new View.OnClickListener() {
+        addToBlButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dataBlogCard.noBlucketListed++;
@@ -108,8 +111,8 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
 
                 dataBlogCard.isAddedToBl = true;
 
-                add_to_bl_button.setImageResource(R.drawable.ic_added_to_bl);
-                add_to_bl_button.setClickable(false);
+                addToBlButton.setImageResource(R.drawable.ic_added_to_bl);
+                addToBlButton.setClickable(false);
             }
         });
     }

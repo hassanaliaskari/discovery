@@ -75,6 +75,7 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
             this.title.setVisibility(View.GONE);
             this.location.setVisibility(View.GONE);
             this.description.setVisibility(View.GONE);
+            likeButton.setImageResource(R.drawable.ic_like);
             this.addLikeCallback(dataPictureCard);
         } else {
             this.scrim.setVisibility(View.VISIBLE);
@@ -86,6 +87,7 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
         }
 
         if (dataPictureCard.isAddedToBl == false) {
+            this.addToBlButton.setImageResource(R.drawable.ic_add_to_bl);
             this.addBucketCallback(dataPictureCard);
         } else {
             this.addToBlButton.setImageResource(R.drawable.ic_added_to_bl);
@@ -101,11 +103,11 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
             likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Backend.getInstance().registerLikeCard(dataPictureCard.id);
                 dataPictureCard.likes++;
                 noOfLikes.setText(String.valueOf(dataPictureCard.likes));
                 dataPictureCard.isLiked = true;
 
-                //like_button.setVisibility(View.GONE);
                 likeButton.setImageResource(R.drawable.ic_liked);
                 likeButton.setClickable(false);
 
