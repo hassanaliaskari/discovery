@@ -5,9 +5,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 
 //Data Structure for blog cards
 public class DataBlogCard {
+    String id;
     String url;
     String thumbnail_url;
     String title;
@@ -15,6 +18,7 @@ public class DataBlogCard {
     int likes;
     int noBlucketListed;
     String location;
+    ArrayList<String> interests;
     DataUploaderBar dataUploaderBar;
 
     boolean isLiked;
@@ -23,14 +27,17 @@ public class DataBlogCard {
     public DataBlogCard() {
     }
 
-    public DataBlogCard(String url, String thumbnail_url, String title, String extract, int likes, String location, String uploader_name, String uploader_pp) {
+    public DataBlogCard(String id, String url, String thumbnail_url, String title, String extract, int likes, String location, ArrayList<String> interests, String uploader_name, String uploader_pp) {
         dataUploaderBar = new DataUploaderBar();
+        this.interests = new ArrayList<String>();
+        this.id = id;
         this.url = url;
         this.thumbnail_url = thumbnail_url;
         this.title = title;
         this.extract = extract;
         this.likes = likes;
         this.location = location;
+        this.interests.addAll(interests);
         this.dataUploaderBar.uploader_name = uploader_name;
         this.dataUploaderBar.uploader_pp = uploader_pp;
 

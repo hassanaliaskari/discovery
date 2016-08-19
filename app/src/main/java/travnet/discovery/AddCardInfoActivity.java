@@ -83,9 +83,11 @@ public class AddCardInfoActivity extends AppCompatActivity {
         if (getIntent().getStringExtra("type").equals("blog")) {
             cardType = TYPE_BLOG;
             inputDescription.setVisibility(View.GONE);
+            inputHeading.setVisibility(View.GONE);
         } else {
             cardType = TYPE_PICTURE;
             inputDescription.setVisibility(View.VISIBLE);
+            inputHeading.setVisibility(View.VISIBLE);
         }
 
 
@@ -190,8 +192,8 @@ public class AddCardInfoActivity extends AppCompatActivity {
         String blogExtract = getIntent().getStringExtra("extract");
         String thumbnailURL = getIntent().getStringExtra("thumbnail");
 
-        String interests = inputInterest.getText().toString().trim();
-        if (interests.isEmpty() == true) {
+        //String interests = inputInterest.getText().toString().trim();
+        if (selectedInterests.isEmpty()) {
             Toast.makeText(getApplicationContext(), R.string.error_interest_not_selected, Toast.LENGTH_LONG).show();
             return;
         }
@@ -202,11 +204,11 @@ public class AddCardInfoActivity extends AppCompatActivity {
         }
 
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progress.setTitle("Uploading picture");
+        progress.setTitle("Sharing Blog");
         progress.show();
 
         Backend backend = Backend.getInstance();
-        backend.postBlog(blogURL, blogTitle, blogExtract, thumbnailURL, interests, location.getName().toString(), backend.new PostBlogListener() {
+        backend.postBlog(blogURL, blogTitle, blogExtract, thumbnailURL, selectedInterests, location.getName().toString(), backend.new PostBlogListener() {
             @Override
             public void onBlogPostSuccess() {
                 progress.dismiss();
@@ -237,7 +239,7 @@ public class AddCardInfoActivity extends AppCompatActivity {
         }
 
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progress.setTitle("Uploading picture");
+        progress.setTitle("Uploading Picture");
         progress.show();
         getUserPictureCount();
     }

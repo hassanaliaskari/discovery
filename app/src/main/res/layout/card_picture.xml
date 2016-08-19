@@ -89,7 +89,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:textSize="12sp"
-                    android:text="103"
                     android:id="@+id/no_of_likes" />
             </LinearLayout>
 
@@ -113,7 +112,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:textSize="12sp"
-                    android:text="13"
                     android:id="@+id/no_of_bl" />
             </LinearLayout>
 

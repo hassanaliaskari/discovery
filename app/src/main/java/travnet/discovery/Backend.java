@@ -506,25 +506,27 @@ public class Backend {
                                         JSONObject card = arrayJson.getJSONObject(i);
                                         HomeFragment.CardsRef cardRef = new HomeFragment.CardsRef();
 
-                                        String cardID = card.getString("_id");
                                         if (card.getString("card_type").equals("photo")) {
                                             cardRef.type = TYPE_PICTURE;
                                             cardRef.index = dataPictureCards.size();
                                             cardsRef.add(cardRef);
                                             JSONArray interests = card.getJSONArray("interests");
-                                            DataPictureCard temp = new DataPictureCard(cardID, card.getString("description"), card.getString("url"),
+                                            DataPictureCard temp = new DataPictureCard(card.getString("_id"), card.getString("description"), card.getString("url"),
                                                     card.getInt("likes"), card.getString("title"), card.getString("location"), interests.getString(0), card.getString("user_name"),
                                                     card.getString("user_profile_pic"));
                                             dataPictureCards.add(temp);
                                         }
-                                        else if (card.getString("card-type").equals("blog")) {
+                                        else if (card.getString("card_type").equals("blog")) {
                                             cardRef.type = TYPE_BLOG;
                                             cardRef.index = dataBlogCards.size();
                                             cardsRef.add(cardRef);
-                                            JSONObject content = card.getJSONObject("content");
-                                            DataBlogCard temp = new DataBlogCard(content.getString("url"), content.getString("thumbnail"), content.getString("title"),
-                                                    content.getString("abstract"), card.getInt("likes"), card.getString("location"), card.getString("user-name"),
-                                                    card.getString("user-img"));
+                                            JSONArray interests = card.getJSONArray("interests");
+                                            ArrayList<String> interestList = new ArrayList<>();
+                                            for (int j=0;j<interests.length();j++)
+                                                interestList.add(interests.getString(j));
+                                            DataBlogCard temp = new DataBlogCard(card.getString("_id"), card.getString("url"), card.getString("thumbnail"), card.getString("title"),
+                                                    card.getString("description"), card.getInt("likes"), card.getString("location"), interestList, card.getString("user_name"),
+                                                    card.getString("user_profile_pic"));
                                             dataBlogCards.add(temp);
 
                                         }
@@ -627,7 +629,7 @@ public class Backend {
         public abstract void onBlogPostSuccess();
         public abstract void onBlogPostFailed();
     }
-    public void postBlog(final String blogURL, final String blogTitle, final String blogExtract, final String thumbnailURL, final String interests, final String location, final PostBlogListener listener) {
+    public void postBlog(final String blogURL, final String blogTitle, final String blogExtract, final String thumbnailURL, final ArrayList<String> interestList, final String location, final PostBlogListener listener) {
         class updateUserInterestsTask extends AsyncTask<Void, Void, Void> {
 
             @Override
@@ -642,8 +644,13 @@ public class Backend {
                     blog.put("card_type", "blog");
                     blog.put("url", blogURL);
                     blog.put("title", blogTitle);
-                    blog.put("extract", blogExtract);
                     blog.put("thumbnail", thumbnailURL);
+                    blog.put("description", blogExtract);
+                    JSONArray interests = new JSONArray();
+                    for (int i=0;i<interestList.size();i++)
+                        interests.put(interestList.get(i));
+                    blog.put("interests", interests);
+                    blog.put("location", location);
 
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -19,32 +19,33 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 public class CardBlogViewHolder extends RecyclerView.ViewHolder {
     View cardView;
 
-    ImageView thumbnail;
     TextView title;
+    ImageView thumbnail;
     TextView extract;
     ImageButton like_button;
+    TextView noOfLikes;
     ImageButton add_to_bl_button;
-    TextView likes;
+    TextView noOfBucketList;
     TextView activity;
     TextView location;
     AvatarView uploaderPic;
-    BarUploaderViewHolder uploader;
+    TextView uploaderName;
 
     public CardBlogViewHolder(View itemView) {
         super(itemView);
         cardView = itemView;
-        uploader = new BarUploaderViewHolder ();
-        thumbnail = (ImageView) itemView.findViewById(R.id.thumbnail);
+
         title = (TextView) itemView.findViewById(R.id.title);
+        thumbnail = (ImageView) itemView.findViewById(R.id.thumbnail);
         extract = (TextView) itemView.findViewById(R.id.extract);
         like_button = (ImageButton) itemView.findViewById(R.id.like_button);
+        noOfLikes = (TextView) itemView.findViewById(R.id.no_of_likes);
         add_to_bl_button = (ImageButton) itemView.findViewById(R.id.add_to_bl_button);
-        likes = (TextView) itemView.findViewById(R.id.likes);
+        noOfBucketList = (TextView) itemView.findViewById(R.id.no_of_bl);
         activity = (TextView) itemView.findViewById(R.id.activity);
         location = (TextView) itemView.findViewById(R.id.location);
-        //uploader.name = (TextView) itemView.findViewById(R.id.name);
-        //uploader.pp = (ImageView) itemView.findViewById(R.id.pp);
         uploaderPic = (AvatarView) itemView.findViewById(R.id.pp);
+        uploaderName = (TextView) itemView.findViewById(R.id.uploader_name);
 
     }
 
@@ -56,16 +57,15 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
                 .considerExifParams(true)
                 .build();
 
-        ImageLoader.getInstance().displayImage(dataBlogCard.thumbnail_url, this.thumbnail, options, new Animations.AnimateFirstDisplayListener());
         this.title.setText(dataBlogCard.title);
+        ImageLoader.getInstance().displayImage(dataBlogCard.thumbnail_url, this.thumbnail, options, new Animations.AnimateFirstDisplayListener());
         this.extract.setText(dataBlogCard.extract);
-        //this.like_button.setText("Like");
-        //this.likes.setText(dataBlogCard.likes + " People Likes this");
-        this.activity.setText("Diving");
+        this.noOfLikes.setText(String.valueOf(dataBlogCard.likes));
+        this.noOfBucketList.setText(String.valueOf(dataBlogCard.noBlucketListed));
+        this.activity.setText(android.text.TextUtils.join(", ", dataBlogCard.interests));
         this.location.setText(dataBlogCard.location);
-        //this.uploader.name.setText(dataBlogCard.dataUploaderBar.uploader_name);
-        //ImageLoader.getInstance().displayImage(dataBlogCard.dataUploaderBar.uploader_pp, this.uploader.pp, options, null);
         ImageLoader.getInstance().displayImage(dataBlogCard.dataUploaderBar.uploader_pp, this.uploaderPic, options, null);
+        this.uploaderName.setText(dataBlogCard.dataUploaderBar.uploader_name);
 
         if (dataBlogCard.isLiked == false) {
             this.addLikeCallback(dataBlogCard);
@@ -89,11 +89,11 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 dataBlogCard.likes++;
+                noOfLikes.setText(String.valueOf(dataBlogCard.likes));
                 dataBlogCard.isLiked = true;
 
                 like_button.setImageResource(R.drawable.ic_liked);
                 like_button.setClickable(false);
-                //likes.setText(dataBlogCard.likes + " People Likes this");
             }
         });
     }
@@ -104,11 +104,12 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 dataBlogCard.noBlucketListed++;
+                noOfBucketList.setText(String.valueOf(dataBlogCard.noBlucketListed));
+
                 dataBlogCard.isAddedToBl = true;
 
                 add_to_bl_button.setImageResource(R.drawable.ic_added_to_bl);
                 add_to_bl_button.setClickable(false);
-                //likes.setText(dataBlogCard.likes + " People Likes this");
             }
         });
     }

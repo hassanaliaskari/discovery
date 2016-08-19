@@ -53,7 +53,7 @@ public class FullscreenPictureCardActivity extends AppCompatActivity {
         image = (ImageView) findViewById(R.id.image);
         likeButton = (ImageButton) findViewById(R.id.like_button);
         addToBlButton = (ImageButton) findViewById(R.id.add_to_bl_button);
-        likes = (TextView) findViewById(R.id.likes);
+        likes = (TextView) findViewById(R.id.no_of_likes);
         activity = (TextView) findViewById(R.id.activity);
         description = (TextView) findViewById(R.id.description);
 
