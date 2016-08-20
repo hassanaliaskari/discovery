@@ -342,7 +342,7 @@ public class Backend {
                                 try {
                                     ArrayList<DataPictureCard> dataPictureCards = new ArrayList<>();
                                     JSONArray arrayJson = response.getJSONArray("cards");
-                                    /*for (int i=0; i< arrayJson.length(); i++) {
+                                    for (int i=0; i< arrayJson.length(); i++) {
                                         JSONObject card = arrayJson.getJSONObject(i);
 
                                         boolean isLiked = false;
@@ -368,7 +368,7 @@ public class Backend {
                                                     card.getString("user_profile_pic"));
                                             dataPictureCards.add(temp);
                                         }
-                                    }*/
+                                    }
                                     listener.onUserPicturesFetched(dataPictureCards);
 
                                 } catch (JSONException e) {
