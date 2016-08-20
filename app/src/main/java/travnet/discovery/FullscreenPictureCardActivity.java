@@ -83,10 +83,10 @@ public class FullscreenPictureCardActivity extends AppCompatActivity {
         }
 
         //Check if the picture is the user's own
-        if (getIntent().getStringExtra("card_src").equals("user")) {
+        /*if (getIntent().getStringExtra("card_src").equals("user")) {
             likeButton.setVisibility(View.GONE);
             addToBlButton.setVisibility(View.GONE);
-        }
+        }*/
 
     }
 
