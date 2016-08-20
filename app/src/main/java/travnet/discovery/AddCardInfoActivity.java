@@ -256,6 +256,7 @@ public class AddCardInfoActivity extends AppCompatActivity {
 
             @Override
             public void onFailed() {
+                progress.dismiss();
                 Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_LONG).show();
             }
         });
@@ -300,6 +301,7 @@ public class AddCardInfoActivity extends AppCompatActivity {
 
             @Override
             public void onPostPictureCardFailed() {
+                progress.dismiss();
                 Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_LONG).show();
             }
         });

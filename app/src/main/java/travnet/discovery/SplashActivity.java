@@ -34,6 +34,20 @@ public class SplashActivity extends AppCompatActivity {
         } else {
         }
 
+
+        Backend.getInstance().getS3Key(Backend.getInstance().new GetS3KeyListener() {
+            @Override
+            public void onGetS3KeySuccess(String keyID, String secretKey) {
+                S3Key.getInstance().setKeyID(keyID);
+                S3Key.getInstance().setSecretKey(secretKey);
+            }
+
+            @Override
+            public void onGetS3KeyFailed() {
+
+            }
+        });
+
         Backend.getInstance().getCards(0, Backend.getInstance().new GetCardsListener() {
             @Override
             public void onCardsFetched(ArrayList<DataPictureCard> dataPictureCards, ArrayList<DataBlogCard> dataBlogCards, ArrayList<HomeFragment.CardsRef> cardsRef) {

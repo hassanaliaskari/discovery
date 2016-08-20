@@ -561,6 +561,7 @@ public class Backend {
                 });
 
                 // Add the request to the RequestQueue.
+                stringRequest.setShouldCache(false);
                 queue.add(stringRequest);
 
                 return null;
@@ -767,6 +768,64 @@ public class Backend {
     }
 
 
+    public abstract class GetS3KeyListener {
+        public GetS3KeyListener() {
+        }
+
+        public abstract void onGetS3KeySuccess(String keyID, String secretKey);
+        public abstract void onGetS3KeyFailed();
+    }
+
+    public void getS3Key(final GetS3KeyListener listener) {
+        class getS3KeyTask extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                RequestQueue queue = Volley.newRequestQueue(context);
+                String url = baseUrl + "getSecretKey";
+
+                JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                        (Request.Method.GET, url, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                ArrayList<String> listInterest = new ArrayList<String>();
+                                try {
+                                    String keyID = response.getString("key");
+                                    String secretKey = response.getString("secret");
+                                    listener.onGetS3KeySuccess(keyID, secretKey);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    listener.onGetS3KeyFailed();
+                                }
+
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                listener.onGetS3KeyFailed();
+                            }
+                        });
+
+                queue.add(jsObjRequest);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void v) {
+            }
+
+
+
+        }
+
+        new getS3KeyTask().execute();
+
+    }
+
 
 
     public abstract class UploadPicureListener {
@@ -783,12 +842,12 @@ public class Backend {
         AmazonS3 s3 = new AmazonS3Client(new AWSCredentials() {
             @Override
             public String getAWSAccessKeyId() {
-                return "";
+                return S3Key.getInstance().getKeyID();
             }
 
             @Override
             public String getAWSSecretKey() {
-                return "";
+                return S3Key.getInstance().getSecretKey();
             }
         });
         TransferUtility transferUtility = new TransferUtility(s3, context);
@@ -820,38 +879,6 @@ public class Backend {
 
         });
 
-        /*AsyncHttpClient client = new AsyncHttpClient();
-        RequestParams params = new RequestParams();
-        try {
-            params.put("key", file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        //client.addHeader("Content-Type", "multipart/form-data");
-        client.post("http://54.169.51.25:3000/api/photo", params, new AsyncHttpResponseHandler() {
-
-            @Override
-            public void onStart() {
-                Log.v("as", "dsd");
-                // called before request is started
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
-                listener.onUploadPictureSuccess();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-                listener.onUploadPictureFailed();
-            }
-
-            @Override
-            public void onRetry(int retryNo) {
-                listener.onUploadPictureFailed();
-                // called when request is retried
-            }
-        });*/
     }
 
 
