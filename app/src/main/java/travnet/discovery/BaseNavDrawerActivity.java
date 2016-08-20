@@ -92,13 +92,13 @@ public class BaseNavDrawerActivity extends AppCompatActivity
             SharedPreferences myPrefs;
             myPrefs = this.getSharedPreferences("login", MODE_PRIVATE);
             SharedPreferences.Editor prefsEditor = myPrefs.edit();
-            prefsEditor.putBoolean("isLogged", false);
+            prefsEditor.putBoolean("prev_login", false);
             prefsEditor.commit();
 
             //Restart activity
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.putExtra("isLogged", false);
+            intent.putExtra("prev_login", false);
             finish();
             startActivity(intent);
         }
