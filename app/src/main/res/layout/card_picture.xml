@@ -20,24 +20,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.percent.PercentRelativeLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id = "@+id/image_holder">
+                android:id="@+id/image_holder">
                 <ImageView
-                    app:layout_widthPercent="100%"
-                    app:layout_aspectRatio="100%"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/placeholder_loading"
                     android:scaleType="centerCrop"
                     android:id = "@+id/image" />
 
                 <View
-                    app:layout_widthPercent="100%"
-                    app:layout_aspectRatio="100%"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:id="@+id/scrim"
                     android:background="@drawable/scrim"/>
-            </android.support.percent.PercentRelativeLayout>
-
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="match_parent"

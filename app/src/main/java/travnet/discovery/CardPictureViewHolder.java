@@ -1,12 +1,15 @@
 package travnet.discovery;
 
+import android.graphics.Bitmap;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.liangfeizc.avatarview.AvatarView;
@@ -60,7 +63,13 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
                 .build();
 
 
-        ImageLoader.getInstance().displayImage(dataPictureCard.link, this.image, options, new Animations.AnimateFirstDisplayListener());
+        ImageLoader.getInstance().displayImage(dataPictureCard.link, this.image, options, new Animations.AnimateFirstDisplayListener(){
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                super.onLoadingComplete(imageUri, view, loadedImage);
+                scrim.getLayoutParams().height = loadedImage.getHeight();
+            }
+        });
         this.title.setText(dataPictureCard.title);
         this.location.setText(dataPictureCard.location);
         this.noOfLikes.setText(String.valueOf(dataPictureCard.likes));
