@@ -30,12 +30,13 @@ public class DataPictureCard implements Parcelable{
     public DataPictureCard() {
     }
 
-    public DataPictureCard(String id, boolean isLiked, String description, String link, int likes, String title, String location, String activity, String uploader_name, String uploader_pp) {
+    public DataPictureCard(String id, boolean isLiked, boolean isAddedToBl, String description, String link, int likes, int noBlucketListed, String title, String location, String activity, String uploader_name, String uploader_pp) {
         dataUploaderBar = new DataUploaderBar();
         this.id = id;
         this.description = description;
         this.link = link;
         this.likes = likes;
+        this.noBlucketListed = noBlucketListed;
         this.title = title;
         this.location = location;
         this.activity = activity;
@@ -43,7 +44,7 @@ public class DataPictureCard implements Parcelable{
         this.dataUploaderBar.uploader_pp = uploader_pp;
 
         this.isLiked = isLiked;
-        this.isAddedToBl = false;
+        this.isAddedToBl = isAddedToBl;
     }
 
     @Override

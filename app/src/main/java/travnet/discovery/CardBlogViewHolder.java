@@ -106,6 +106,7 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
         addToBlButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Backend.getInstance().registerBucketCard(dataBlogCard.id);
                 dataBlogCard.noBlucketListed++;
                 noOfBucketList.setText(String.valueOf(dataBlogCard.noBlucketListed));
 

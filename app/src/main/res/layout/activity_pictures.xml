@@ -44,7 +44,7 @@
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:src="@drawable/empty_state_pictures"/>
+                android:src="@drawable/empty_state_bl"/>
 
             <TextView
                 android:layout_width="match_parent"

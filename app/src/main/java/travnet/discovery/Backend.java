@@ -325,33 +325,47 @@ public class Backend {
             protected Void doInBackground(Void... params) {
 
                 RequestQueue queue = Volley.newRequestQueue(context);
-                String url = baseUrl + "getCards";
+                String url = baseUrl + "getUserCards";
 
-                /*JSONObject userID = new JSONObject();
+                JSONObject userID = new JSONObject();
                 try {
                     userID.put("user_id", User.getInstance().getUserID());
-
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }*/
+                }
 
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                        (Request.Method.GET, url, new Response.Listener<JSONObject>() {
+                        (Request.Method.POST, url, userID, new Response.Listener<JSONObject>() {
 
                             @Override
                             public void onResponse(JSONObject response) {
                                 try {
-                                    ArrayList<DataPictureCard> dataPictureCards = new ArrayList<DataPictureCard>();
+                                    ArrayList<DataPictureCard> dataPictureCards = new ArrayList<>();
                                     JSONArray arrayJson = response.getJSONArray("cards");
-                                    /*for (int i=0; i< NO_OF_CARDS; i++) {
+                                    /*for (int i=0; i< arrayJson.length(); i++) {
                                         JSONObject card = arrayJson.getJSONObject(i);
 
-                                        String check = card.getString(("card-type"));
-                                        if (card.getString("card-type").equals("image")) {
-                                            JSONObject content = card.getJSONObject("content");
-                                            DataPictureCard temp = new DataPictureCard("test_id", content.getString("description"), content.getString("url"),
-                                                    card.getInt("likes"), card.getString("location"), "Place holder", card.getString("user-name"),
-                                                    card.getString("user-img"));
+                                        boolean isLiked = false;
+                                        JSONArray likeList = card.getJSONArray("like_list");
+                                        for (int j=0;j<likeList.length();j++) {
+                                            String userID = User.getInstance().getUserID();
+                                            if (likeList.getString(j).equals(userID))
+                                                isLiked = true;
+                                        }
+
+                                        boolean isBucketListed = false;
+                                        JSONArray bucketUsers = card.getJSONArray("bucket_users");
+                                        for (int j=0;j<bucketUsers.length();j++) {
+                                            String userID = User.getInstance().getUserID();
+                                            if (bucketUsers.getString(j).equals(userID))
+                                                isBucketListed = true;
+                                        }
+
+                                        if (card.getString("card_type").equals("photo")) {
+                                            JSONArray interests = card.getJSONArray("interests");
+                                            DataPictureCard temp = new DataPictureCard(card.getString("_id"), isLiked, isBucketListed, card.getString("description"), card.getString("url"),
+                                                    card.getInt("likes"), card.getInt("bucket_count"), card.getString("title"), card.getString("location"), interests.getString(0), card.getString("user_name"),
+                                                    card.getString("user_profile_pic"));
                                             dataPictureCards.add(temp);
                                         }
                                     }*/
@@ -377,20 +391,6 @@ public class Backend {
 
             @Override
             protected void onPostExecute(Void v) {
-                //Stub
-                /*String imageLink = "http://www.planwallpaper.com/static/images/4-Nature-Wallpapers-2014-1_ukaavUI.jpg";
-
-                ArrayList userPictures = new ArrayList<DataPictureCard>();
-                DataPictureCard data1 = new DataPictureCard("A", imageLink, 10, "D", "E", "F", "G");
-                DataPictureCard data2 = new DataPictureCard("A", imageLink, 10, "D", "E", "F", "G");
-                DataPictureCard data3 = new DataPictureCard("A", imageLink, 10, "D", "E", "F", "G");
-                DataPictureCard data4 = new DataPictureCard("A", imageLink, 10, "D", "E", "F", "G");
-                userPictures.add(data1);
-                userPictures.add(data2);
-                userPictures.add(data3);
-                userPictures.add(data4);
-                listener.onUserPicturesFetched(userPictures);*/
-
             }
 
 
@@ -514,14 +514,21 @@ public class Backend {
                                                 isLiked = true;
                                         }
 
+                                        boolean isBucketListed = false;
+                                        JSONArray bucketUsers = card.getJSONArray("bucket_users");
+                                        for (int j=0;j<bucketUsers.length();j++) {
+                                            String userID = User.getInstance().getUserID();
+                                            if (bucketUsers.getString(j).equals(userID))
+                                                isBucketListed = true;
+                                        }
 
                                         if (card.getString("card_type").equals("photo")) {
                                             cardRef.type = TYPE_PICTURE;
                                             cardRef.index = dataPictureCards.size();
                                             cardsRef.add(cardRef);
                                             JSONArray interests = card.getJSONArray("interests");
-                                            DataPictureCard temp = new DataPictureCard(card.getString("_id"), isLiked, card.getString("description"), card.getString("url"),
-                                                    card.getInt("likes"), card.getString("title"), card.getString("location"), interests.getString(0), card.getString("user_name"),
+                                            DataPictureCard temp = new DataPictureCard(card.getString("_id"), isLiked, isBucketListed, card.getString("description"), card.getString("url"),
+                                                    card.getInt("likes"), card.getInt("bucket_count"), card.getString("title"), card.getString("location"), interests.getString(0), card.getString("user_name"),
                                                     card.getString("user_profile_pic"));
                                             dataPictureCards.add(temp);
                                         }
@@ -533,8 +540,8 @@ public class Backend {
                                             ArrayList<String> interestList = new ArrayList<>();
                                             for (int j=0;j<interests.length();j++)
                                                 interestList.add(interests.getString(j));
-                                            DataBlogCard temp = new DataBlogCard(card.getString("_id"), isLiked, card.getString("url"), card.getString("thumbnail"), card.getString("title"),
-                                                    card.getString("description"), card.getInt("likes"), card.getString("location"), interestList, card.getString("user_name"),
+                                            DataBlogCard temp = new DataBlogCard(card.getString("_id"), isLiked, isBucketListed, card.getString("url"), card.getString("thumbnail"), card.getString("title"),
+                                                    card.getString("description"), card.getInt("likes"), card.getInt("bucket_count"), card.getString("location"), interestList, card.getString("user_name"),
                                                     card.getString("user_profile_pic"));
                                             dataBlogCards.add(temp);
 
@@ -912,13 +919,6 @@ public class Backend {
     }
 
 
-    public abstract class RegisterLikeCardListener {
-        public RegisterLikeCardListener() {
-        }
-
-        public abstract void onSuceess();
-        public abstract void onFailed();
-    }
 
     public void registerLikeCard(final String cardID) {
         class postPictureCard extends AsyncTask<Void, Void, Void> {
@@ -967,6 +967,52 @@ public class Backend {
 
     }
 
+    public void registerBucketCard(final String cardID) {
+        class postPictureCard extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                RequestQueue queue = Volley.newRequestQueue(context);
+                String url = baseUrl + "addToBucket";
+
+                JSONObject likeInfo = new JSONObject();
+                try {
+                    likeInfo.put("user_id", User.getInstance().getUserID());
+                    likeInfo.put("card_id", cardID);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                        (Request.Method.POST, url, likeInfo, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+
+                            }
+                        });
+
+                queue.add(jsObjRequest);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void v) {
+
+            }
+        }
+
+        new postPictureCard().execute();
+
+    }
 
 
 

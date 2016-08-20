@@ -49,7 +49,7 @@ public class PicturesActivity extends BaseNavDrawerActivity {
         emptyStateLayout = (LinearLayout) findViewById(R.id.empty_state_layout);
         emptyStateLayout.setVisibility(View.GONE);
 
-        userPictures = new ArrayList<DataPictureCard>();
+        userPictures = new ArrayList<>();
         imageadapter = new ImageAdapter();
         RecyclerView gridUserPictures = (RecyclerView) findViewById(R.id.grid_user_pictures);
 

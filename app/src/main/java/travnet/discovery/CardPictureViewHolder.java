@@ -132,6 +132,7 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
         addToBlButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Backend.getInstance().registerBucketCard(dataPictureCard.id);
                 dataPictureCard.noBlucketListed++;
                 noOfBucketList.setText(String.valueOf(dataPictureCard.noBlucketListed));
                 dataPictureCard.isAddedToBl = true;
