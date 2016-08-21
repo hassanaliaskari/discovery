@@ -3,6 +3,8 @@ package travnet.discovery;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +27,7 @@ import com.google.android.gms.maps.GoogleMap;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AddCardInfoActivity extends AppCompatActivity {
     private static final int REQUEST_ADD_INTEREST = 5;
@@ -207,8 +210,9 @@ public class AddCardInfoActivity extends AppCompatActivity {
         progress.setTitle("Sharing Blog");
         progress.show();
 
+        String locationString = getLocationString(location);
         Backend backend = Backend.getInstance();
-        backend.postBlog(blogURL, blogTitle, blogExtract, thumbnailURL, selectedInterests, location.getName().toString(), backend.new PostBlogListener() {
+        backend.postBlog(blogURL, blogTitle, blogExtract, thumbnailURL, selectedInterests, location.getId(), locationString, backend.new PostBlogListener() {
             @Override
             public void onBlogPostSuccess() {
                 progress.dismiss();
@@ -290,8 +294,8 @@ public class AddCardInfoActivity extends AppCompatActivity {
         String userID = User.getInstance().getUserID();
         String pictureUrl = "https://travnet.s3.amazonaws.com/" + userID + "-" + pictureCount + ".jpg";
 
-
-        backend.postPictureCard(pictureUrl, heading, location.getName().toString(), interest, description, backend.new PostPictureCardListener() {
+        String locationString = getLocationString(location);
+        backend.postPictureCard(pictureUrl, heading, location.getId(), locationString, interest, description, backend.new PostPictureCardListener() {
             @Override
             public void onPostPictureCardSuccess() {
                 Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();
@@ -306,9 +310,32 @@ public class AddCardInfoActivity extends AppCompatActivity {
             }
         });
 
-
-
     }
+
+
+    String getLocationString (Place location) {
+        Geocoder geoLocation = new Geocoder(getApplicationContext());
+        String country = null;
+        List<Address> myList = new ArrayList<>();
+        try {
+            myList = geoLocation.getFromLocation(location.getLatLng().latitude, location.getLatLng().longitude, 1);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(myList != null) {
+            try {
+                country = myList.get(0).getCountryName();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        String locationString = location.getName() + ", " + country;
+        return locationString;
+    }
+
 
 
 

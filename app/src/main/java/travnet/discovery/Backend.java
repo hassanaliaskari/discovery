@@ -646,7 +646,7 @@ public class Backend {
         public abstract void onBlogPostSuccess();
         public abstract void onBlogPostFailed();
     }
-    public void postBlog(final String blogURL, final String blogTitle, final String blogExtract, final String thumbnailURL, final ArrayList<String> interestList, final String location, final PostBlogListener listener) {
+    public void postBlog(final String blogURL, final String blogTitle, final String blogExtract, final String thumbnailURL, final ArrayList<String> interestList, final String locationID, final String location, final PostBlogListener listener) {
         class updateUserInterestsTask extends AsyncTask<Void, Void, Void> {
 
             @Override
@@ -667,6 +667,7 @@ public class Backend {
                     for (int i=0;i<interestList.size();i++)
                         interests.put(interestList.get(i));
                     blog.put("interests", interests);
+                    blog.put("location_id", locationID);
                     blog.put("location", location);
 
                 } catch (JSONException e) {
@@ -891,7 +892,7 @@ public class Backend {
         public abstract void onPostPictureCardFailed();
     }
 
-    public void postPictureCard(final String pictureUrl, final String heading, final String location, final String interest, final String description, final PostPictureCardListener listener) {
+    public void postPictureCard(final String pictureUrl, final String heading, final String locationID, final String location, final String interest, final String description, final PostPictureCardListener listener) {
         class postPictureCard extends AsyncTask<Void, Void, Void> {
 
             @Override
@@ -906,6 +907,7 @@ public class Backend {
                     pictureCard.put("card_type", "photo");
                     pictureCard.put("url", pictureUrl);
                     pictureCard.put("title", heading);
+                    pictureCard.put("location_id", locationID);
                     pictureCard.put("location", location);
                     JSONArray interests = new JSONArray();
                     interests.put(interest);
@@ -1016,13 +1018,13 @@ public class Backend {
 
                             @Override
                             public void onResponse(JSONObject response) {
-
+                                Log.v("bl", "response");
                             }
                         }, new Response.ErrorListener() {
 
                             @Override
                             public void onErrorResponse(VolleyError error) {
-
+                                Log.v("bl", "error");
                             }
                         });
 
