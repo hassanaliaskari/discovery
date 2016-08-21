@@ -10,20 +10,20 @@ import java.util.List;
 public class DataBucketListCard {
 
     String location;
-    List<String> pictures;
-    List<String> headers;
+    List<DataPictureCard> pictures;
+    List<DataBlogCard> blogs;
 
     public DataBucketListCard() {
         pictures = new ArrayList<>();
+        blogs = new ArrayList<>();
     }
 
-    public DataBucketListCard(String location, List<String> pictures, List<String> headers) {
+    public DataBucketListCard(String location, List<DataPictureCard> pictures, List<DataBlogCard> blogs) {
         this.pictures = new ArrayList<>();
-        this.headers = new ArrayList<>();
+        this.blogs = new ArrayList<>();
         this.location = location;
         this.pictures.addAll(pictures);
-        this.headers.addAll(headers);
-
+        this.blogs.addAll(blogs);
     }
 
 

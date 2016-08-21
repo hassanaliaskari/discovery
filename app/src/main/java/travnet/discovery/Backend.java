@@ -44,7 +44,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.client.HttpClient;
@@ -1045,7 +1047,167 @@ public class Backend {
 
 
 
+    public abstract class GetBucketListListener {
+        public GetBucketListListener() {
+        }
 
+        public abstract void onBucketListFetched(List<DataBucketListCard> userBucketList);
+        public abstract void onGetBucketListFailed();
+    }
+    public void getBucketList(final GetBucketListListener listener) {
+
+        class getBucketListTask extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                RequestQueue queue = Volley.newRequestQueue(context);
+                String url = baseUrl + "getBucketList";
+
+                JSONObject userID = new JSONObject();
+                try {
+                    userID.put("user_id", User.getInstance().getUserID());
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                        (Request.Method.POST, url, userID, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    ArrayList<DataBucketListCard> userBucketList = new ArrayList();
+                                    ArrayList<String> countries = new ArrayList<>();
+                                    JSONArray arrayJson = response.getJSONArray("cards");
+                                    int noOfCards = arrayJson.length();
+                                    for (int i=0; i< noOfCards; i++) {
+                                        JSONObject card = arrayJson.getJSONObject(i);
+                                        String location = card.getString("location");
+                                        List<String> temp = Arrays.asList(location.split(","));
+                                        String country = temp.get(temp.size() - 1);
+
+                                        int idx;
+                                        for (idx=0;idx<userBucketList.size();idx++) {
+                                            if (userBucketList.get(idx).location.equals(country))
+                                                break;
+                                        }
+                                        if (idx == userBucketList.size()) {
+                                            DataBucketListCard dataBucketListCard = new DataBucketListCard();
+                                            dataBucketListCard.location = country;
+                                            userBucketList.add(dataBucketListCard);
+                                        }
+                                        if (card.getString("card_type").equals("photo")){
+                                            DataPictureCard dataPictureCard = createPictureCardFromJSON(card);
+                                            userBucketList.get(idx).pictures.add(dataPictureCard);
+                                        }
+                                        else if (card.getString("card_type").equals("blog")){
+                                            DataBlogCard dataBlogCard = createBlogCardFromJSON(card);
+                                            userBucketList.get(idx).blogs.add(dataBlogCard);
+                                        }
+
+                                    }
+                                    listener.onBucketListFetched(userBucketList);
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                listener.onGetBucketListFailed();
+                            }
+                        });
+
+                // Add the request to the RequestQueue.
+                jsObjRequest.setShouldCache(false);
+                queue.add(jsObjRequest);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void v) {
+            }
+
+
+
+        }
+
+        new getBucketListTask().execute();
+    }
+
+
+
+    DataPictureCard createPictureCardFromJSON (JSONObject card) {
+        DataPictureCard dataPictureCard = null;
+        try {
+            boolean isLiked = false;
+            JSONArray likeList = card.getJSONArray("like_list");
+            for (int j = 0; j < likeList.length(); j++) {
+                String userID = User.getInstance().getUserID();
+                if (likeList.getString(j).equals(userID))
+                    isLiked = true;
+            }
+
+            boolean isBucketListed = false;
+            JSONArray bucketUsers = card.getJSONArray("bucket_users");
+            for (int j = 0; j < bucketUsers.length(); j++) {
+                String userID = User.getInstance().getUserID();
+                if (bucketUsers.getString(j).equals(userID))
+                    isBucketListed = true;
+            }
+
+            JSONArray interests = card.getJSONArray("interests");
+            dataPictureCard = new DataPictureCard(card.getString("_id"), isLiked, isBucketListed, card.getString("description"), card.getString("url"),
+                    card.getInt("likes"), card.getInt("bucket_count"), card.getString("title"), card.getString("location"), interests.getString(0), card.getString("user_name"),
+                    card.getString("user_profile_pic"));
+
+        }  catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return dataPictureCard;
+    }
+
+
+    DataBlogCard createBlogCardFromJSON (JSONObject card) {
+        DataBlogCard dataBlogCard = null;
+        try {
+            boolean isLiked = false;
+            JSONArray likeList = card.getJSONArray("like_list");
+            for (int j = 0; j < likeList.length(); j++) {
+                String userID = User.getInstance().getUserID();
+                if (likeList.getString(j).equals(userID))
+                    isLiked = true;
+            }
+
+            boolean isBucketListed = false;
+            JSONArray bucketUsers = card.getJSONArray("bucket_users");
+            for (int j = 0; j < bucketUsers.length(); j++) {
+                String userID = User.getInstance().getUserID();
+                if (bucketUsers.getString(j).equals(userID))
+                    isBucketListed = true;
+            }
+
+            JSONArray interests = card.getJSONArray("interests");
+            ArrayList<String> interestList = new ArrayList<>();
+            for (int j=0;j<interests.length();j++)
+                interestList.add(interests.getString(j));
+            dataBlogCard = new DataBlogCard(card.getString("_id"), isLiked, isBucketListed, card.getString("url"), card.getString("thumbnail"), card.getString("title"),
+                    card.getString("description"), card.getInt("likes"), card.getInt("bucket_count"), card.getString("location"), interestList, card.getString("user_name"),
+                    card.getString("user_profile_pic"));
+
+        }  catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return dataBlogCard;
+    }
 
 
 }
+
+
+
+

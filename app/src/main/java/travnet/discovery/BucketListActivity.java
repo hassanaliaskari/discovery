@@ -47,10 +47,21 @@ public class BucketListActivity extends BaseNavDrawerActivity {
         userBucketList = new ArrayList<>();
         bucketListItemAdapter = new BucketListItemAdapter(this);
 
+
+        Backend.getInstance().getBucketList(Backend.getInstance().new GetBucketListListener() {
+            @Override
+            public void onBucketListFetched(List<DataBucketListCard> userBucketList) {
+
+            }
+
+            @Override
+            public void onGetBucketListFailed() {
+
+            }
+        });
+
         //Stub
-
-
-        ArrayList<String> links1 = new ArrayList<>();
+        /*ArrayList<String> links1 = new ArrayList<>();
         links1.add("http://science-all.com/images/wallpapers/nature/nature-25.jpg");
         links1.add("http://www.amaraholisticwellbeing.com/wp-content/uploads/2015/01/Fall-beautiful-nature-22666764-900-562.jpg");
         ArrayList<String> headers1 = new ArrayList<>();
@@ -70,7 +81,7 @@ public class BucketListActivity extends BaseNavDrawerActivity {
         DataBucketListCard data3 = new DataBucketListCard("Krabi, Thailand", links3, headers1);
         userBucketList.add(data1);
         userBucketList.add(data2);
-        userBucketList.add(data3);
+        userBucketList.add(data3);*/
 
 
         emptyStateLayout = (LinearLayout) findViewById(R.id.empty_state_layout);
@@ -148,7 +159,7 @@ public class BucketListActivity extends BaseNavDrawerActivity {
             linearLayoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
             cardBucketListItemViewHolder.blogs.setVisibility(View.GONE);
             cardBucketListItemViewHolder.blogs.setLayoutManager(linearLayoutManager2);
-            BucketListBlogAdapter bucketListBlogAdapter = new BucketListBlogAdapter(userBucketList.get(position).headers, userBucketList.get(position).pictures);
+            BucketListBlogAdapter bucketListBlogAdapter = new BucketListBlogAdapter(userBucketList.get(position).blogs);
             cardBucketListItemViewHolder.blogs.setAdapter(bucketListBlogAdapter);
 
         }
@@ -156,9 +167,9 @@ public class BucketListActivity extends BaseNavDrawerActivity {
 
 
     private class BucketListPictureAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder> {
-        List<String> pictures;
+        List<DataPictureCard> pictures;
 
-        public BucketListPictureAdapter(List<String> pictures){
+        public BucketListPictureAdapter(List<DataPictureCard> pictures){
             super();
             this.pictures = pictures;
         }
@@ -174,7 +185,7 @@ public class BucketListActivity extends BaseNavDrawerActivity {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             CardBucketListPictureViewHolder cardBucketListPictureViewHolder = (CardBucketListPictureViewHolder) holder;
-            ImageLoader.getInstance().displayImage(pictures.get(position), cardBucketListPictureViewHolder.image);
+            ImageLoader.getInstance().displayImage(pictures.get(position).link, cardBucketListPictureViewHolder.image);
         }
 
         @Override
@@ -182,6 +193,8 @@ public class BucketListActivity extends BaseNavDrawerActivity {
             return pictures.size();
         }
     }
+
+
 
     public class CardBucketListPictureViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
@@ -197,13 +210,11 @@ public class BucketListActivity extends BaseNavDrawerActivity {
 
 
     private class BucketListBlogAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder> {
-        List<String> pictures;
-        List<String> headers;
+        List<DataBlogCard> blogs;
 
-        public BucketListBlogAdapter(List<String> headers, List<String> pictures){
+        public BucketListBlogAdapter(List<DataBlogCard> blogs){
             super();
-            this.headers = headers;
-            this.pictures = pictures;
+            this.blogs = blogs;
         }
 
         @Override
@@ -217,12 +228,13 @@ public class BucketListActivity extends BaseNavDrawerActivity {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             CardBucketListBlogViewHolder cardBucketListBlogViewHolder = (CardBucketListBlogViewHolder) holder;
-            ImageLoader.getInstance().displayImage(pictures.get(position), cardBucketListBlogViewHolder.thumbnail);
+            ImageLoader.getInstance().displayImage(blogs.get(position).thumbnail_url, cardBucketListBlogViewHolder.thumbnail);
+            cardBucketListBlogViewHolder.title.setText(blogs.get(position).title);
         }
 
         @Override
         public int getItemCount() {
-            return pictures.size();
+            return blogs.size();
         }
     }
 
