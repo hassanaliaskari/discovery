@@ -47,11 +47,23 @@ public class BucketListActivity extends BaseNavDrawerActivity {
         userBucketList = new ArrayList<>();
         bucketListItemAdapter = new BucketListItemAdapter(this);
 
+        emptyStateLayout = (LinearLayout) findViewById(R.id.empty_state_layout);
+        emptyStateLayout.setVisibility(View.GONE);
+
+        RecyclerView userBucketListView = (RecyclerView) findViewById(R.id.user_bucket_list);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        userBucketListView.setLayoutManager(linearLayoutManager);
+        userBucketListView.setAdapter(bucketListItemAdapter);
 
         Backend.getInstance().getBucketList(Backend.getInstance().new GetBucketListListener() {
             @Override
-            public void onBucketListFetched(List<DataBucketListCard> userBucketList) {
-
+            public void onBucketListFetched(List<DataBucketListCard> bucketList) {
+                if (bucketList.size() == 0) {
+                    emptyStateLayout.setVisibility(View.VISIBLE);
+                }
+                userBucketList.addAll(bucketList);
+                bucketListItemAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -59,43 +71,6 @@ public class BucketListActivity extends BaseNavDrawerActivity {
 
             }
         });
-
-        //Stub
-        /*ArrayList<String> links1 = new ArrayList<>();
-        links1.add("http://science-all.com/images/wallpapers/nature/nature-25.jpg");
-        links1.add("http://www.amaraholisticwellbeing.com/wp-content/uploads/2015/01/Fall-beautiful-nature-22666764-900-562.jpg");
-        ArrayList<String> headers1 = new ArrayList<>();
-        headers1.add("test1");
-        headers1.add("test2");
-        DataBucketListCard data1 = new DataBucketListCard("Bali, Indonesia", links1, headers1);
-
-        ArrayList<String> links2 = new ArrayList<>();
-        links2.add("https://capfor.files.wordpress.com/2012/07/beautiful-forest-beautiful-day-forests-grass-green-light-nature-sunshine-trees.jpg");
-        DataBucketListCard data2 = new DataBucketListCard("Lombok, Indonesia", links2, headers1);
-
-        ArrayList<String> links3 = new ArrayList<>();
-        links3.add("http://hdwpro.com/wp-content/uploads/2015/12/nature-thailand.jpg");
-        links3.add("http://webneel.com/wallpaper/sites/default/files/images/04-2013/mediterranean-beach-wallpaper.jpg");
-        links3.add("https://i.ytimg.com/vi/9Nwn-TZfFUI/maxresdefault.jpg");
-        links3.add("http://tedytravel.com/wp-content/uploads/2016/04/Krabi-8.jpg");
-        DataBucketListCard data3 = new DataBucketListCard("Krabi, Thailand", links3, headers1);
-        userBucketList.add(data1);
-        userBucketList.add(data2);
-        userBucketList.add(data3);*/
-
-
-        emptyStateLayout = (LinearLayout) findViewById(R.id.empty_state_layout);
-        emptyStateLayout.setVisibility(View.GONE);
-        if (userBucketList.size() == 0) {
-            emptyStateLayout.setVisibility(View.VISIBLE);
-        }
-
-
-        RecyclerView userBucketList = (RecyclerView) findViewById(R.id.user_bucket_list);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        userBucketList.setLayoutManager(linearLayoutManager);
-        userBucketList.setAdapter(bucketListItemAdapter);
 
     }
 

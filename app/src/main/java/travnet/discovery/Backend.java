@@ -1078,7 +1078,7 @@ public class Backend {
                                 try {
                                     ArrayList<DataBucketListCard> userBucketList = new ArrayList();
                                     ArrayList<String> countries = new ArrayList<>();
-                                    JSONArray arrayJson = response.getJSONArray("cards");
+                                    JSONArray arrayJson = response.getJSONArray("bucket_list");
                                     int noOfCards = arrayJson.length();
                                     for (int i=0; i< noOfCards; i++) {
                                         JSONObject card = arrayJson.getJSONObject(i);
