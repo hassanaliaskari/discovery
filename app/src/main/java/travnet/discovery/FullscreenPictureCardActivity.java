@@ -1,6 +1,7 @@
 package travnet.discovery;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,8 +27,9 @@ public class FullscreenPictureCardActivity extends AppCompatActivity {
     TextView location;
     ImageView image;
     ImageButton likeButton;
+    TextView noOfLikes;
     ImageButton addToBlButton;
-    TextView likes;
+    TextView noOfBucketList;
     TextView activity;
     TextView description;
 
@@ -52,17 +54,22 @@ public class FullscreenPictureCardActivity extends AppCompatActivity {
         location = (TextView) findViewById(R.id.location);
         image = (ImageView) findViewById(R.id.image);
         likeButton = (ImageButton) findViewById(R.id.like_button);
+        noOfLikes = (TextView) findViewById(R.id.no_of_likes);
         addToBlButton = (ImageButton) findViewById(R.id.add_to_bl_button);
-        likes = (TextView) findViewById(R.id.no_of_likes);
+        noOfBucketList = (TextView) findViewById(R.id.no_of_bl);
         activity = (TextView) findViewById(R.id.activity);
         description = (TextView) findViewById(R.id.description);
 
 
         ImageLoader.getInstance().displayImage(dataPictureCard.dataUploaderBar.uploader_pp, this.uploaderPic);
         uploaderName.setText(dataPictureCard.dataUploaderBar.uploader_name);
+        Typeface font = Typeface.createFromAsset(getApplicationContext().getAssets(), "EchinosParkScript.ttf");
+        this.title.setTypeface(font);
         title.setText(dataPictureCard.title);
         location.setText(dataPictureCard.location);
         ImageLoader.getInstance().displayImage(dataPictureCard.link, image);
+        noOfLikes.setText(String.valueOf(dataPictureCard.likes));
+        noOfBucketList.setText(String.valueOf(dataPictureCard.noBlucketListed));
         activity.setText(dataPictureCard.activity);
         description.setText(dataPictureCard.description);
         addLikeCallback();
@@ -95,7 +102,9 @@ public class FullscreenPictureCardActivity extends AppCompatActivity {
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Backend.getInstance().registerLikeCard(dataPictureCard.id);
                 dataPictureCard.likes++;
+                noOfLikes.setText(String.valueOf(dataPictureCard.likes));
                 dataPictureCard.isLiked = true;
 
                 likeButton.setImageResource(R.drawable.ic_liked);
@@ -113,7 +122,9 @@ public class FullscreenPictureCardActivity extends AppCompatActivity {
         addToBlButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Backend.getInstance().registerBucketCard(dataPictureCard.id);
                 dataPictureCard.noBlucketListed++;
+                noOfBucketList.setText(String.valueOf(dataPictureCard.noBlucketListed));
                 dataPictureCard.isAddedToBl = true;
 
                 addToBlButton.setImageResource(R.drawable.ic_added_to_bl);

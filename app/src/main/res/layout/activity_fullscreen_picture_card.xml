@@ -65,7 +65,8 @@
         android:layout_above="@id/image_holder"
         android:paddingBottom="8dp"
         android:gravity="center_horizontal"
-        android:textSize="22sp"
+        android:textSize="18sp"
+        android:layout_marginTop="-8dp"
         android:textColor="#FFFFFF"
         android:id="@+id/location" />
 
@@ -75,7 +76,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/location"
         android:gravity="center_horizontal"
-        android:textSize="30sp"
+        android:textSize="34sp"
         android:textColor="#FFFFFF"
         android:id="@+id/title" />
 
@@ -108,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textSize="12sp"
-                android:text="103"
+                android:textColor="#FFFFFF"
                 android:id="@+id/no_of_likes" />
         </LinearLayout>
 
@@ -132,7 +133,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textSize="12sp"
-                android:text="13"
+                android:textColor="#FFFFFF"
                 android:id="@+id/no_of_bl" />
         </LinearLayout>
 
