@@ -42,9 +42,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/image_holder"
-                android:paddingBottom="8dp"
                 android:gravity="center_horizontal"
-                android:textSize="22sp"
+                android:textSize="18sp"
                 android:textColor="#FFFFFF"
                 android:id="@+id/location" />
 
@@ -53,7 +52,8 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@id/location"
                 android:gravity="center_horizontal"
-                android:textSize="30sp"
+                android:layout_marginBottom="-8dp"
+                android:textSize="34sp"
                 android:textColor="#FFFFFF"
                 android:id="@+id/title" />
 

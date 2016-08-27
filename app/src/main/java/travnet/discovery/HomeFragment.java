@@ -213,7 +213,7 @@ public class HomeFragment extends Fragment {
                 case TYPE_PICTURE:
                     view = LayoutInflater.from(parent.getContext())
                             .inflate(R.layout.card_picture, parent, false);
-                    CardPictureViewHolder cardPictureViewHolder = new CardPictureViewHolder(view);
+                    CardPictureViewHolder cardPictureViewHolder = new CardPictureViewHolder(view, getActivity().getApplicationContext());
                     return cardPictureViewHolder;
 
                 case TYPE_BLOG:

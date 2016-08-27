@@ -1,6 +1,8 @@
 package travnet.discovery;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -21,6 +23,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 //View Holder for picture cards
 public class CardPictureViewHolder extends RecyclerView.ViewHolder {
     View cardView;
+    Context context;
 
     ImageView image;
     View scrim;
@@ -35,8 +38,9 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
     AvatarView uploaderPic;
     TextView uploaderName;
 
-    public CardPictureViewHolder(View itemView) {
+    public CardPictureViewHolder(View itemView, Context context) {
         super(itemView);
+        this.context = context;
         cardView = itemView;
 
         image = (ImageView) itemView.findViewById(R.id.image);
@@ -70,6 +74,8 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
                 scrim.getLayoutParams().height = loadedImage.getHeight();
             }
         });
+        Typeface font = Typeface.createFromAsset(context.getAssets(), "EchinosParkScript.ttf");
+        this.title.setTypeface(font);
         this.title.setText(dataPictureCard.title);
         this.location.setText(dataPictureCard.location);
         this.noOfLikes.setText(String.valueOf(dataPictureCard.likes));
