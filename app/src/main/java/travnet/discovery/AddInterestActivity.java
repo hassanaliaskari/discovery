@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,12 +130,6 @@ public class AddInterestActivity extends AppCompatActivity {
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.card_add_interest, parent, false);
             CardAddInterestItemViewHolder cardAddInterestItemViewHolder = new CardAddInterestItemViewHolder(view);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ((CheckBox)v.findViewById(R.id.interest_select)).toggle();
-                }
-            });
             return cardAddInterestItemViewHolder;
         }
 
@@ -145,8 +140,23 @@ public class AddInterestActivity extends AppCompatActivity {
             cardBucketListItemViewHolder.interestName.setText(interests.get(position));
             if (selectedIntersets.contains(interests.get(position))) {
                 cardBucketListItemViewHolder.isSelected.setChecked(true);
+            } else {
+                cardBucketListItemViewHolder.isSelected.setChecked(false);
             }
 
+            ((CardAddInterestItemViewHolder) holder).cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i("add_iterest", "view clicked");
+                    ((CheckBox) v.findViewById(R.id.interest_select)).toggle();
+                    String interest = interests.get(position);
+                    if (selectedIntersets.contains(interest)) {
+                        selectedIntersets.remove(interest);
+                    } else {
+                        selectedIntersets.add(interest);
+                    }
+                }
+            });
 
         }
     }
@@ -171,7 +181,7 @@ public class AddInterestActivity extends AppCompatActivity {
 
     private void returnInterests() {
         //Browse through list to find selected interests
-        selectedIntersets.clear();
+        /*selectedIntersets.clear();
 
         for (int i=0; i<listInterests.getChildCount(); i++){
             View view = listInterests.getChildAt(i);
@@ -180,7 +190,7 @@ public class AddInterestActivity extends AppCompatActivity {
                 String interestName = ((TextView)view.findViewById(R.id.interest_name)).getText().toString();
                 selectedIntersets.add(interestName);
             }
-        }
+        }*/
 
 
         if (selectedIntersets.size() < minInterestRequired) {

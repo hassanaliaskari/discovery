@@ -206,13 +206,13 @@ public class Backend {
                                     String hometown = response.getString("home");
                                     String location = response.getString("living_in");
                                     String ppURL = response.getString("profile_pic");
-                                    //JSONObject interestJSON = response.getJSONObject("interests");
-                                    String temp = response.getString("interests");
-                                    List<String> interests = Arrays.asList(temp.substring(1,temp.length()-1).split("\\s*,\\s*"));
-                                    /*ArrayList<String> interests = new ArrayList<String>();
-                                    for (int i=0; i<interestJSON.length(); i++){
-                                        interests.add(interestJSON.getString(i));
-                                    }*/
+                                    JSONArray jsonInterests = response.getJSONArray("interests");
+                                    //String temp = response.getString("interests");
+                                    //List<String> interests = Arrays.asList(temp.substring(1,temp.length()-1).split("\\s*,\\s*"));
+                                    ArrayList<String> interests = new ArrayList<String>();
+                                    for (int i=0; i<jsonInterests.length(); i++){
+                                        interests.add(jsonInterests.getString(i));
+                                    }
                                     User.getInstance().updateUser(name, email, location, hometown, ppURL);
                                     User.getInstance().setInterests(interests);
                                     listener.onUserInfoFetched();
@@ -603,7 +603,11 @@ public class Backend {
                 try {
                     userInterest.put("user_id", User.getInstance().getUserID());
                     ArrayList<String> listInterest = new ArrayList<String>(User.getInstance().getInterests());
-                    userInterest.put("interests", listInterest);
+                    //JSONArray jsonInterests = new JSONArray(Arrays.asList(listInterest));
+                    JSONArray jsonInterests = new JSONArray();
+                    for (int i=0;i<listInterest.size();i++)
+                        jsonInterests.put(listInterest.get(i));
+                    userInterest.put("interests", jsonInterests);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
