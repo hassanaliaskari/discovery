@@ -3,6 +3,7 @@ package travnet.discovery;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -71,9 +72,22 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                 super.onLoadingComplete(imageUri, view, loadedImage);
-                scrim.getLayoutParams().height = loadedImage.getHeight();
+                int w = image.getWidth();
+                int check = loadedImage.getWidth();
+                int check2 = loadedImage.getHeight();
+                double ratio = (double)w/(double)loadedImage.getWidth();
+                double temp = loadedImage.getHeight() * ratio;
+                int h = (int) temp;
+                scrim.getLayoutParams().height = h;
+                scrim.invalidate();
             }
         });
+        /*this.image.post(new Runnable() {
+            @Override
+            public void run() {
+                scrim.getLayoutParams().height = image.getHeight();
+            }
+        });*/
         Typeface font = Typeface.createFromAsset(context.getAssets(), "EchinosParkScript.ttf");
         this.title.setTypeface(font);
         this.title.setText(dataPictureCard.title);
