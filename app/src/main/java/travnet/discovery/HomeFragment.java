@@ -7,8 +7,10 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +59,7 @@ public class HomeFragment extends Fragment {
     static ArrayList<DataBlogCard> dataBlogCards;
     static ArrayList<CardsRef> cardsRef;
 
+    SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView recyclerView;
     CardAdapter cardAdapter;
     ImageLoader imageLoader;
@@ -86,9 +89,21 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
         recyclerView = (RecyclerView) view.findViewById(R.id.list);
         initializeListView();
         requestCards();
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        cardsRef.clear();
+                        dataBlogCards.clear();
+                        dataPictureCards.clear();
+                        requestCards();
+                    }
+                }
+        );
 
         return view;
     }
@@ -129,6 +144,7 @@ public class HomeFragment extends Fragment {
             public void onCardsFetched(ArrayList<DataPictureCard> dataPictureCards, ArrayList<DataBlogCard> dataBlogCards, ArrayList<CardsRef> cardsRef) {
                 copyCards(dataPictureCards, dataBlogCards, cardsRef);
                 cardAdapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
@@ -290,7 +306,6 @@ public class HomeFragment extends Fragment {
             }
         }
     }
-
 
 
 }

@@ -24,7 +24,7 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
 
     @Override
     public void onScrolled(RecyclerView view, int dx, int dy) {
-        int firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
+        /*int firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
         int visibleItemCount = view.getChildCount();
         int totalItemCount = mLinearLayoutManager.getItemCount();
 
@@ -52,7 +52,7 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
             currentPage++;
             onLoadMore(currentPage, totalItemCount);
             loading = true;
-        }
+        }*/
     }
 
     // Defines the process for actually loading more data based on page
