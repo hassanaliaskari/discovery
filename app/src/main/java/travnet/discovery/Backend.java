@@ -60,13 +60,11 @@ import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
  */
 public class Backend {
     private static Backend ourInstance = new Backend();
+    private RequestQueue queue;
     private Context context;
 
-    //private String baseUrl = "http://192.168.1.25:8080/api/";
-    //private String baseUrl = "http://54.86.18.174/api/";
     private String baseUrl = "http://54.169.51.25/api/";
 
-    //public static final int NO_OF_CARDS = 5;
     private static final int TYPE_PICTURE = 0;
     private static final int TYPE_BLOG = 1;
 
@@ -84,6 +82,9 @@ public class Backend {
 
     public void initialize(Context context) {
         this.context = context;
+        this.queue = Volley.newRequestQueue(context);
+        queue.getCache().clear();
+
 
         dataPictureCards = new ArrayList<>();
         dataBlogCards = new ArrayList<>();
@@ -107,8 +108,6 @@ public class Backend {
             protected Void doInBackground(Void... params) {
                 User.getInstance().setProfilePicURL(ppURL);
 
-
-                RequestQueue queue = Volley.newRequestQueue(context);
                 String url = baseUrl + "registerUser";
 
                 JSONObject user = new JSONObject();
@@ -184,7 +183,6 @@ public class Backend {
             @Override
             protected Void doInBackground(Void... params) {
 
-                RequestQueue queue = Volley.newRequestQueue(context);
                 String url = baseUrl + "getUserInfo";
 
                 JSONObject userID = new JSONObject();
@@ -263,7 +261,6 @@ public class Backend {
             @Override
             protected Void doInBackground(Void... params) {
 
-                RequestQueue queue = Volley.newRequestQueue(context);
                 String url = baseUrl + "getUserInterests";
 
                 JSONObject userID = new JSONObject();
@@ -326,7 +323,6 @@ public class Backend {
             @Override
             protected Void doInBackground(Void... params) {
 
-                RequestQueue queue = Volley.newRequestQueue(context);
                 String url = baseUrl + "getUserCards";
 
                 JSONObject userID = new JSONObject();
@@ -419,7 +415,6 @@ public class Backend {
             @Override
             protected Void doInBackground(Void... params) {
 
-                RequestQueue queue = Volley.newRequestQueue(context);
                 String url = baseUrl + "getInterests";
 
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest
@@ -479,30 +474,29 @@ public class Backend {
     }
     public void getCards(int currNoOfCards, final GetCardsListener listener) {
 
-        if (cardsRef.size() > currNoOfCards) {
+        /*if (cardsRef.size() > currNoOfCards) {
             listener.onCardsFetched(dataPictureCards, dataBlogCards, cardsRef);
             return;
         } else {
             dataPictureCards.clear();
             dataBlogCards.clear();
             cardsRef.clear();
-        }
+        }*/
 
 
         class getCardsTask extends AsyncTask<Void, Void, Void> {
 
             @Override
             protected Void doInBackground(Void... params) {
-                RequestQueue queue = Volley.newRequestQueue(context);
                 String url = baseUrl + "getCards";
 
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                        new Response.Listener<String>() {
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,
+                        new Response.Listener<JSONObject>() {
                             @Override
-                            public void onResponse(String response) {
+                            public void onResponse(JSONObject response) {
                                 try {
-                                    JSONObject jsonObj = new JSONObject(response);
-                                    JSONArray arrayJson = jsonObj.getJSONArray("cards");
+                                    //JSONObject jsonObj = new JSONObject(response);
+                                    JSONArray arrayJson = response.getJSONArray("cards");
                                     int noOfCards = arrayJson.length();
                                     for (int i=0; i< noOfCards; i++) {
                                         JSONObject card = arrayJson.getJSONObject(i);
@@ -563,8 +557,11 @@ public class Backend {
                 });
 
                 // Add the request to the RequestQueue.
-                stringRequest.setShouldCache(false);
-                queue.add(stringRequest);
+                jsonObjectRequest.setShouldCache(false);
+                queue.getCache().invalidate(url, true);
+                queue.getCache().remove(url);
+                queue.getCache().clear();
+                queue.add(jsonObjectRequest);
 
                 return null;
             }
@@ -596,7 +593,6 @@ public class Backend {
             @Override
             protected Void doInBackground(Void... params) {
 
-                RequestQueue queue = Volley.newRequestQueue(context);
                 String url = baseUrl + "registerInterests";
 
                 JSONObject userInterest = new JSONObject();
@@ -658,7 +654,6 @@ public class Backend {
             @Override
             protected Void doInBackground(Void... params) {
 
-                RequestQueue queue = Volley.newRequestQueue(context);
                 String url = baseUrl + "registerCard";
 
                 JSONObject blog = new JSONObject();
@@ -728,7 +723,6 @@ public class Backend {
             @Override
             protected Void doInBackground(Void... params) {
 
-                RequestQueue queue = Volley.newRequestQueue(context);
                 String url = baseUrl + "getUserPhotoCount";
 
                 JSONObject userID = new JSONObject();
@@ -789,7 +783,6 @@ public class Backend {
             @Override
             protected Void doInBackground(Void... params) {
 
-                RequestQueue queue = Volley.newRequestQueue(context);
                 String url = baseUrl + "getSecretKey";
 
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest
@@ -904,7 +897,6 @@ public class Backend {
             @Override
             protected Void doInBackground(Void... params) {
 
-                RequestQueue queue = Volley.newRequestQueue(context);
                 String url = baseUrl + "registerCard";
 
                 JSONObject pictureCard = new JSONObject();
@@ -961,7 +953,6 @@ public class Backend {
             @Override
             protected Void doInBackground(Void... params) {
 
-                RequestQueue queue = Volley.newRequestQueue(context);
                 String url = baseUrl + "likeCard";
 
                 JSONObject likeInfo = new JSONObject();
@@ -1008,7 +999,6 @@ public class Backend {
             @Override
             protected Void doInBackground(Void... params) {
 
-                RequestQueue queue = Volley.newRequestQueue(context);
                 String url = baseUrl + "addToBucket";
 
                 JSONObject likeInfo = new JSONObject();
@@ -1064,7 +1054,6 @@ public class Backend {
 
             @Override
             protected Void doInBackground(Void... params) {
-                RequestQueue queue = Volley.newRequestQueue(context);
                 String url = baseUrl + "getBucketList";
 
                 JSONObject userID = new JSONObject();

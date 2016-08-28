@@ -150,6 +150,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onGetCardsFailed() {
                 Toast.makeText(getActivity().getApplicationContext(), R.string.error_connect_server_failed, Toast.LENGTH_LONG).show();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
