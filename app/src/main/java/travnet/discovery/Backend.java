@@ -100,7 +100,7 @@ public class Backend {
         public abstract void registerNewUserFailed();
     }
 
-    public void registerNewUser(final String id, final String name, final String email, final String location, final String hometown, final String ppURL, final RegisterNewUserListener listener) {
+    public void registerNewUser(final String id, final String name, final String email, final String ppURL, final RegisterNewUserListener listener) {
 
         class RegisterNewUserTask extends AsyncTask<Void, Void, Void> {
 
@@ -114,8 +114,6 @@ public class Backend {
                 try {
                     user.put("email", email);
                     user.put("name", name);
-                    user.put("living_in", location);
-                    user.put("home", hometown);
                     user.put("facebook_id", id);
                     user.put("date_of_birth", "25");
                     user.put("profile_pic", ppURL);
@@ -201,8 +199,6 @@ public class Backend {
                                 try {
                                     String name = response.getString("name");
                                     String email = response.getString("email");
-                                    String hometown = response.getString("home");
-                                    String location = response.getString("living_in");
                                     String ppURL = response.getString("profile_pic");
                                     JSONArray jsonInterests = response.getJSONArray("interests");
                                     //String temp = response.getString("interests");
@@ -211,7 +207,7 @@ public class Backend {
                                     for (int i=0; i<jsonInterests.length(); i++){
                                         interests.add(jsonInterests.getString(i));
                                     }
-                                    User.getInstance().updateUser(name, email, location, hometown, ppURL);
+                                    User.getInstance().updateUser(name, email, "", "", ppURL);
                                     User.getInstance().setInterests(interests);
                                     listener.onUserInfoFetched();
                                 } catch (JSONException e) {

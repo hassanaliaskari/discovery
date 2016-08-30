@@ -95,8 +95,6 @@ public class SignInFragment extends Fragment {
         loginButton.setFragment(this);
         loginButton.setReadPermissions("public_profile");
         loginButton.setReadPermissions("email");
-        loginButton.setReadPermissions("user_hometown");
-        loginButton.setReadPermissions("user_location");
         loginButton.setReadPermissions("user_friends");
 
 
@@ -106,8 +104,6 @@ public class SignInFragment extends Fragment {
             public void onSuccess(LoginResult loginResult) {
 
                 LoginManager.getInstance().logInWithReadPermissions(getActivity(), Arrays.asList("email"));
-                LoginManager.getInstance().logInWithReadPermissions(getActivity(), Arrays.asList("user_hometown"));
-                LoginManager.getInstance().logInWithReadPermissions(getActivity(), Arrays.asList("user_location"));
 
                 //Request user info
                 GraphRequest request = GraphRequest.newMeRequest(
@@ -121,16 +117,12 @@ public class SignInFragment extends Fragment {
                                     String id = object.getString("id");
                                     String email = object.getString("email");
                                     String name = object.getString("name");
-                                    JSONObject locationObj = object.getJSONObject("location");
-                                    String location = locationObj.getString("name");
-                                    JSONObject hometownObj = object.getJSONObject("hometown");
-                                    String hometown = hometownObj.getString("name");
                                     JSONObject picture = object.getJSONObject("picture");
                                     String ppURL = picture.getJSONObject("data").getString("url");
 
-                                    User.getInstance().updateUser(name, email, location, hometown, null);
+                                    User.getInstance().updateUser(name, email, "", "", null);
 
-                                    Backend.getInstance().registerNewUser(id, name, email, location, hometown, ppURL, Backend.getInstance().new RegisterNewUserListener() {
+                                    Backend.getInstance().registerNewUser(id, name, email, ppURL, Backend.getInstance().new RegisterNewUserListener() {
                                         @Override
                                         public void registerNewUserCompleted() {
                                             loginListener.onLoginSuccessful();
