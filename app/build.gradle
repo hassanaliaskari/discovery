@@ -20,7 +20,7 @@ android {
         applicationId "travnet.discovery"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 3
+        versionCode 4
         versionName "1.0"
     }
     buildTypes {
@@ -53,4 +53,5 @@ dependencies {
     compile 'com.liangfeizc:avatarview:0.0.1@aar'
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.amazonaws:aws-android-sdk-s3:2.2.+'
+    compile 'com.github.wooplr:Spotlight:1.2.2'
 }

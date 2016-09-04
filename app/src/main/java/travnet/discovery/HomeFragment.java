@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -31,6 +32,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.wooplr.spotlight.SpotlightView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -251,6 +253,8 @@ public class HomeFragment extends Fragment {
 
                 case TYPE_PICTURE:
                     CardPictureViewHolder cardPictureViewHolder = (CardPictureViewHolder) holder;
+                    if (position == 0)
+                        showLikeHint(cardPictureViewHolder);
                     final DataPictureCard dataPictureCard = dataPictureCards.get(cardsRef.get(position).index);
                     cardPictureViewHolder.poplulatePictureCard(dataPictureCard, position);
                     cardPictureViewHolder.image.setOnClickListener(new View.OnClickListener() {
@@ -280,6 +284,33 @@ public class HomeFragment extends Fragment {
         @Override
         public int getItemViewType(int position) {
             return cardsRef.get(position).type;
+        }
+
+
+        private void showLikeHint(CardPictureViewHolder cardPictureViewHolder) {
+            if (User.getInstance().getUserState() < 2) {
+                new SpotlightView.Builder(getActivity())
+                        .introAnimationDuration(400)
+                        .performClick(true)
+                        .fadeinTextDuration(400)
+                        .headingTvColor(Color.parseColor("#CE1A1A"))
+                        .headingTvSize(24)
+                        .headingTvText("Like To Reveal")
+                        .subHeadingTvSize(16)
+                        .maskColor(Color.parseColor("#dc000000"))
+                        .lineAndArcColor(Color.parseColor("#CE1A1A"))
+                        .subHeadingTvText("Like the picture to reveal its location")
+                        .target(cardPictureViewHolder.likeButton)
+                        .lineAnimDuration(400)
+                        .dismissOnTouch(true)
+                        .dismissOnBackPress(true)
+                        .enableDismissAfterShown(true)
+                        .show();
+                User.getInstance().setUserState(2);
+            } else {
+
+            }
+
         }
 
     }
