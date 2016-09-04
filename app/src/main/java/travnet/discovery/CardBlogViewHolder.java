@@ -57,6 +57,7 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
                 .considerExifParams(true)
                 .build();
 
+        this.thumbnail.setImageDrawable(null);
         this.title.setText(dataBlogCard.title);
         ImageLoader.getInstance().displayImage(dataBlogCard.thumbnail_url, this.thumbnail, options, new Animations.AnimateFirstDisplayListener());
         this.extract.setText(dataBlogCard.extract);

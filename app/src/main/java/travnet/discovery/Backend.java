@@ -479,6 +479,9 @@ public class Backend {
             cardsRef.clear();
         }*/
 
+        dataPictureCards.clear();
+        dataBlogCards.clear();
+        cardsRef.clear();
 
         class getCardsTask extends AsyncTask<Void, Void, Void> {
 

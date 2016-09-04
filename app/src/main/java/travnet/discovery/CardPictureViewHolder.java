@@ -67,11 +67,13 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
                 .considerExifParams(true)
                 .build();
 
-
+        this.image.setScaleType(ImageView.ScaleType.CENTER);
+        this.image.setImageDrawable(context.getResources().getDrawable(R.drawable.placeholder_loading));
         ImageLoader.getInstance().displayImage(dataPictureCard.link, this.image, options, new Animations.AnimateFirstDisplayListener(){
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                 super.onLoadingComplete(imageUri, view, loadedImage);
+                image.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 int w = image.getWidth();
                 int check = loadedImage.getWidth();
                 int check2 = loadedImage.getHeight();
