@@ -93,17 +93,11 @@ public class SignInFragment extends Fragment {
 
         loginButton = (LoginButton) myFragmentView.findViewById(R.id.login_button);
         loginButton.setFragment(this);
-        loginButton.setReadPermissions("public_profile");
-        loginButton.setReadPermissions("email");
-        loginButton.setReadPermissions("user_friends");
-
-
+        loginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_friends"));
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-
-                LoginManager.getInstance().logInWithReadPermissions(getActivity(), Arrays.asList("email"));
 
                 //Request user info
                 GraphRequest request = GraphRequest.newMeRequest(
@@ -135,6 +129,7 @@ public class SignInFragment extends Fragment {
                                     });
 
                                 } catch (JSONException e) {
+                                    loginListener.onLoginFailed();
                                     e.printStackTrace();
                                 }
                             }
@@ -142,7 +137,7 @@ public class SignInFragment extends Fragment {
                         });
                 Bundle parameters = new Bundle();
                 parameters.putString("fields", "id,email,name,hometown,location,picture.width(300).height(300)");
-        //        parameters.putString("fields", "email, name");
+                //        parameters.putString("fields", "email, name");
                 request.setParameters(parameters);
                 request.executeAsync();
 

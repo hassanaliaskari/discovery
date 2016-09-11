@@ -132,6 +132,7 @@ public class Backend {
                                     userID = response.getString("user_id");
 
                                 } catch (JSONException e) {
+                                    listener.registerNewUserFailed();
                                     e.printStackTrace();
                                 }
                                 User.getInstance().setUserID(userID);
