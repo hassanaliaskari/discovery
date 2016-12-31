@@ -249,9 +249,12 @@ public class HomeFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+
             switch (holder.getItemViewType()) {
 
                 case TYPE_PICTURE:
+                    Backend.getInstance().registerSeenCard((dataPictureCards.get(cardsRef.get(position).index)).id);
+
                     CardPictureViewHolder cardPictureViewHolder = (CardPictureViewHolder) holder;
                     if (position == 0)
                         showLikeHint(cardPictureViewHolder);
@@ -266,6 +269,8 @@ public class HomeFragment extends Fragment {
                     break;
 
                 case TYPE_BLOG:
+                    Backend.getInstance().registerSeenCard((dataBlogCards.get(cardsRef.get(position).index)).id);
+
                     CardBlogViewHolder cardBlogViewHolder = (CardBlogViewHolder) holder;
                     final DataBlogCard dataBlogCard = dataBlogCards.get(cardsRef.get(position).index);
                     cardBlogViewHolder.poplulateBlogCard(dataBlogCard, position);

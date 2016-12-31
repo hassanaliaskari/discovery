@@ -64,6 +64,7 @@ public class Backend {
     private Context context;
 
     private String baseUrl = "http://54.169.51.25/api/";
+    //private String baseUrl = "http://10.0.2.2:8080/api/";
 
     private static final int TYPE_PICTURE = 0;
     private static final int TYPE_BLOG = 1;
@@ -478,6 +479,7 @@ public class Backend {
             dataPictureCards.clear();
             dataBlogCards.clear();
             cardsRef.clear();
+
         }*/
 
         dataPictureCards.clear();
@@ -489,8 +491,16 @@ public class Backend {
             @Override
             protected Void doInBackground(Void... params) {
                 String url = baseUrl + "getCards";
+                JSONObject userID = new JSONObject();
+                try {
+                    userID.put("user_id", User.getInstance().getUserID());
 
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, userID,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
@@ -502,21 +512,21 @@ public class Backend {
                                         JSONObject card = arrayJson.getJSONObject(i);
                                         HomeFragment.CardsRef cardRef = new HomeFragment.CardsRef();
 
-                                        boolean isLiked = false;
-                                        JSONArray likeList = card.getJSONArray("like_list");
+                                        boolean isLiked = card.getBoolean("is_liked");
+                                        /*JSONArray likeList = card.getJSONArray("like_list");
                                         for (int j=0;j<likeList.length();j++) {
                                             String userID = User.getInstance().getUserID();
                                             if (likeList.getString(j).equals(userID))
                                                 isLiked = true;
-                                        }
+                                        }*/
 
-                                        boolean isBucketListed = false;
-                                        JSONArray bucketUsers = card.getJSONArray("bucket_users");
+                                        boolean isBucketListed = card.getBoolean("is_bucket_listed");
+                                        /*JSONArray bucketUsers = card.getJSONArray("bucket_users");
                                         for (int j=0;j<bucketUsers.length();j++) {
                                             String userID = User.getInstance().getUserID();
                                             if (bucketUsers.getString(j).equals(userID))
                                                 isBucketListed = true;
-                                        }
+                                        }*/
 
                                         if (card.getString("card_type").equals("photo")) {
                                             cardRef.type = TYPE_PICTURE;
@@ -946,6 +956,51 @@ public class Backend {
     }
 
 
+    public void registerSeenCard(final String cardID) {
+        class postPictureCard extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                String url = baseUrl + "seenCard";
+
+                JSONObject likeInfo = new JSONObject();
+                try {
+                    likeInfo.put("user_id", User.getInstance().getUserID());
+                    likeInfo.put("card_id", cardID);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                        (Request.Method.POST, url, likeInfo, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+
+                            }
+                        });
+
+                queue.add(jsObjRequest);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void v) {
+
+            }
+        }
+
+        new postPictureCard().execute();
+
+    }
 
     public void registerLikeCard(final String cardID) {
         class postPictureCard extends AsyncTask<Void, Void, Void> {
