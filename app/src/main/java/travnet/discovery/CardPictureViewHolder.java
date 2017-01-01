@@ -157,7 +157,36 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
                 scrim.startAnimation(scrimFadeIn);
             }
         });
-        }
+    }
+
+
+    public void addlocationCallback(final DataPictureCard dataPictureCard, final View infoView) {
+        View.OnClickListener locationListener = new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                infoView.setVisibility(View.VISIBLE);
+                TextView name = (TextView) infoView.findViewById(R.id.name);
+                name.setText(dataPictureCard.locationInfoName);
+                TextView summary = (TextView) infoView.findViewById(R.id.summary);
+                summary.setText(dataPictureCard.locationInfoSummary);
+                final View scrim = infoView.findViewById(R.id.scrim);
+                scrim.setClickable(true);
+                scrim.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        scrim.setClickable(false);
+                        infoView.setVisibility(View.GONE);
+                    }
+                });
+
+            }
+        };
+
+        title.setOnClickListener(locationListener);
+        location.setOnClickListener(locationListener);
+    }
+
+
 
     public void addBucketCallback(final DataPictureCard dataPictureCard) {
         addToBlButton.setOnClickListener(new View.OnClickListener() {

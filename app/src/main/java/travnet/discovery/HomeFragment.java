@@ -61,6 +61,7 @@ public class HomeFragment extends Fragment {
     static ArrayList<DataBlogCard> dataBlogCards;
     static ArrayList<CardsRef> cardsRef;
 
+    View infoView;
     SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView recyclerView;
     CardAdapter cardAdapter;
@@ -93,11 +94,14 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
         recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        infoView = view.findViewById(R.id.info_view);
+        infoView.setVisibility(View.GONE);
         initializeListView();
         requestCards();
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
+
                     public void onRefresh() {
                         cardsRef.clear();
                         dataBlogCards.clear();
@@ -266,6 +270,7 @@ public class HomeFragment extends Fragment {
                             openFullScreenPicture(dataPictureCard, position);
                         }
                     });
+                    cardPictureViewHolder.addlocationCallback(dataPictureCard, infoView);
                     break;
 
                 case TYPE_BLOG:
@@ -290,7 +295,6 @@ public class HomeFragment extends Fragment {
         public int getItemViewType(int position) {
             return cardsRef.get(position).type;
         }
-
 
         private void showLikeHint(CardPictureViewHolder cardPictureViewHolder) {
             int currentapiVersion = android.os.Build.VERSION.SDK_INT;
