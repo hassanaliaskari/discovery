@@ -26,6 +26,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -62,6 +70,7 @@ public class HomeFragment extends Fragment {
     static ArrayList<CardsRef> cardsRef;
 
     View infoView;
+    MapView mapView;
     SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView recyclerView;
     CardAdapter cardAdapter;
@@ -95,8 +104,11 @@ public class HomeFragment extends Fragment {
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
         recyclerView = (RecyclerView) view.findViewById(R.id.list);
         infoView = view.findViewById(R.id.info_view);
+        mapView = (MapView) infoView.findViewById(R.id.map_view);
+        mapView.onCreate(savedInstanceState);
         infoView.setVisibility(View.GONE);
         initializeListView();
+        initializeMap();
         requestCards();
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -114,6 +126,29 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -140,6 +175,14 @@ public class HomeFragment extends Fragment {
         void  onFragmentInteraction(Uri uri);
     }
 
+
+    private void initializeMap() {
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
     // Function to make http request for cards. The received cards are added to the data arrays
@@ -271,6 +314,7 @@ public class HomeFragment extends Fragment {
                         }
                     });
                     cardPictureViewHolder.addlocationCallback(dataPictureCard, infoView);
+                    cardPictureViewHolder.addMapCallback(dataPictureCard, infoView);
                     break;
 
                 case TYPE_BLOG:
