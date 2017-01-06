@@ -23,6 +23,8 @@ public class DataPictureCard implements Parcelable{
     String location;
     String locationInfoName;
     String locationInfoSummary;
+    double latitude;
+    double longitude;
     String activity;
     DataUploaderBar dataUploaderBar;
 
@@ -32,7 +34,9 @@ public class DataPictureCard implements Parcelable{
     public DataPictureCard() {
     }
 
-    public DataPictureCard(String id, boolean isLiked, boolean isAddedToBl, String description, String link, int likes, int noBlucketListed, String title, String location, String locationInfoName, String locationInfoSummary, String activity, String uploader_name, String uploader_pp) {
+    public DataPictureCard(String id, boolean isLiked, boolean isAddedToBl, String description, String link, int likes, int noBlucketListed,
+                           String title, String location, String locationInfoName, String locationInfoSummary, double latitude, double longitude,
+                           String activity, String uploader_name, String uploader_pp) {
         dataUploaderBar = new DataUploaderBar();
         this.id = id;
         this.description = description;
@@ -43,6 +47,8 @@ public class DataPictureCard implements Parcelable{
         this.location = location;
         this.locationInfoName = locationInfoName;
         this.locationInfoSummary = locationInfoSummary;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.activity = activity;
         this.dataUploaderBar.uploader_name = uploader_name;
         this.dataUploaderBar.uploader_pp = uploader_pp;
@@ -69,6 +75,8 @@ public class DataPictureCard implements Parcelable{
         out.writeString(location);
         out.writeString(locationInfoName);
         out.writeString(locationInfoSummary);
+        out.writeDouble(latitude);
+        out.writeDouble(longitude);
         out.writeString(activity);
         out.writeString(dataUploaderBar.uploader_name);
         out.writeString(dataUploaderBar.uploader_pp);
@@ -98,6 +106,8 @@ public class DataPictureCard implements Parcelable{
         location = in.readString();
         locationInfoName = in.readString();
         locationInfoSummary = in.readString();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
         activity = in.readString();
         dataUploaderBar.uploader_name = in.readString();
         dataUploaderBar.uploader_pp = in.readString();

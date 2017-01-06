@@ -23,6 +23,10 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.Serializable;
@@ -295,7 +299,8 @@ public class AddCardInfoActivity extends AppCompatActivity {
         String pictureUrl = "https://travnet.s3.amazonaws.com/" + userID + "-" + pictureCount + ".jpg";
 
         String locationString = getLocationString(location);
-        backend.postPictureCard(pictureUrl, heading, location.getId(), locationString, interest, description, backend.new PostPictureCardListener() {
+
+        backend.postPictureCard(pictureUrl, heading, location.getId(), locationString, location.getLatLng().latitude, location.getLatLng().longitude, interest, description, backend.new PostPictureCardListener() {
             @Override
             public void onPostPictureCardSuccess() {
                 Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();

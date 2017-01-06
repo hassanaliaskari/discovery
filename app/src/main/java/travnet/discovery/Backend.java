@@ -361,7 +361,8 @@ public class Backend {
                                             JSONArray interests = card.getJSONArray("interests");
                                             DataPictureCard temp = new DataPictureCard(card.getString("_id"), isLiked, isBucketListed, card.getString("description"), card.getString("url"),
                                                     card.getInt("likes"), card.getInt("bucket_count"), card.getString("title"), card.getString("location"), card.getString("location_info_name"),
-                                                    card.getString("location_info_summary"), interests.getString(0), card.getString("user_name"), card.getString("user_profile_pic"));
+                                                    card.getString("location_info_summary"), card.getDouble("latitude"), card.getDouble("longitude"),
+                                                    interests.getString(0), card.getString("user_name"), card.getString("user_profile_pic"));
                                             dataPictureCards.add(temp);
                                         }
                                     }
@@ -535,7 +536,8 @@ public class Backend {
                                             JSONArray interests = card.getJSONArray("interests");
                                             DataPictureCard temp = new DataPictureCard(card.getString("_id"), isLiked, isBucketListed, card.getString("description"), card.getString("url"),
                                                     card.getInt("likes"), card.getInt("bucket_count"), card.getString("title"), card.getString("location"), card.getString("location_info_name"),
-                                                    card.getString("location_info_summary"),interests.getString(0), card.getString("user_name"), card.getString("user_profile_pic"));
+                                                    card.getString("location_info_summary"), card.getDouble("latitude"), card.getDouble("longitude"),
+                                                    interests.getString(0), card.getString("user_name"), card.getString("user_profile_pic"));
                                             dataPictureCards.add(temp);
                                         }
                                         else if (card.getString("card_type").equals("blog")) {
@@ -901,7 +903,7 @@ public class Backend {
         public abstract void onPostPictureCardFailed();
     }
 
-    public void postPictureCard(final String pictureUrl, final String heading, final String locationID, final String location, final String interest, final String description, final PostPictureCardListener listener) {
+    public void postPictureCard(final String pictureUrl, final String heading, final String locationID, final String location, final double latitude, final double longitude, final String interest, final String description, final PostPictureCardListener listener) {
         class postPictureCard extends AsyncTask<Void, Void, Void> {
 
             @Override
@@ -917,6 +919,8 @@ public class Backend {
                     pictureCard.put("title", heading);
                     pictureCard.put("location_id", locationID);
                     pictureCard.put("location", location);
+                    pictureCard.put("latitude", latitude);
+                    pictureCard.put("longitude", longitude);
                     JSONArray interests = new JSONArray();
                     interests.put(interest);
                     pictureCard.put("interests", interests);
@@ -1209,7 +1213,8 @@ public class Backend {
             JSONArray interests = card.getJSONArray("interests");
             dataPictureCard = new DataPictureCard(card.getString("_id"), isLiked, isBucketListed, card.getString("description"), card.getString("url"),
                     card.getInt("likes"), card.getInt("bucket_count"), card.getString("title"), card.getString("location"), card.getString("location_info_name"),
-                    card.getString("location_info_summary"), interests.getString(0), card.getString("user_name"), card.getString("user_profile_pic"));
+                    card.getString("location_info_summary"), card.getDouble("latitude"), card.getDouble("longitude"),
+                    interests.getString(0), card.getString("user_name"), card.getString("user_profile_pic"));
 
         }  catch (JSONException e) {
             e.printStackTrace();

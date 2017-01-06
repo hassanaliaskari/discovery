@@ -15,6 +15,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.liangfeizc.avatarview.AvatarView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -30,6 +37,7 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
     View scrim;
     TextView title;
     TextView location;
+    ImageButton mapButton;
     ImageButton likeButton;
     TextView noOfLikes;
     ImageButton addToBlButton;
@@ -48,6 +56,7 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
         scrim = (View) itemView.findViewById(R.id.scrim);
         title= (TextView) itemView.findViewById(R.id.title);
         location = (TextView) itemView.findViewById(R.id.location);
+        mapButton = (ImageButton) itemView.findViewById(R.id.map_button);
         likeButton = (ImageButton) itemView.findViewById(R.id.like_button);
         noOfLikes = (TextView) itemView.findViewById(R.id.no_of_likes);
         addToBlButton = (ImageButton) itemView.findViewById(R.id.add_to_bl_button);
@@ -130,7 +139,7 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-        public void addLikeCallback(final DataPictureCard dataPictureCard) {
+    public void addLikeCallback(final DataPictureCard dataPictureCard) {
             likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -164,12 +173,16 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
         View.OnClickListener locationListener = new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                infoView.setVisibility(View.VISIBLE);
                 TextView name = (TextView) infoView.findViewById(R.id.name);
-                name.setText(dataPictureCard.locationInfoName);
                 TextView summary = (TextView) infoView.findViewById(R.id.summary);
-                summary.setText(dataPictureCard.locationInfoSummary);
                 final View scrim = infoView.findViewById(R.id.scrim);
+                MapView mapView = (MapView) infoView.findViewById(R.id.map_view);
+
+                infoView.setVisibility(View.VISIBLE);
+                name.setVisibility(View.VISIBLE);
+                summary.setVisibility(View.VISIBLE);
+                mapView.setVisibility(View.GONE);
+
                 scrim.setClickable(true);
                 scrim.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -179,12 +192,56 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
                     }
                 });
 
+                name.setText(dataPictureCard.locationInfoName);
+                summary.setText(dataPictureCard.locationInfoSummary);
             }
         };
 
         title.setOnClickListener(locationListener);
         location.setOnClickListener(locationListener);
     }
+
+    public void addMapCallback (final DataPictureCard dataPictureCard, final View infoView) {
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TextView name = (TextView) infoView.findViewById(R.id.name);
+                TextView summary = (TextView) infoView.findViewById(R.id.summary);
+                final View scrim = infoView.findViewById(R.id.scrim);
+                MapView mapView = (MapView) infoView.findViewById(R.id.map_view);
+
+                infoView.setVisibility(View.VISIBLE);
+                name.setVisibility(View.GONE);
+                summary.setVisibility(View.GONE);
+                mapView.setVisibility(View.VISIBLE);
+
+                scrim.setClickable(true);
+                scrim.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        scrim.setClickable(false);
+                        infoView.setVisibility(View.GONE);
+                    }
+                });
+
+
+                (mapView).getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap googleMap) {
+                        LatLng position = new LatLng(dataPictureCard.latitude, dataPictureCard.longitude);
+                        googleMap.addMarker(new MarkerOptions().position(position).title("Marker Title").snippet("Marker Description"));
+
+                        // For zooming automatically to the location of the marker
+                        CameraPosition cameraPosition = new CameraPosition.Builder().target(position).zoom(12).build();
+                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    }
+                });
+
+            }
+
+        });
+    }
+
 
 
 
