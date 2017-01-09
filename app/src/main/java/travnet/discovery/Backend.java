@@ -63,8 +63,8 @@ public class Backend {
     private RequestQueue queue;
     private Context context;
 
-    private String baseUrl = "http://54.169.51.25/api/";
-    //private String baseUrl = "http://10.0.2.2:8080/api/";
+    //private String baseUrl = "http://54.169.51.25/api/";
+    private String baseUrl = "http://10.0.2.2:8080/api/";
 
     private static final int TYPE_PICTURE = 0;
     private static final int TYPE_BLOG = 1;
@@ -471,7 +471,7 @@ public class Backend {
         public abstract void onCardsFetched(ArrayList<DataPictureCard> dataPictureCards, ArrayList<DataBlogCard> dataBlogCards, ArrayList<HomeFragment.CardsRef> cardsRef);
         public abstract void onGetCardsFailed();
     }
-    public void getCards(int currNoOfCards, final GetCardsListener listener) {
+    public void getCards(int currNoOfCards, final double lat, final double lng, final GetCardsListener listener) {
 
         /*if (cardsRef.size() > currNoOfCards) {
             listener.onCardsFetched(dataPictureCards, dataBlogCards, cardsRef);
@@ -492,16 +492,17 @@ public class Backend {
             @Override
             protected Void doInBackground(Void... params) {
                 String url = baseUrl + "getCards";
-                JSONObject userID = new JSONObject();
+                JSONObject param = new JSONObject();
                 try {
-                    userID.put("user_id", User.getInstance().getUserID());
-
+                    param.put("user_id", User.getInstance().getUserID());
+                    param.put("latitude", lat);
+                    param.put("longitude", lng);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
 
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, userID,
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, param,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {

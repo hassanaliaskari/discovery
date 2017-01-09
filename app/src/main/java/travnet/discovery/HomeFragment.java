@@ -1,12 +1,16 @@
 package travnet.discovery;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,6 +30,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -52,13 +59,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     public static final int LOADING_THRESHOLD = 2;
     public static final int NO_OF_CARDS = 5;
 
     private static final int TYPE_PICTURE = 0;
     private static final int TYPE_BLOG = 1;
     private static final int FULLSCREEN_PICTURE = 55;
+    private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10;
+
 
     public static class CardsRef {
         int type;
@@ -71,6 +81,9 @@ public class HomeFragment extends Fragment {
 
     View infoView;
     MapView mapView;
+    GoogleApiClient googleApiClient;
+    double curLat;
+    double curLng;
     SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView recyclerView;
     CardAdapter cardAdapter;
@@ -84,10 +97,17 @@ public class HomeFragment extends Fragment {
     }
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (googleApiClient == null) {
+            googleApiClient = new GoogleApiClient.Builder(getActivity())
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
 
         dataPictureCards = new ArrayList<>();
         dataBlogCards = new ArrayList<>();
@@ -109,22 +129,86 @@ public class HomeFragment extends Fragment {
         infoView.setVisibility(View.GONE);
         initializeListView();
         initializeMap();
-        requestCards();
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
+                                                    @Override
 
-                    public void onRefresh() {
-                        cardsRef.clear();
-                        dataBlogCards.clear();
-                        dataPictureCards.clear();
-                        requestCards();
-                    }
-                }
+                                                    public void onRefresh() {
+                                                        cardsRef.clear();
+                                                        dataBlogCards.clear();
+                                                        dataPictureCards.clear();
+                                                        requestCards();
+                                                    }
+                                                }
         );
 
         return view;
     }
+
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+            }
+        } else {
+            getLocationData();
+        }
+    }
+
+    private void getLocationData() {
+        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        if (lastLocation != null) {
+            curLat = lastLocation.getLatitude();
+            curLng = lastLocation.getLongitude();
+            requestCards();
+        }
+}
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getLocationData();
+                } else {
+                }
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+
+
+    public void onStart() {
+        googleApiClient.connect();
+        super.onStart();
+    }
+
+    public void onStop() {
+        googleApiClient.disconnect();
+        super.onStop();
+    }
+
 
     @Override
     public void onResume() {
@@ -188,7 +272,7 @@ public class HomeFragment extends Fragment {
     // Function to make http request for cards. The received cards are added to the data arrays
     private void requestCards () {
         Backend backend = Backend.getInstance();
-        backend.getCards(cardsRef.size(), backend.new GetCardsListener() {
+        backend.getCards(cardsRef.size(), curLat, curLng, backend.new GetCardsListener() {
             @Override
             public void onCardsFetched(ArrayList<DataPictureCard> dataPictureCards, ArrayList<DataBlogCard> dataBlogCards, ArrayList<CardsRef> cardsRef) {
                 copyCards(dataPictureCards, dataBlogCards, cardsRef);
