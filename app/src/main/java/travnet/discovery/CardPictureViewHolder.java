@@ -37,7 +37,6 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
     View scrim;
     TextView title;
     TextView location;
-    ImageButton mapButton;
     ImageButton likeButton;
     TextView noOfLikes;
     ImageButton addToBlButton;
@@ -56,7 +55,6 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
         scrim = (View) itemView.findViewById(R.id.scrim);
         title= (TextView) itemView.findViewById(R.id.title);
         location = (TextView) itemView.findViewById(R.id.location);
-        mapButton = (ImageButton) itemView.findViewById(R.id.map_button);
         likeButton = (ImageButton) itemView.findViewById(R.id.like_button);
         noOfLikes = (TextView) itemView.findViewById(R.id.no_of_likes);
         addToBlButton = (ImageButton) itemView.findViewById(R.id.add_to_bl_button);
@@ -181,7 +179,7 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
                 infoView.setVisibility(View.VISIBLE);
                 name.setVisibility(View.VISIBLE);
                 summary.setVisibility(View.VISIBLE);
-                mapView.setVisibility(View.GONE);
+                mapView.setVisibility(View.VISIBLE);
 
                 scrim.setClickable(true);
                 scrim.setOnClickListener(new View.OnClickListener() {
@@ -194,37 +192,6 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
 
                 name.setText(dataPictureCard.locationInfoName);
                 summary.setText(dataPictureCard.locationInfoSummary);
-            }
-        };
-
-        title.setOnClickListener(locationListener);
-        location.setOnClickListener(locationListener);
-    }
-
-    public void addMapCallback (final DataPictureCard dataPictureCard, final View infoView) {
-        mapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TextView name = (TextView) infoView.findViewById(R.id.name);
-                TextView summary = (TextView) infoView.findViewById(R.id.summary);
-                final View scrim = infoView.findViewById(R.id.scrim);
-                MapView mapView = (MapView) infoView.findViewById(R.id.map_view);
-
-                infoView.setVisibility(View.VISIBLE);
-                name.setVisibility(View.GONE);
-                summary.setVisibility(View.GONE);
-                mapView.setVisibility(View.VISIBLE);
-
-                scrim.setClickable(true);
-                scrim.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        scrim.setClickable(false);
-                        infoView.setVisibility(View.GONE);
-                    }
-                });
-
-
                 (mapView).getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
@@ -238,9 +205,12 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
                 });
 
             }
+        };
 
-        });
+        title.setOnClickListener(locationListener);
+        location.setOnClickListener(locationListener);
     }
+
 
 
 

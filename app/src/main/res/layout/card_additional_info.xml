@@ -9,30 +9,36 @@
         android:id="@+id/scrim"
         android:background="#80000000"/>
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:gravity="center_vertical"
-        android:background="#F2000000"
-        android:textColor="#ffffff"
-        android:id="@+id/summary"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_above="@id/summary"
-        android:background="#F2000000"
-        android:textColor="#ffffff"
-        android:id="@+id/name"/>
+        android:orientation="vertical"
+        android:layout_centerVertical="true">
 
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/map_view"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_centerVertical="true"/>
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/map_view"
+            android:layout_width="match_parent"
+            android:layout_height="400dp" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:background="#F2000000"
+            android:textColor="#ffffff"
+            android:id="@+id/name"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:background="#F2000000"
+            android:textColor="#ffffff"
+            android:id="@+id/summary"/>
+
+    </LinearLayout>
 
 
 

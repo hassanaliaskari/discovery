@@ -398,7 +398,6 @@ public class HomeFragment extends Fragment implements
                         }
                     });
                     cardPictureViewHolder.addlocationCallback(dataPictureCard, infoView);
-                    cardPictureViewHolder.addMapCallback(dataPictureCard, infoView);
                     break;
 
                 case TYPE_BLOG:
