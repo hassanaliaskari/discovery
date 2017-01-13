@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
@@ -15,12 +16,15 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.liangfeizc.avatarview.AvatarView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -167,14 +171,14 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    public void addlocationCallback(final DataPictureCard dataPictureCard, final View infoView) {
+    public void addlocationCallback(final DataPictureCard dataPictureCard, final View infoView, final double curLat, final double curLng) {
         View.OnClickListener locationListener = new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 TextView name = (TextView) infoView.findViewById(R.id.name);
                 TextView summary = (TextView) infoView.findViewById(R.id.summary);
                 final View scrim = infoView.findViewById(R.id.scrim);
-                MapView mapView = (MapView) infoView.findViewById(R.id.map_view);
+                final MapView mapView = (MapView) infoView.findViewById(R.id.map_view);
 
                 infoView.setVisibility(View.VISIBLE);
                 name.setVisibility(View.VISIBLE);
@@ -187,6 +191,7 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
                     public void onClick(View v) {
                         scrim.setClickable(false);
                         infoView.setVisibility(View.GONE);
+
                     }
                 });
 
@@ -195,12 +200,26 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
                 (mapView).getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
-                        LatLng position = new LatLng(dataPictureCard.latitude, dataPictureCard.longitude);
-                        googleMap.addMarker(new MarkerOptions().position(position).title("Marker Title").snippet("Marker Description"));
+                        googleMap.clear();
+                        LatLng cardPos = new LatLng(dataPictureCard.latitude, dataPictureCard.longitude);
+                        LatLng userPos = new LatLng(curLat, curLng);
+
+                        googleMap.addMarker(new MarkerOptions().position(cardPos));
+                        googleMap.addMarker(new MarkerOptions().position(userPos));
+
+                        LatLngBounds.Builder b = new LatLngBounds.Builder();
+                        b.include(userPos);
+                        b.include(cardPos);
+                        LatLngBounds bounds = b.build();
+                        int width = (int) (0.8*infoView.getWidth());
+                        int height = (int) (0.8*mapView.getHeight());
+                        //Log.v(String.valueOf(width), String.valueOf(height));
+                        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, 5);
+                        googleMap.animateCamera(cu);
 
                         // For zooming automatically to the location of the marker
-                        CameraPosition cameraPosition = new CameraPosition.Builder().target(position).zoom(12).build();
-                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                        //CameraPosition cameraPosition = new CameraPosition.Builder().target(cardPos).zoom(0).build();
+                        //googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                     }
                 });
 

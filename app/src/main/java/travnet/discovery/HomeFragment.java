@@ -397,7 +397,7 @@ public class HomeFragment extends Fragment implements
                             openFullScreenPicture(dataPictureCard, position);
                         }
                     });
-                    cardPictureViewHolder.addlocationCallback(dataPictureCard, infoView);
+                    cardPictureViewHolder.addlocationCallback(dataPictureCard, infoView, curLat, curLng);
                     break;
 
                 case TYPE_BLOG:

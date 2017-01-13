@@ -18,16 +18,20 @@
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/map_view"
-            android:layout_width="match_parent"
+            android:layout_width="720dp"
             android:layout_height="400dp" />
 
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:background="#F2000000"
             android:textColor="#ffffff"
+            android:paddingTop="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:id="@+id/name"/>
 
         <TextView
@@ -36,6 +40,11 @@
             android:gravity="center_vertical"
             android:background="#F2000000"
             android:textColor="#ffffff"
+            android:paddingTop="4dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textSize="16sp"
             android:id="@+id/summary"/>
 
     </LinearLayout>
