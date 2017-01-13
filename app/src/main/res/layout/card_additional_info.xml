@@ -12,6 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#F2000000"
         android:orientation="vertical"
         android:layout_centerVertical="true">
 
@@ -25,7 +26,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#F2000000"
             android:textColor="#ffffff"
             android:paddingTop="8dp"
             android:paddingLeft="16dp"
@@ -38,14 +38,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:background="#F2000000"
+            android:textColor="#ffffff"
+            android:paddingTop="4dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textSize="16sp"
+            android:id="@+id/summary"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:clickable="true"
             android:textColor="#ffffff"
             android:paddingTop="4dp"
             android:paddingBottom="8dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:textSize="16sp"
-            android:id="@+id/summary"/>
+            android:text="Read More"
+            android:id="@+id/link"/>
 
     </LinearLayout>
 

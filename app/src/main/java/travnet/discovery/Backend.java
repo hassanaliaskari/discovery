@@ -361,7 +361,7 @@ public class Backend {
                                             JSONArray interests = card.getJSONArray("interests");
                                             DataPictureCard temp = new DataPictureCard(card.getString("_id"), isLiked, isBucketListed, card.getString("description"), card.getString("url"),
                                                     card.getInt("likes"), card.getInt("bucket_count"), card.getString("title"), card.getString("location"), card.getString("location_info_name"),
-                                                    card.getString("location_info_summary"), card.getDouble("latitude"), card.getDouble("longitude"),
+                                                    card.getString("location_info_summary"), card.getString("location_info_link"), card.getDouble("latitude"), card.getDouble("longitude"),
                                                     interests.getString(0), card.getString("user_name"), card.getString("user_profile_pic"));
                                             dataPictureCards.add(temp);
                                         }
@@ -537,7 +537,7 @@ public class Backend {
                                             JSONArray interests = card.getJSONArray("interests");
                                             DataPictureCard temp = new DataPictureCard(card.getString("_id"), isLiked, isBucketListed, card.getString("description"), card.getString("url"),
                                                     card.getInt("likes"), card.getInt("bucket_count"), card.getString("title"), card.getString("location"), card.getString("location_info_name"),
-                                                    card.getString("location_info_summary"), card.getDouble("latitude"), card.getDouble("longitude"),
+                                                    card.getString("location_info_summary"), card.getString("location_info_link"), card.getDouble("latitude"), card.getDouble("longitude"),
                                                     interests.getString(0), card.getString("user_name"), card.getString("user_profile_pic"));
                                             dataPictureCards.add(temp);
                                         }
@@ -1214,7 +1214,7 @@ public class Backend {
             JSONArray interests = card.getJSONArray("interests");
             dataPictureCard = new DataPictureCard(card.getString("_id"), isLiked, isBucketListed, card.getString("description"), card.getString("url"),
                     card.getInt("likes"), card.getInt("bucket_count"), card.getString("title"), card.getString("location"), card.getString("location_info_name"),
-                    card.getString("location_info_summary"), card.getDouble("latitude"), card.getDouble("longitude"),
+                    card.getString("location_info_summary"), card.getString("location_info_link"), card.getDouble("latitude"), card.getDouble("longitude"),
                     interests.getString(0), card.getString("user_name"), card.getString("user_profile_pic"));
 
         }  catch (JSONException e) {

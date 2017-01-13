@@ -1,6 +1,7 @@
 package travnet.discovery;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -171,18 +172,27 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    public void addlocationCallback(final DataPictureCard dataPictureCard, final View infoView, final double curLat, final double curLng) {
+    public abstract class AddlocationCallbackListener {
+        public AddlocationCallbackListener() {
+        }
+
+        public abstract void onLocationLinkClicked(String uri);
+    }
+
+    public void addlocationCallback(final DataPictureCard dataPictureCard, final View infoView, final double curLat, final double curLng, final AddlocationCallbackListener listener) {
         View.OnClickListener locationListener = new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 TextView name = (TextView) infoView.findViewById(R.id.name);
                 TextView summary = (TextView) infoView.findViewById(R.id.summary);
+                TextView link = (TextView) infoView.findViewById(R.id.link);
                 final View scrim = infoView.findViewById(R.id.scrim);
                 final MapView mapView = (MapView) infoView.findViewById(R.id.map_view);
 
                 infoView.setVisibility(View.VISIBLE);
                 name.setVisibility(View.VISIBLE);
                 summary.setVisibility(View.VISIBLE);
+                link.setVisibility(View.VISIBLE);
                 mapView.setVisibility(View.VISIBLE);
 
                 scrim.setClickable(true);
@@ -197,6 +207,12 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
 
                 name.setText(dataPictureCard.locationInfoName);
                 summary.setText(dataPictureCard.locationInfoSummary);
+                link.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onLocationLinkClicked(dataPictureCard.locationInfoLink);
+                    }
+                });
                 (mapView).getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
@@ -211,8 +227,8 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
                         b.include(userPos);
                         b.include(cardPos);
                         LatLngBounds bounds = b.build();
-                        int width = (int) (0.8*infoView.getWidth());
-                        int height = (int) (0.8*mapView.getHeight());
+                        int width = (int) (0.8 * infoView.getWidth());
+                        int height = (int) (0.8 * mapView.getHeight());
                         //Log.v(String.valueOf(width), String.valueOf(height));
                         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, 5);
                         googleMap.animateCamera(cu);

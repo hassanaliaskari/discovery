@@ -23,6 +23,7 @@ public class DataPictureCard implements Parcelable{
     String location;
     String locationInfoName;
     String locationInfoSummary;
+    String locationInfoLink;
     double latitude;
     double longitude;
     String activity;
@@ -35,7 +36,7 @@ public class DataPictureCard implements Parcelable{
     }
 
     public DataPictureCard(String id, boolean isLiked, boolean isAddedToBl, String description, String link, int likes, int noBlucketListed,
-                           String title, String location, String locationInfoName, String locationInfoSummary, double latitude, double longitude,
+                           String title, String location, String locationInfoName, String locationInfoSummary, String locationInfoLink, double latitude, double longitude,
                            String activity, String uploader_name, String uploader_pp) {
         dataUploaderBar = new DataUploaderBar();
         this.id = id;
@@ -47,6 +48,7 @@ public class DataPictureCard implements Parcelable{
         this.location = location;
         this.locationInfoName = locationInfoName;
         this.locationInfoSummary = locationInfoSummary;
+        this.locationInfoLink = locationInfoLink;
         this.latitude = latitude;
         this.longitude = longitude;
         this.activity = activity;
@@ -75,6 +77,7 @@ public class DataPictureCard implements Parcelable{
         out.writeString(location);
         out.writeString(locationInfoName);
         out.writeString(locationInfoSummary);
+        out.writeString(locationInfoLink);
         out.writeDouble(latitude);
         out.writeDouble(longitude);
         out.writeString(activity);
@@ -106,6 +109,7 @@ public class DataPictureCard implements Parcelable{
         location = in.readString();
         locationInfoName = in.readString();
         locationInfoSummary = in.readString();
+        locationInfoLink = in.readString();
         latitude = in.readDouble();
         longitude = in.readDouble();
         activity = in.readString();
