@@ -47,6 +47,7 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
     ImageButton addToBlButton;
     TextView noOfBucketList;
     TextView activity;
+    TextView distance;
     TextView description;
     AvatarView uploaderPic;
     TextView uploaderName;
@@ -65,6 +66,7 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
         addToBlButton = (ImageButton) itemView.findViewById(R.id.add_to_bl_button);
         noOfBucketList = (TextView) itemView.findViewById(R.id.no_of_bl);
         activity = (TextView) itemView.findViewById(R.id.activity);
+        distance = (TextView) itemView.findViewById(R.id.distance);
         description = (TextView) itemView.findViewById(R.id.description);
         uploaderName = (TextView) itemView.findViewById(R.id.uploader_name);
         uploaderPic = (AvatarView) itemView.findViewById(R.id.uploader_pp);
@@ -109,6 +111,7 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
         this.noOfLikes.setText(String.valueOf(dataPictureCard.likes));
         this.noOfBucketList.setText(String.valueOf(dataPictureCard.noBlucketListed));
         this.activity.setText(dataPictureCard.activity);
+        this.distance.setText("About " + String.valueOf(dataPictureCard.distance) + " km from you.");
         this.description.setText(dataPictureCard.description);
         this.uploaderName.setText(dataPictureCard.dataUploaderBar.uploader_name);
         ImageLoader.getInstance().displayImage(dataPictureCard.dataUploaderBar.uploader_pp, this.uploaderPic, options, null);
@@ -136,8 +139,6 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
             this.addToBlButton.setImageResource(R.drawable.ic_added_to_bl);
             this.addToBlButton.setClickable(false);
         }
-
-
 
     }
 

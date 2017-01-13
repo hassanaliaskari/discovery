@@ -341,28 +341,8 @@ public class Backend {
                                     for (int i=0; i< arrayJson.length(); i++) {
                                         JSONObject card = arrayJson.getJSONObject(i);
 
-                                        boolean isLiked = false;
-                                        JSONArray likeList = card.getJSONArray("like_list");
-                                        for (int j=0;j<likeList.length();j++) {
-                                            String userID = User.getInstance().getUserID();
-                                            if (likeList.getString(j).equals(userID))
-                                                isLiked = true;
-                                        }
-
-                                        boolean isBucketListed = false;
-                                        JSONArray bucketUsers = card.getJSONArray("bucket_users");
-                                        for (int j=0;j<bucketUsers.length();j++) {
-                                            String userID = User.getInstance().getUserID();
-                                            if (bucketUsers.getString(j).equals(userID))
-                                                isBucketListed = true;
-                                        }
-
                                         if (card.getString("card_type").equals("photo")) {
-                                            JSONArray interests = card.getJSONArray("interests");
-                                            DataPictureCard temp = new DataPictureCard(card.getString("_id"), isLiked, isBucketListed, card.getString("description"), card.getString("url"),
-                                                    card.getInt("likes"), card.getInt("bucket_count"), card.getString("title"), card.getString("location"), card.getString("location_info_name"),
-                                                    card.getString("location_info_summary"), card.getString("location_info_link"), card.getDouble("latitude"), card.getDouble("longitude"),
-                                                    interests.getString(0), card.getString("user_name"), card.getString("user_profile_pic"));
+                                            DataPictureCard temp = createPictureCardFromJSON(card);
                                             dataPictureCards.add(temp);
                                         }
                                     }
@@ -514,44 +494,18 @@ public class Backend {
                                         JSONObject card = arrayJson.getJSONObject(i);
                                         HomeFragment.CardsRef cardRef = new HomeFragment.CardsRef();
 
-                                        boolean isLiked = card.getBoolean("is_liked");
-                                        /*JSONArray likeList = card.getJSONArray("like_list");
-                                        for (int j=0;j<likeList.length();j++) {
-                                            String userID = User.getInstance().getUserID();
-                                            if (likeList.getString(j).equals(userID))
-                                                isLiked = true;
-                                        }*/
-
-                                        boolean isBucketListed = card.getBoolean("is_bucket_listed");
-                                        /*JSONArray bucketUsers = card.getJSONArray("bucket_users");
-                                        for (int j=0;j<bucketUsers.length();j++) {
-                                            String userID = User.getInstance().getUserID();
-                                            if (bucketUsers.getString(j).equals(userID))
-                                                isBucketListed = true;
-                                        }*/
-
                                         if (card.getString("card_type").equals("photo")) {
                                             cardRef.type = TYPE_PICTURE;
                                             cardRef.index = dataPictureCards.size();
                                             cardsRef.add(cardRef);
-                                            JSONArray interests = card.getJSONArray("interests");
-                                            DataPictureCard temp = new DataPictureCard(card.getString("_id"), isLiked, isBucketListed, card.getString("description"), card.getString("url"),
-                                                    card.getInt("likes"), card.getInt("bucket_count"), card.getString("title"), card.getString("location"), card.getString("location_info_name"),
-                                                    card.getString("location_info_summary"), card.getString("location_info_link"), card.getDouble("latitude"), card.getDouble("longitude"),
-                                                    interests.getString(0), card.getString("user_name"), card.getString("user_profile_pic"));
+                                            DataPictureCard temp = createPictureCardFromJSON(card);
                                             dataPictureCards.add(temp);
                                         }
                                         else if (card.getString("card_type").equals("blog")) {
                                             cardRef.type = TYPE_BLOG;
                                             cardRef.index = dataBlogCards.size();
                                             cardsRef.add(cardRef);
-                                            JSONArray interests = card.getJSONArray("interests");
-                                            ArrayList<String> interestList = new ArrayList<>();
-                                            for (int j=0;j<interests.length();j++)
-                                                interestList.add(interests.getString(j));
-                                            DataBlogCard temp = new DataBlogCard(card.getString("_id"), isLiked, isBucketListed, card.getString("url"), card.getString("thumbnail"), card.getString("title"),
-                                                    card.getString("description"), card.getInt("likes"), card.getInt("bucket_count"), card.getString("location"), interestList, card.getString("user_name"),
-                                                    card.getString("user_profile_pic"));
+                                            DataBlogCard temp = createBlogCardFromJSON(card);
                                             dataBlogCards.add(temp);
 
                                         }
@@ -1195,27 +1149,18 @@ public class Backend {
     DataPictureCard createPictureCardFromJSON (JSONObject card) {
         DataPictureCard dataPictureCard = null;
         try {
-            boolean isLiked = false;
-            JSONArray likeList = card.getJSONArray("like_list");
-            for (int j = 0; j < likeList.length(); j++) {
-                String userID = User.getInstance().getUserID();
-                if (likeList.getString(j).equals(userID))
-                    isLiked = true;
-            }
-
-            boolean isBucketListed = false;
-            JSONArray bucketUsers = card.getJSONArray("bucket_users");
-            for (int j = 0; j < bucketUsers.length(); j++) {
-                String userID = User.getInstance().getUserID();
-                if (bucketUsers.getString(j).equals(userID))
-                    isBucketListed = true;
-            }
-
+            boolean isLiked = card.getBoolean("is_liked");
+            boolean isBucketListed = card.getBoolean("is_bucket_listed");
             JSONArray interests = card.getJSONArray("interests");
+            double dist;
+            if (card.has("distance"))
+                dist = card.getDouble("distance");
+            else dist = -1;
+
             dataPictureCard = new DataPictureCard(card.getString("_id"), isLiked, isBucketListed, card.getString("description"), card.getString("url"),
                     card.getInt("likes"), card.getInt("bucket_count"), card.getString("title"), card.getString("location"), card.getString("location_info_name"),
                     card.getString("location_info_summary"), card.getString("location_info_link"), card.getDouble("latitude"), card.getDouble("longitude"),
-                    interests.getString(0), card.getString("user_name"), card.getString("user_profile_pic"));
+                    roundDistance(dist), interests.getString(0), card.getString("user_name"), card.getString("user_profile_pic"));
 
         }  catch (JSONException e) {
             e.printStackTrace();
@@ -1224,8 +1169,22 @@ public class Backend {
         return dataPictureCard;
     }
 
+    int roundDistance (double dist) {
+        if (dist < 100)
+            return ((int)(dist / 10)) * 10;
+        else if (dist < 500)
+            return ((int)(dist / 50)) * 50;
+        else if (dist < 1000)
+            return ((int)(dist / 100)) * 100;
+        else if (dist < 5000)
+            return ((int)(dist / 500)) * 500;
+        else
+            return ((int)(dist / 1000)) * 1000;
 
-    DataBlogCard createBlogCardFromJSON (JSONObject card) {
+    }
+
+
+        DataBlogCard createBlogCardFromJSON (JSONObject card) {
         DataBlogCard dataBlogCard = null;
         try {
             boolean isLiked = false;
