@@ -216,7 +216,7 @@ public class AddCardInfoActivity extends AppCompatActivity {
 
         String locationString = getLocationString(location);
         Backend backend = Backend.getInstance();
-        backend.postBlog(blogURL, blogTitle, blogExtract, thumbnailURL, selectedInterests, location.getId(), locationString, backend.new PostBlogListener() {
+        backend.postBlog(blogURL, blogTitle, blogExtract, thumbnailURL, selectedInterests, location.getId(), locationString, location.getLatLng().latitude, location.getLatLng().longitude, backend.new PostBlogListener() {
             @Override
             public void onBlogPostSuccess() {
                 progress.dismiss();

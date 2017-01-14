@@ -18,6 +18,12 @@ public class DataBlogCard {
     int likes;
     int noBlucketListed;
     String location;
+    String locationInfoName;
+    String locationInfoSummary;
+    String locationInfoLink;
+    double latitude;
+    double longitude;
+    int distance;
     ArrayList<String> interests;
     DataUploaderBar dataUploaderBar;
 
@@ -27,7 +33,9 @@ public class DataBlogCard {
     public DataBlogCard() {
     }
 
-    public DataBlogCard(String id, boolean isLiked, boolean isAddedToBl, String url, String thumbnail_url, String title, String extract, int likes, int noBlucketListed, String location, ArrayList<String> interests, String uploader_name, String uploader_pp) {
+    public DataBlogCard(String id, boolean isLiked, boolean isAddedToBl, String url, String thumbnail_url, String title, String extract, int likes, int noBlucketListed,
+                        String location, String locationInfoName, String locationInfoSummary, String locationInfoLink, double latitude, double longitude, int distance,
+                        ArrayList<String> interests, String uploader_name, String uploader_pp) {
         dataUploaderBar = new DataUploaderBar();
         this.interests = new ArrayList<String>();
         this.id = id;
@@ -38,6 +46,12 @@ public class DataBlogCard {
         this.likes = likes;
         this.noBlucketListed = noBlucketListed;
         this.location = location;
+        this.locationInfoName = locationInfoName;
+        this.locationInfoSummary = locationInfoSummary;
+        this.locationInfoLink = locationInfoLink;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.distance = distance;
         this.interests.addAll(interests);
         this.dataUploaderBar.uploader_name = uploader_name;
         this.dataUploaderBar.uploader_pp = uploader_pp;

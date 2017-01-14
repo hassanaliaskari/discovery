@@ -63,8 +63,8 @@ public class Backend {
     private RequestQueue queue;
     private Context context;
 
-    //private String baseUrl = "http://54.169.51.25/api/";
-    private String baseUrl = "http://10.0.2.2:8080/api/";
+    private String baseUrl = "http://54.169.51.25/api/";
+    //private String baseUrl = "http://10.0.2.2:8080/api/";
 
     private static final int TYPE_PICTURE = 0;
     private static final int TYPE_BLOG = 1;
@@ -615,7 +615,7 @@ public class Backend {
         public abstract void onBlogPostSuccess();
         public abstract void onBlogPostFailed();
     }
-    public void postBlog(final String blogURL, final String blogTitle, final String blogExtract, final String thumbnailURL, final ArrayList<String> interestList, final String locationID, final String location, final PostBlogListener listener) {
+    public void postBlog(final String blogURL, final String blogTitle, final String blogExtract, final String thumbnailURL, final ArrayList<String> interestList, final String locationID, final String location, final double latitude, final double longitude, final PostBlogListener listener) {
         class updateUserInterestsTask extends AsyncTask<Void, Void, Void> {
 
             @Override
@@ -637,6 +637,8 @@ public class Backend {
                     blog.put("interests", interests);
                     blog.put("location_id", locationID);
                     blog.put("location", location);
+                    blog.put("latitude", latitude);
+                    blog.put("longitude", longitude);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -1207,8 +1209,15 @@ public class Backend {
             ArrayList<String> interestList = new ArrayList<>();
             for (int j=0;j<interests.length();j++)
                 interestList.add(interests.getString(j));
+            double dist;
+            if (card.has("distance"))
+                dist = card.getDouble("distance");
+            else dist = -1;
+
             dataBlogCard = new DataBlogCard(card.getString("_id"), isLiked, isBucketListed, card.getString("url"), card.getString("thumbnail"), card.getString("title"),
-                    card.getString("description"), card.getInt("likes"), card.getInt("bucket_count"), card.getString("location"), interestList, card.getString("user_name"),
+                    card.getString("description"), card.getInt("likes"), card.getInt("bucket_count"), card.getString("location"), card.getString("location_info_name"),
+                    card.getString("location_info_summary"), card.getString("location_info_link"), card.getDouble("latitude"), card.getDouble("longitude"),
+                    roundDistance(dist), interestList, card.getString("user_name"),
                     card.getString("user_profile_pic"));
 
         }  catch (JSONException e) {

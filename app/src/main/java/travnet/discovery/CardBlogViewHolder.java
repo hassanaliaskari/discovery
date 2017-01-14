@@ -11,6 +11,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.liangfeizc.avatarview.AvatarView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -28,6 +36,7 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
     TextView noOfBucketList;
     TextView activity;
     TextView location;
+    TextView distance;
     AvatarView uploaderPic;
     TextView uploaderName;
 
@@ -44,6 +53,7 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
         noOfBucketList = (TextView) itemView.findViewById(R.id.no_of_bl);
         activity = (TextView) itemView.findViewById(R.id.activity);
         location = (TextView) itemView.findViewById(R.id.location);
+        distance = (TextView) itemView.findViewById(R.id.distance);
         uploaderPic = (AvatarView) itemView.findViewById(R.id.pp);
         uploaderName = (TextView) itemView.findViewById(R.id.uploader_name);
 
@@ -65,6 +75,7 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
         this.noOfBucketList.setText(String.valueOf(dataBlogCard.noBlucketListed));
         this.activity.setText(android.text.TextUtils.join(", ", dataBlogCard.interests));
         this.location.setText(dataBlogCard.location);
+        this.distance.setText("About " + String.valueOf(dataBlogCard.distance) + " km from you.");
         ImageLoader.getInstance().displayImage(dataBlogCard.dataUploaderBar.uploader_pp, this.uploaderPic, options, null);
         this.uploaderName.setText(dataBlogCard.dataUploaderBar.uploader_name);
 
@@ -118,5 +129,81 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
             }
         });
     }
+
+
+    public abstract class AddlocationCallbackListener {
+        public AddlocationCallbackListener() {
+        }
+
+        public abstract void onLocationLinkClicked(String uri);
+    }
+
+    public void addlocationCallback(final DataBlogCard dataBlogCard, final View infoView, final double curLat, final double curLng, final AddlocationCallbackListener listener) {
+        View.OnClickListener locationListener = new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                TextView name = (TextView) infoView.findViewById(R.id.name);
+                TextView summary = (TextView) infoView.findViewById(R.id.summary);
+                TextView link = (TextView) infoView.findViewById(R.id.link);
+                final View scrim = infoView.findViewById(R.id.scrim);
+                final MapView mapView = (MapView) infoView.findViewById(R.id.map_view);
+
+                infoView.setVisibility(View.VISIBLE);
+                name.setVisibility(View.VISIBLE);
+                summary.setVisibility(View.VISIBLE);
+                link.setVisibility(View.VISIBLE);
+                mapView.setVisibility(View.VISIBLE);
+
+                scrim.setClickable(true);
+                scrim.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        scrim.setClickable(false);
+                        infoView.setVisibility(View.GONE);
+
+                    }
+                });
+
+                name.setText(dataBlogCard.locationInfoName);
+                summary.setText(dataBlogCard.locationInfoSummary);
+                link.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onLocationLinkClicked(dataBlogCard.locationInfoLink);
+                    }
+                });
+                (mapView).getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap googleMap) {
+                        googleMap.clear();
+                        LatLng cardPos = new LatLng(dataBlogCard.latitude, dataBlogCard.longitude);
+                        LatLng userPos = new LatLng(curLat, curLng);
+
+                        googleMap.addMarker(new MarkerOptions().position(cardPos));
+                        googleMap.addMarker(new MarkerOptions().position(userPos));
+
+                        LatLngBounds.Builder b = new LatLngBounds.Builder();
+                        b.include(userPos);
+                        b.include(cardPos);
+                        LatLngBounds bounds = b.build();
+                        int width = (int) (0.8 * infoView.getWidth());
+                        int height = (int) (0.8 * mapView.getHeight());
+                        //Log.v(String.valueOf(width), String.valueOf(height));
+                        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, 5);
+                        googleMap.animateCamera(cu);
+
+                        // For zooming automatically to the location of the marker
+                        //CameraPosition cameraPosition = new CameraPosition.Builder().target(cardPos).zoom(0).build();
+                        //googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    }
+                });
+
+            }
+        };
+
+        //title.setOnClickListener(locationListener);
+        location.setOnClickListener(locationListener);
+    }
+
 
 }

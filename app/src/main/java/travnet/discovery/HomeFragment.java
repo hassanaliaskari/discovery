@@ -419,6 +419,13 @@ public class HomeFragment extends Fragment implements
                             getActivity().startActivity(browserIntent);
                         }
                     });
+                    cardBlogViewHolder.addlocationCallback(dataBlogCard, infoView, curLat, curLng, cardBlogViewHolder.new AddlocationCallbackListener() {
+                        @Override
+                        public void onLocationLinkClicked(String uri) {
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                            getActivity().startActivity(browserIntent);
+                        }
+                    });
                     break;
             }
         }
