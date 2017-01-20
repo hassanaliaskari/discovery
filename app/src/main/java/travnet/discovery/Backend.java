@@ -63,8 +63,8 @@ public class Backend {
     private RequestQueue queue;
     private Context context;
 
-    private String baseUrl = "http://54.169.51.25/api/";
-    //private String baseUrl = "http://10.0.2.2:8080/api/";
+    //private String baseUrl = "http://54.169.51.25/api/";
+    private String baseUrl = "http://10.0.2.2:8080/api/";
 
     private static final int TYPE_PICTURE = 0;
     private static final int TYPE_BLOG = 1;
@@ -603,6 +603,58 @@ public class Backend {
         }
 
         new updateUserInterestsTask().execute();
+
+    }
+
+
+    /*public abstract class RegisterNationalityListener {
+        public RegisterNationalityListener() {
+        }
+
+        public abstract void onRegistered();
+        public abstract void onFailed();
+    }*/
+    public void registerNationality(final String nationality) {
+        class registerNationality extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                String url = baseUrl + "registerNationality";
+
+                JSONObject UserNationality = new JSONObject();
+                try {
+                    UserNationality.put("user_id", User.getInstance().getUserID());
+                    UserNationality.put("nationality", nationality);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                        (Request.Method.POST, url, UserNationality, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                            }
+                        });
+
+                queue.add(jsObjRequest);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void v) {
+            }
+
+        }
+
+        new registerNationality().execute();
 
     }
 
@@ -1162,7 +1214,7 @@ public class Backend {
             dataPictureCard = new DataPictureCard(card.getString("_id"), isLiked, isBucketListed, card.getString("description"), card.getString("url"),
                     card.getInt("likes"), card.getInt("bucket_count"), card.getString("title"), card.getString("location"), card.getString("location_info_name"),
                     card.getString("location_info_summary"), card.getString("location_info_link"), card.getDouble("latitude"), card.getDouble("longitude"),
-                    roundDistance(dist), interests.getString(0), card.getString("user_name"), card.getString("user_profile_pic"));
+                    roundDistance(dist), card.getString("visa_info"), interests.getString(0), card.getString("user_name"), card.getString("user_profile_pic"));
 
         }  catch (JSONException e) {
             e.printStackTrace();
@@ -1186,7 +1238,7 @@ public class Backend {
     }
 
 
-        DataBlogCard createBlogCardFromJSON (JSONObject card) {
+    DataBlogCard createBlogCardFromJSON (JSONObject card) {
         DataBlogCard dataBlogCard = null;
         try {
             boolean isLiked = false;
@@ -1217,7 +1269,7 @@ public class Backend {
             dataBlogCard = new DataBlogCard(card.getString("_id"), isLiked, isBucketListed, card.getString("url"), card.getString("thumbnail"), card.getString("title"),
                     card.getString("description"), card.getInt("likes"), card.getInt("bucket_count"), card.getString("location"), card.getString("location_info_name"),
                     card.getString("location_info_summary"), card.getString("location_info_link"), card.getDouble("latitude"), card.getDouble("longitude"),
-                    roundDistance(dist), interestList, card.getString("user_name"),
+                    roundDistance(dist), card.getString("visa_info"), interestList, card.getString("user_name"),
                     card.getString("user_profile_pic"));
 
         }  catch (JSONException e) {

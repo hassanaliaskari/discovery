@@ -37,6 +37,7 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
     TextView activity;
     TextView location;
     TextView distance;
+    TextView visaInfo;
     AvatarView uploaderPic;
     TextView uploaderName;
 
@@ -54,6 +55,7 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
         activity = (TextView) itemView.findViewById(R.id.activity);
         location = (TextView) itemView.findViewById(R.id.location);
         distance = (TextView) itemView.findViewById(R.id.distance);
+        visaInfo = (TextView) itemView.findViewById((R.id.visa_info));
         uploaderPic = (AvatarView) itemView.findViewById(R.id.pp);
         uploaderName = (TextView) itemView.findViewById(R.id.uploader_name);
 
@@ -78,6 +80,11 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
         this.distance.setText("About " + String.valueOf(dataBlogCard.distance) + " km from you.");
         ImageLoader.getInstance().displayImage(dataBlogCard.dataUploaderBar.uploader_pp, this.uploaderPic, options, null);
         this.uploaderName.setText(dataBlogCard.dataUploaderBar.uploader_name);
+
+        this.visaInfo.setText(dataBlogCard.visaInfo);
+        if (dataBlogCard.visaInfo.equals("Nationality needed") || dataBlogCard.visaInfo.equals("Not available") || dataBlogCard.visaInfo.equals("Unknown") )
+            this.visaInfo.setVisibility(View.GONE);
+
 
         if (dataBlogCard.isLiked == false) {
             likeButton.setImageResource(R.drawable.ic_like);
@@ -186,8 +193,8 @@ public class CardBlogViewHolder extends RecyclerView.ViewHolder {
                         b.include(userPos);
                         b.include(cardPos);
                         LatLngBounds bounds = b.build();
-                        int width = (int) (0.8 * infoView.getWidth());
-                        int height = (int) (0.8 * mapView.getHeight());
+                        int width = (int) (0.7 * infoView.getWidth());
+                        int height = (int) (0.7 * mapView.getHeight());
                         //Log.v(String.valueOf(width), String.valueOf(height));
                         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, 5);
                         googleMap.animateCamera(cu);

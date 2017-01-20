@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
@@ -20,6 +23,8 @@ import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.juanpabloprado.countrypicker.CountryPicker;
+import com.juanpabloprado.countrypicker.CountryPickerListener;
 
 public class MainActivity extends BaseNavDrawerActivity
         implements SignInFragment.OnFragmentInteractionListener, SignInFragment.OnLoginListener,
@@ -61,7 +66,7 @@ public class MainActivity extends BaseNavDrawerActivity
 
         if (isLogged) {
             User.getInstance().setUserID(userID);
-            setupHomeScreen();
+            getCitizenshipInfo();
         } else {
             //Set Login fragment
             signInFragment = new SignInFragment();
@@ -87,7 +92,7 @@ public class MainActivity extends BaseNavDrawerActivity
         //Remove Login Fragment
         getSupportFragmentManager().beginTransaction()
             .remove(signInFragment).commitAllowingStateLoss();
-        setupHomeScreen();
+        getCitizenshipInfo();
     }
 
 
@@ -97,10 +102,28 @@ public class MainActivity extends BaseNavDrawerActivity
     }
 
 
+    void getCitizenshipInfo() {
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container,
+                        CountryPicker.getInstance(new CountryPickerListener() {
+                            @Override
+                            public void onSelectCountry(String name, String code) {
+                                backend.registerNationality(name);
+                                setupHomeScreen();
+                            }
+                        }))
+                .commit();
+
+    }
+
+
+
     void setupHomeScreen() {
+
         homeFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, homeFragment).commitAllowingStateLoss();
+                .replace(R.id.fragment_container, homeFragment).commitAllowingStateLoss();
 
         //Check if user has selected intgerests
         int userState = myPrefs.getInt("user_state", 0);
@@ -160,6 +183,7 @@ public class MainActivity extends BaseNavDrawerActivity
                 Log.i("init", "user info fetched");
                 updateNavDrawerHeader();
             }
+
             @Override
             public void onGetUserInfoFailed() {
             }

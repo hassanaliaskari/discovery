@@ -173,13 +173,30 @@
 
         </LinearLayout>
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/distance"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:textSize="16sp"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/distance"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/visa_info"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+
 
         <TextView
             android:layout_width="match_parent"
@@ -188,7 +205,6 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:textSize="16sp"/>
-
 
 
     </LinearLayout>

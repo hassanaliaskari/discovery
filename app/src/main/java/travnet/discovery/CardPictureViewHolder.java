@@ -48,6 +48,7 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
     TextView noOfBucketList;
     TextView activity;
     TextView distance;
+    TextView visaInfo;
     TextView description;
     AvatarView uploaderPic;
     TextView uploaderName;
@@ -67,6 +68,7 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
         noOfBucketList = (TextView) itemView.findViewById(R.id.no_of_bl);
         activity = (TextView) itemView.findViewById(R.id.activity);
         distance = (TextView) itemView.findViewById(R.id.distance);
+        visaInfo = (TextView) itemView.findViewById(R.id.visa_info);
         description = (TextView) itemView.findViewById(R.id.description);
         uploaderName = (TextView) itemView.findViewById(R.id.uploader_name);
         uploaderPic = (AvatarView) itemView.findViewById(R.id.uploader_pp);
@@ -115,6 +117,11 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
         this.description.setText(dataPictureCard.description);
         this.uploaderName.setText(dataPictureCard.dataUploaderBar.uploader_name);
         ImageLoader.getInstance().displayImage(dataPictureCard.dataUploaderBar.uploader_pp, this.uploaderPic, options, null);
+
+        this.visaInfo.setText(dataPictureCard.visaInfo);
+        if (dataPictureCard.visaInfo.equals("Nationality needed") || dataPictureCard.visaInfo.equals("Not available") || dataPictureCard.visaInfo.equals("Unknown") )
+            this.visaInfo.setVisibility(View.GONE);
+
 
         if (dataPictureCard.isLiked == false) {
             this.scrim.setVisibility(View.GONE);
@@ -228,11 +235,11 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
                         b.include(userPos);
                         b.include(cardPos);
                         LatLngBounds bounds = b.build();
-                        int width = (int) (0.8 * infoView.getWidth());
-                        int height = (int) (0.8 * mapView.getHeight());
+                        int width = (int) (0.7 * infoView.getWidth());
+                        int height = (int) (0.7 * mapView.getHeight());
                         //Log.v(String.valueOf(width), String.valueOf(height));
-                        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, 5);
-                        googleMap.animateCamera(cu);
+                        //CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, 5);
+                        //googleMap.animateCamera(cu);
 
                         // For zooming automatically to the location of the marker
                         //CameraPosition cameraPosition = new CameraPosition.Builder().target(cardPos).zoom(0).build();
