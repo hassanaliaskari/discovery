@@ -238,7 +238,8 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
                         int width = (int) (0.7 * infoView.getWidth());
                         int height = (int) (0.7 * mapView.getHeight());
                         //Log.v(String.valueOf(width), String.valueOf(height));
-                        //CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, 5);
+                        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 5);
+                        googleMap.moveCamera(cu);
                         //googleMap.animateCamera(cu);
 
                         // For zooming automatically to the location of the marker
