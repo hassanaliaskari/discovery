@@ -41,5 +41,6 @@
     <string name="empty_msg_bucket_list_sub">Add pictures and blogs of places you want to go</string>
     <string name="title_activity_add_card_info">Card Information</string>
     <string name="hint_picture_card_heading">Name</string>
+    <string name="title_activity_location_info">LocationInfoActivity</string>
 
 </resources>

@@ -63,8 +63,8 @@ public class Backend {
     private RequestQueue queue;
     private Context context;
 
-    //private String baseUrl = "http://54.169.51.25/api/";
-    private String baseUrl = "http://10.0.2.2:8080/api/";
+    private String baseUrl = "http://54.169.51.25/api/";
+    //private String baseUrl = "http://10.0.2.2:8080/api/";
 
     private static final int TYPE_PICTURE = 0;
     private static final int TYPE_BLOG = 1;

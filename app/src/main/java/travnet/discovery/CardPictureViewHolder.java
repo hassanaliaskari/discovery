@@ -191,6 +191,8 @@ public class CardPictureViewHolder extends RecyclerView.ViewHolder {
         View.OnClickListener locationListener = new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+
+
                 TextView name = (TextView) infoView.findViewById(R.id.name);
                 TextView summary = (TextView) infoView.findViewById(R.id.summary);
                 TextView link = (TextView) infoView.findViewById(R.id.link);
