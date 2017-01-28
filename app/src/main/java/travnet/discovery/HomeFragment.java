@@ -79,8 +79,6 @@ public class HomeFragment extends Fragment implements
     static ArrayList<DataBlogCard> dataBlogCards;
     static ArrayList<CardsRef> cardsRef;
 
-    View infoView;
-    MapView mapView;
     GoogleApiClient googleApiClient;
     double curLat;
     double curLng;
@@ -123,10 +121,6 @@ public class HomeFragment extends Fragment implements
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
         recyclerView = (RecyclerView) view.findViewById(R.id.list);
-        infoView = view.findViewById(R.id.info_view);
-        mapView = (MapView) infoView.findViewById(R.id.map_view);
-        mapView.onCreate(savedInstanceState);
-        infoView.setVisibility(View.GONE);
         initializeListView();
         initializeMap();
 
@@ -209,30 +203,6 @@ public class HomeFragment extends Fragment implements
         super.onStop();
     }
 
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mapView.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mapView.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mapView.onLowMemory();
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -408,13 +378,7 @@ public class HomeFragment extends Fragment implements
                             getActivity().startActivity(intent);
                         }
                     });
-                    /*cardPictureViewHolder.addlocationCallback(dataPictureCard, infoView, curLat, curLng, cardPictureViewHolder.new AddlocationCallbackListener() {
-                        @Override
-                        public void onLocationLinkClicked(String uri) {
-                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                            getActivity().startActivity(browserIntent);
-                        }
-                    });*/
+
                     break;
 
                 case TYPE_BLOG:
@@ -430,13 +394,7 @@ public class HomeFragment extends Fragment implements
                             getActivity().startActivity(browserIntent);
                         }
                     });
-                    cardBlogViewHolder.addlocationCallback(dataBlogCard, infoView, curLat, curLng, cardBlogViewHolder.new AddlocationCallbackListener() {
-                        @Override
-                        public void onLocationLinkClicked(String uri) {
-                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                            getActivity().startActivity(browserIntent);
-                        }
-                    });
+
                     break;
             }
         }

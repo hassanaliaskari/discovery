@@ -63,8 +63,8 @@ public class Backend {
     private RequestQueue queue;
     private Context context;
 
-    private String baseUrl = "http://54.169.51.25/api/";
-    //private String baseUrl = "http://10.0.2.2:8080/api/";
+    //private String baseUrl = "http://54.169.51.25/api/";
+    private String baseUrl = "http://10.0.2.2:8080/api/";
 
     private static final int TYPE_PICTURE = 0;
     private static final int TYPE_BLOG = 1;
@@ -101,7 +101,7 @@ public class Backend {
         public abstract void registerNewUserFailed();
     }
 
-    public void registerNewUser(final String id, final String name, final String email, final String ppURL, final RegisterNewUserListener listener) {
+    public void registerNewUser(final String type, final String id, final String name, final String email, final String ppURL, final RegisterNewUserListener listener) {
 
         class RegisterNewUserTask extends AsyncTask<Void, Void, Void> {
 
@@ -115,6 +115,7 @@ public class Backend {
                 try {
                     user.put("email", email);
                     user.put("name", name);
+                    user.put("login_type", type);
                     user.put("facebook_id", id);
                     user.put("date_of_birth", "25");
                     user.put("profile_pic", ppURL);
@@ -1210,11 +1211,17 @@ public class Backend {
             if (card.has("distance"))
                 dist = card.getDouble("distance");
             else dist = -1;
+            ArrayList<Double> locationScore = new ArrayList<>();
+            if(card.has("location_score")) {
+                JSONArray scores = card.getJSONArray("location_score");
+                for (int j=0;j<12;j++)
+                    locationScore.add(scores.getDouble(j));
+            }
 
             dataPictureCard = new DataPictureCard(card.getString("_id"), isLiked, isBucketListed, card.getString("description"), card.getString("url"),
                     card.getInt("likes"), card.getInt("bucket_count"), card.getString("title"), card.getString("location"), card.getString("location_info_name"),
                     card.getString("location_info_summary"), card.getString("location_info_link"), card.getDouble("latitude"), card.getDouble("longitude"),
-                    roundDistance(dist), card.getString("visa_info"), interests.getString(0), card.getString("user_name"), card.getString("user_profile_pic"));
+                    locationScore, roundDistance(dist), card.getString("visa_info"), interests.getString(0), card.getString("user_name"), card.getString("user_profile_pic"));
 
         }  catch (JSONException e) {
             e.printStackTrace();
@@ -1265,11 +1272,17 @@ public class Backend {
             if (card.has("distance"))
                 dist = card.getDouble("distance");
             else dist = -1;
+            ArrayList<Double> locationScore = new ArrayList<>();
+            if(card.has("location_score")) {
+                JSONArray scores = card.getJSONArray("location_score");
+                for (int j=0;j<12;j++)
+                    locationScore.add(scores.getDouble(j));
+            }
 
             dataBlogCard = new DataBlogCard(card.getString("_id"), isLiked, isBucketListed, card.getString("url"), card.getString("thumbnail"), card.getString("title"),
                     card.getString("description"), card.getInt("likes"), card.getInt("bucket_count"), card.getString("location"), card.getString("location_info_name"),
                     card.getString("location_info_summary"), card.getString("location_info_link"), card.getDouble("latitude"), card.getDouble("longitude"),
-                    roundDistance(dist), card.getString("visa_info"), interestList, card.getString("user_name"),
+                    locationScore, roundDistance(dist), card.getString("visa_info"), interestList, card.getString("user_name"),
                     card.getString("user_profile_pic"));
 
         }  catch (JSONException e) {

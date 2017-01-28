@@ -28,8 +28,7 @@ import com.juanpabloprado.countrypicker.CountryPickerListener;
 
 public class MainActivity extends BaseNavDrawerActivity
         implements SignInFragment.OnFragmentInteractionListener, SignInFragment.OnLoginListener,
-        HomeFragment.OnFragmentInteractionListener,
-        GoogleApiClient.OnConnectionFailedListener {
+        HomeFragment.OnFragmentInteractionListener {
 
 
     private static final int REQUEST_ADD_INTEREST = 1;
@@ -261,9 +260,9 @@ public class MainActivity extends BaseNavDrawerActivity
 
 
 
-    @Override
+    /*@Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-    }
+    }*/
 
     public void onFragmentInteraction(Uri uri){
     }

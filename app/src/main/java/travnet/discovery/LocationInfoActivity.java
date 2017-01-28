@@ -1,6 +1,8 @@
 package travnet.discovery;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -11,7 +13,9 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -35,6 +39,7 @@ public class LocationInfoActivity extends FragmentActivity implements OnMapReady
     DataPictureCard dataPictureCard;
     double curLat;
     double curLng;
+    LinearLayout scoreBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,8 @@ public class LocationInfoActivity extends FragmentActivity implements OnMapReady
         TextView summary = (TextView) findViewById(R.id.summary);
         TextView link = (TextView) findViewById(R.id.link);
         View scrim = findViewById(R.id.scrim);
+        scoreBar = (LinearLayout) findViewById(R.id.score_bar);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_view);
         mapFragment.getMapAsync(this);
@@ -74,6 +81,8 @@ public class LocationInfoActivity extends FragmentActivity implements OnMapReady
             }
         });
 
+        drawScoreBar();
+
 
     }
 
@@ -81,6 +90,100 @@ public class LocationInfoActivity extends FragmentActivity implements OnMapReady
     public void browseLink () {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(dataPictureCard.locationInfoLink));
         this.startActivity(browserIntent);
+    }
+
+
+
+    private void drawScoreBar() {
+        String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+
+        if(dataPictureCard.locationScore.size() != 0) {
+            for (int i = 0; i < 12; i++) {
+                TextView month = new TextView(this);
+                month.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f));
+                month.setGravity(Gravity.CENTER | Gravity.CENTER);
+                month.setTextColor(Color.parseColor("#000000"));
+                month.setText(months[i]);
+
+                int red = Color.argb(0x80, 0xb3, 0x24, 0x24);
+                int yellow = Color.argb(0x80, 0xb2, 0xb3, 0x24);
+                int green = Color.argb(0x80, 0x24, 0xb3, 0x24);
+
+                GradientDrawable greenToYellow = new GradientDrawable(
+                        GradientDrawable.Orientation.LEFT_RIGHT,
+                        new int[] {green,yellow});
+                GradientDrawable yellowToGreen = new GradientDrawable(
+                        GradientDrawable.Orientation.LEFT_RIGHT,
+                        new int[] {yellow,green});
+                GradientDrawable yellowToRed = new GradientDrawable(
+                        GradientDrawable.Orientation.LEFT_RIGHT,
+                        new int[] {yellow,red});
+                GradientDrawable redToYellow = new GradientDrawable(
+                        GradientDrawable.Orientation.LEFT_RIGHT,
+                        new int[] {red,yellow});
+                GradientDrawable greenToRed = new GradientDrawable(
+                        GradientDrawable.Orientation.LEFT_RIGHT,
+                        new int[] {green,red});
+                GradientDrawable redToGreen = new GradientDrawable(
+                        GradientDrawable.Orientation.LEFT_RIGHT,
+                        new int[] {red,green});
+
+                /*greenToYellow.setGradientCenter(0.9f, 0.5f);
+                greenToRed.setGradientCenter(0.9f, 0.5f);
+                redToYellow.setGradientCenter(0.9f, 0.5f);
+                redToGreen.setGradientCenter(0.9f, 0.5f);
+                yellowToGreen.setGradientCenter(0.9f, 0.5f);
+                yellowToRed.setGradientCenter(0.9f, 0.5f);*/
+
+
+                int score = (int) Math.floor(dataPictureCard.locationScore.get(i));
+                if (score == 3)
+                    score = 2;
+                int nxtScore = -1;
+                if (i<11)
+                    nxtScore = (int) Math.floor(dataPictureCard.locationScore.get(i+1));
+                else nxtScore = (int) Math.floor(dataPictureCard.locationScore.get(0));
+                if(nxtScore == 3)
+                    nxtScore = 2;
+
+                Log.v("score", String.valueOf(score) + String.valueOf(nxtScore));
+
+                if(score == nxtScore || i==11) {
+                    if (score == 0) {
+                        month.setBackgroundColor(red);
+                    } else if (score == 1) {
+                        month.setBackgroundColor(yellow);
+                    } else {
+                        month.setBackgroundColor(green);
+                    }
+                }
+
+                if(score == 0 && nxtScore == 1) {
+                    month.setBackground(redToYellow);
+                } else if (score == 1 && nxtScore == 0) {
+                    month.setBackground(yellowToRed);
+                } else if (score == 1 && nxtScore == 2) {
+                    month.setBackground(yellowToGreen);
+                } else if (score == 2 && nxtScore == 1) {
+                    month.setBackground(greenToYellow);
+                } else if (score == 0 && nxtScore == 2) {
+                    month.setBackground(redToGreen);
+                } else if (score == 2 && nxtScore == 0) {
+                    month.setBackground(greenToRed);
+                }
+
+
+                /*double score = dataPictureCard.locationScore.get(i);
+                if (score > 0.0 && score < 1.0) {
+                    month.setBackgroundColor(red);
+                } else if (score > 1.0 && score < 2.0) {
+                    month.setBackgroundColor(yellow);
+                } else {
+                    month.setBackgroundColor(green);
+                }*/
+                scoreBar.addView(month);
+            }
+        }
     }
 
 

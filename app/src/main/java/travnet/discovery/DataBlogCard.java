@@ -23,6 +23,7 @@ public class DataBlogCard {
     String locationInfoLink;
     double latitude;
     double longitude;
+    ArrayList<Double> locationScore;
     int distance;
     String visaInfo;
     ArrayList<String> interests;
@@ -35,10 +36,11 @@ public class DataBlogCard {
     }
 
     public DataBlogCard(String id, boolean isLiked, boolean isAddedToBl, String url, String thumbnail_url, String title, String extract, int likes, int noBlucketListed,
-                        String location, String locationInfoName, String locationInfoSummary, String locationInfoLink, double latitude, double longitude, int distance,
-                        String visaInfo, ArrayList<String> interests, String uploader_name, String uploader_pp) {
+                        String location, String locationInfoName, String locationInfoSummary, String locationInfoLink, double latitude, double longitude, ArrayList<Double> locationScore,
+                        int distance, String visaInfo, ArrayList<String> interests, String uploader_name, String uploader_pp) {
         dataUploaderBar = new DataUploaderBar();
         this.interests = new ArrayList<String>();
+        this.locationScore = new ArrayList<>();
         this.id = id;
         this.url = url;
         this.thumbnail_url = thumbnail_url;
@@ -52,6 +54,7 @@ public class DataBlogCard {
         this.locationInfoLink = locationInfoLink;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.locationScore.addAll(locationScore);
         this.distance = distance;
         this.visaInfo = visaInfo;
         this.interests.addAll(interests);

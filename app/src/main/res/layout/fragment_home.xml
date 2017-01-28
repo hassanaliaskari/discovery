@@ -19,8 +19,6 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <include android:id="@+id/info_view"
-        layout="@layout/card_additional_info"/>
 
 </RelativeLayout>
 

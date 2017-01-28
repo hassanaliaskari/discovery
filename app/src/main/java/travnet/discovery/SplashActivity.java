@@ -51,9 +51,9 @@ public class SplashActivity extends AppCompatActivity {
         Backend.getInstance().getCards(0, 500, 500, Backend.getInstance().new GetCardsListener() {
             @Override
             public void onCardsFetched(ArrayList<DataPictureCard> dataPictureCards, ArrayList<DataBlogCard> dataBlogCards, ArrayList<HomeFragment.CardsRef> cardsRef) {
-                for (int i=0; i<dataPictureCards.size(); i++) {
+                /*for (int i=0; i<dataPictureCards.size(); i++) {
                     imageLoader.loadImageSync(dataPictureCards.get(i).link);
-                }
+                }*/
 
                 startActivity(intent);
                 finish();

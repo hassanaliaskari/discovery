@@ -43,7 +43,7 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.github.jkwiecien:EasyImage:1.2.1'
     compile 'com.isseiaoki:simplecropview:1.1.0'
-    compile 'com.google.android.gms:play-services-location:8.4.0'
+    compile 'com.google.android.gms:play-services-location:9.0.0'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'com.leocardz:link-preview:1.2.1@aar'
     compile 'com.github.clans:fab:1.6.3'
@@ -54,5 +54,8 @@ dependencies {
     compile 'com.amazonaws:aws-android-sdk-s3:2.2.+'
     compile 'com.github.wooplr:Spotlight:1.2.2'
     compile 'com.juanpabloprado:countrypicker:1.2.0'
-
+    compile 'com.google.android.gms:play-services-auth:9.0.0'
 }
+
+apply plugin: 'com.google.gms.google-services'
+

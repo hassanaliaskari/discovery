@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 
 
 //Data Structure for picture cards
@@ -26,6 +27,7 @@ public class DataPictureCard implements Parcelable{
     String locationInfoLink;
     double latitude;
     double longitude;
+    ArrayList<Double> locationScore;
     int distance;
     String visaInfo;
     String activity;
@@ -39,8 +41,9 @@ public class DataPictureCard implements Parcelable{
 
     public DataPictureCard(String id, boolean isLiked, boolean isAddedToBl, String description, String link, int likes, int noBlucketListed,
                            String title, String location, String locationInfoName, String locationInfoSummary, String locationInfoLink, double latitude, double longitude,
-                           int distance, String visaInfo, String activity, String uploader_name, String uploader_pp) {
+                           ArrayList<Double> locationScore, int distance, String visaInfo, String activity, String uploader_name, String uploader_pp) {
         dataUploaderBar = new DataUploaderBar();
+        this.locationScore = new ArrayList<>();
         this.id = id;
         this.description = description;
         this.link = link;
@@ -53,6 +56,7 @@ public class DataPictureCard implements Parcelable{
         this.locationInfoLink = locationInfoLink;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.locationScore.addAll(locationScore);
         this.distance = distance;
         this.visaInfo = visaInfo;
         this.activity = activity;
@@ -84,6 +88,7 @@ public class DataPictureCard implements Parcelable{
         out.writeString(locationInfoLink);
         out.writeDouble(latitude);
         out.writeDouble(longitude);
+        out.writeSerializable(locationScore);
         out.writeInt(distance);
         out.writeString(visaInfo);
         out.writeString(activity);
@@ -118,6 +123,7 @@ public class DataPictureCard implements Parcelable{
         locationInfoLink = in.readString();
         latitude = in.readDouble();
         longitude = in.readDouble();
+        locationScore = (ArrayList<Double>) in.readSerializable();
         distance = in.readInt();
         visaInfo = in.readString();
         activity = in.readString();
